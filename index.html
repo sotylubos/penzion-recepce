@@ -235,14 +235,14 @@ function initials(n){return n.split(/\s+/).filter(Boolean).slice(0,2).map(functi
 function pl(n,a,b,c){return n===1?a:(n>=2&&n<=4?b:c);}
 function persTxt(n){return n+' '+pl(n,'osoba','osoby','osob');}
 
-var PL={ub:['Ubytování','noc'],di:['Dítě','dítě a noc'],sn:['Snídaně','ks'],ob:['Oběd','ks'],ve:['Večeře','ks'],ka:['Káva','ks'],pp:['Místní poplatek z pobytu','os. a noc'],pes:['Pes','pes a noc']};
+var PL={ub:['Ubytování','noc'],di:['Dítě 3–12 let','dítě a noc'],st:['Dítě / student 12–18 let','osoba a noc'],sn:['Snídaně','ks'],ob:['Oběd','ks'],ve:['Večeře','ks'],ka:['Káva','ks'],pp:['Místní poplatek z pobytu','os. a noc'],pes:['Pes','pes a noc']};
 var METHODS={hotove:['Hotově','#12805C','#E3F8EC'],qr:['QR kód','#1D6FE0','#EAF2FF'],prevod:['Převodem','#6C3CE9','#F1EBFF'],predem:['Zaplaceno předem','#C2410C','#FFE9D6']};
 
 var HIST0=[];
 
 /* ---------- výchozí (prázdná) data; skutečná data se načítají z úložiště ---------- */
 var S;
-var DEFP={ub1:530,ub2:530,di:0,sn:120,ob:150,ve:100,ka:20,pp:15,pes:100};
+var DEFP={ub1:530,ub2:530,di:0,st:530,sn:120,ob:150,ve:100,ka:20,pp:15,pes:100};
 function seed(){
  return {guests:[],stays:[],payments:[],groupDefs:[],
   priceLists:[{id:'pl1',name:'Běžný ceník',from:'',to:'',groups:['indiv'],p:Object.assign({},DEFP)}],
@@ -297,7 +297,7 @@ function listFor(g){
 function basePrice(g,k){var l=listFor(g);if(k==='ub')return g.persons>=2?l.p.ub2:l.p.ub1;return l.p[k]||0;}
 function pr(g,k){return (g.price&&g.price[k]!=null)?g.price[k]:basePrice(g,k);}
 function extrasSum(g){return (g.extra||[]).reduce(function(a,x){return a+(x.qty||0)*(x.price||0);},0);}
-var NOMUL={pp:1,pes:1,di:1};
+var NOMUL={pp:1,pes:1,di:1,st:1};
 function lineSum(g,k){return (g.bill[k]||0)*pr(g,k)*(NOMUL[k]?1:g.persons);}
 function total(g){return Object.keys(PL).reduce(function(a,k){return a+lineSum(g,k);},0)+extrasSum(g);}
 function syncAll(){S.payments.forEach(function(p){var g=G(p.gid);if(g)p.sum=total(g);});}
@@ -362,7 +362,7 @@ function billBlock(g){
   var q=g.bill[k]||0,ov=g.price&&g.price[k]!=null&&g.price[k]!==basePrice(g,k);
   var nm=PL[k][0],ln;
   if(k==='pes')ln='<span class="ln">'+nm+'<small>počet = psi × noci</small></span>';
-  if(k==='di')ln='<span class="ln">'+nm+'<small>počet = děti × noci (děti nepočítejte do osob)</small></span>';
+  else if(k==='di'||k==='st')ln='<span class="ln">'+nm+'<small>počet = děti × noci (děti nepočítejte do osob, místní poplatek se za ně neúčtuje)</small></span>';
   else if(k==='pp')ln='<span class="ln">'+nm+'<small>vybírá se pro obec · počet = osoby × noci</small></span>';
   else if(k==='ub')ln='<span class="ln">'+nm+'<small>'+(g.persons>=2?'cena za osobu (ve dvou a více)':'cena za osobu (sám v pokoji)')+'</small></span>';
   else ln='<span class="ln">'+nm+'</span>';
@@ -596,7 +596,7 @@ function PLg(id){return S.priceLists.filter(function(l){return l.id===id;})[0];}
 function plDates(l){return l.from&&l.to?dmy(l.from)+' – '+dmy(l.to):'bez omezení data';}
 function allGroups(){return S.groupDefs.map(function(d){return [d.key,d.name,d.color];}).concat([['indiv','Individuálové','#C2410C']]);}
 function vPrice(){
- var rows=[['ub1','Ubytování – 1 osoba v pokoji','Kč za noc'],['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['di','Dítě','Kč za dítě a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
+ var rows=[['ub1','Ubytování – 1 osoba v pokoji','Kč za noc'],['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['di','Dítě 3–12 let (mladší 3 let zdarma)','Kč za dítě a noc'],['st','Dítě / student 12–18 let','Kč za osobu a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
  var cards=S.priceLists.map(function(l){
   var k='pl:'+l.id,o=isOpen(k,false);
   var tags=l.groups.map(function(g){return '<span class="tag" style="background:rgba(255,255,255,.25);color:#fff;font-size:14px">'+esc(grpName(g))+'</span>';}).join('')||'<span class="tag bad">žádná skupina</span>';
@@ -817,7 +817,7 @@ function bankCard(){
 function stayEdit(sel){
  return '<div class="row wrap" style="align-items:flex-end;gap:12px"><div class="fld"><label for="sd_f">Příjezd</label><input type="date" class="inp" id="sd_f" data-sdt="'+sel.id+'|from" value="'+sel.from+'"></div><div class="fld"><label for="sd_t">Odjezd</label><input type="date" class="inp" id="sd_t" data-sdt="'+sel.id+'|to" value="'+sel.to+'"></div><span class="sp"></span>'+(S.delArm===sel.id?'<button class="btn red" data-a="delStay" data-p="'+sel.id+'">Ano, zrušit</button><button class="btn white" style="color:#6C3CE9" data-a="disarm" data-p="">Ne, vrátit zpět</button>':'<button class="btn red" data-a="delStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Zrušit rezervaci a smazat hosta':'Zrušit rezervaci')+'</button>')+'</div>';
 }
-function rescale(x,on,nn){if(!x||x.paid||on===nn)return;x.bill.ub=x.only?0:nn;x.bill.pp=x.only?0:x.persons*nn;['sn','ob','ve','pes','di'].forEach(function(k){x.bill[k]=Math.round((x.bill[k]||0)*nn/on);});syncPay(x);}
+function rescale(x,on,nn){if(!x||x.paid||on===nn)return;x.bill.ub=x.only?0:nn;x.bill.pp=x.only?0:x.persons*nn;['sn','ob','ve','pes','di','st'].forEach(function(k){x.bill[k]=Math.round((x.bill[k]||0)*nn/on);});syncPay(x);}
 function dropGuest(id){
  S.guests=S.guests.filter(function(x){return x.id!==id;});
  S.payments=S.payments.filter(function(x){return x.gid!==id;});
@@ -922,7 +922,7 @@ function applyCfg(snap){
 function afterLoad(){
  if(!S.priceLists.length)S.priceLists=seed().priceLists;
  if(!S.bank)S.bank={acc:'',name:''};
- S.priceLists.forEach(function(l){l.p=l.p||{};if(l.p.di==null)l.p.di=0;});
+ S.priceLists.forEach(function(l){l.p=l.p||{};if(l.p.di==null)l.p.di=0;if(l.p.st==null)l.p.st=l.p.ub2||0;});
  if(!S.biz)S.biz={name:'',addr:'',ico:'',dic:'',vat:false,phone:''};
  if(!grpDef(S.grp))S.grp=S.groupDefs.length?S.groupDefs[0].key:'';
 }
@@ -1148,7 +1148,7 @@ document.addEventListener('input',function(e){
  if(t.dataset.gd){a=t.dataset.gd.split('|');g=G(a[0]);var dd=guestDates(g),on=Math.max(1,diffDays(dd.from,dd.to)),nf=a[1]==='from'?t.value:dd.from,nt=a[1]==='to'?t.value:dd.to;
   if(!nf||!nt||nt<nf)return;
   if(g.grp==='indiv'){var st=stayOfGuest(g);st.from=nf;st.to=nt;}else{g.arr=nf;g.dep=nt;}
-  var nn=Math.max(1,diffDays(nf,nt));g.bill.ub=g.only?0:nn;g.bill.pp=g.only?0:g.persons*nn;['sn','ob','ve','pes','di'].forEach(function(k){g.bill[k]=Math.round((g.bill[k]||0)*nn/on);});
+  var nn=Math.max(1,diffDays(nf,nt));g.bill.ub=g.only?0:nn;g.bill.pp=g.only?0:g.persons*nn;['sn','ob','ve','pes','di','st'].forEach(function(k){g.bill[k]=Math.round((g.bill[k]||0)*nn/on);});
   syncPay(g);render();return;}
  if(t.dataset.kd){S[t.dataset.kd]=t.value;render();return;}
  if(t.dataset.pl){a=t.dataset.pl.split('|');var l=PLg(a[0]);l[a[1]]=t.value;document.querySelectorAll('[data-plname="'+l.id+'"]').forEach(function(e){e.textContent=l.name;});document.querySelectorAll('[data-pldates="'+l.id+'"]').forEach(function(e){e.textContent=plDates(l);});syncAll();return;}
