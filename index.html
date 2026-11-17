@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://bnckyiveqebzzzxuoluj.supabase.co wss://bnckyiveqebzzzxuoluj.supabase.co; manifest-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#12B45E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Penzion Na Devítce – recepce</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%2312B45E%27/%3E%3Ctext x=%2732%27 y=%2748%27 font-size=%2744%27 font-weight=%27900%27 font-family=%27Arial,sans-serif%27 text-anchor=%27middle%27 fill=%27white%27%3E9%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'Nunito',system-ui,sans-serif;color:#1F2340;background:#FFF6E5;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select,textarea{font-family:inherit;color:#1F2340}
+.app{display:flex;height:100vh;height:100dvh;overflow:hidden}
+.side{width:250px;flex:none;background:#2B1B6B;color:#fff;display:flex;flex-direction:column;padding:22px 16px;gap:8px;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:12px;padding:4px 8px 16px}
+.logo i{width:50px;height:50px;border-radius:16px;background:linear-gradient(145deg,#34D17A,#0E9F4F);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:36px;font-style:normal;line-height:1;box-shadow:0 4px 0 #087338}
+.logo div{display:flex;flex-direction:column;line-height:1.1}
+.logo b{font-size:20px;font-weight:900}
+.logo span{font-size:13px;font-weight:700;color:#D9CFFF}
+.nav{display:flex;align-items:center;gap:12px;min-height:50px;padding:4px 12px;border-radius:16px;font-weight:800;font-size:17px;background:transparent;color:#fff;text-align:left;width:100%}
+.nav.act{background:#fff;color:#1F2340}
+.nav i{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;font-style:normal;color:#1F2340;flex:none}
+.sidebtn{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:16px;font-weight:900;font-size:17px;width:100%}
+.sidebtn.y{background:#FFC21A;color:#1F2340;margin-top:8px}
+.sidebtn.o{background:transparent;border:2px solid #7B63D6;color:#fff;font-size:15px;font-weight:800;min-height:48px}
+.sidenote{background:#3F2A92;border-radius:16px;padding:12px 14px;font-size:13px;font-weight:700;line-height:1.4;color:#E6DEFF;margin-top:auto}
+.sidenote button{margin-top:8px;background:#fff;color:#2B1B6B;border-radius:999px;font-weight:800;font-size:13px;min-height:40px;padding:0 14px}
+.main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;padding:20px 30px 10px;gap:16px}
+.top h1{margin:0;font-size:30px;font-weight:900;line-height:1.1}
+.top small{font-size:14px;font-weight:700;color:#5B5F85}
+.badge{background:#FFC21A;color:#1F2340;font-weight:800;font-size:13px;padding:8px 14px;border-radius:999px;white-space:nowrap}
+.scroll{flex:1;min-height:0;overflow-y:auto;padding:4px 30px 36px}
+.card{background:#fff;border-radius:24px;padding:18px;box-shadow:0 5px 0 #F0DFC0;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.wrap{flex-wrap:wrap}
+.sp{flex:1}
+.col{display:flex;flex-direction:column;gap:12px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.small{font-size:13px;font-weight:700;color:#5B5F85;line-height:1.4}
+.b{font-weight:800}
+.btn{min-height:44px;border-radius:999px;padding:0 18px;font-weight:800;font-size:15px;color:#fff;background:#6C3CE9;box-shadow:0 3px 0 rgba(31,35,64,.18);white-space:nowrap}
+.btn:active,.pill:active,.rb:active,.nav:active{transform:translateY(2px)}
+.btn.big{min-height:52px;font-size:16px;font-weight:900;padding:0 24px}
+.btn.green{background:#12805C}.btn.blue{background:#1D6FE0}.btn.teal{background:#00857F}.btn.red{background:#D62839}.btn.dark{background:#2B1B6B}
+.btn.orange{background:#C2410C}.btn.yellow{background:#FFC21A;color:#1F2340}.btn.white{background:#fff;color:#1F2340}
+.btn.grey{background:#E6E8F5;color:#3A3F66;box-shadow:none}.btn.lgreen{background:#E3F8EC;color:#0B5A40;box-shadow:none}
+.pill{min-height:44px;border-radius:999px;padding:0 18px;font-weight:800;font-size:15px;background:#fff;color:#1F2340;box-shadow:0 3px 0 #F0DFC0;white-space:nowrap}
+.pill.on{color:#fff;box-shadow:0 3px 0 rgba(31,35,64,.28)}
+.tag{font-weight:800;font-size:12px;padding:5px 11px;border-radius:999px;white-space:nowrap}
+.tag.ok{background:#E3F8EC;color:#0B5A40}.tag.bad{background:#D62839;color:#fff}.tag.y{background:#FFC21A;color:#1F2340}.tag.g{background:#E6E8F5;color:#1F2340}
+.inp{min-height:44px;border-radius:12px;border:2px solid #C9B8FF;padding:0 12px;font-size:16px;font-weight:700;background:#fff;min-width:0;width:100%}
+.inp.w{border-color:#F0C36A}.inp.gr{border-color:#9FDCC0}.inp.t{border-color:#7DE0D0}
+textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld label{font-size:13px;font-weight:800}
+.fg{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.fg3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.panel{border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.note{border-radius:16px;padding:12px 16px;font-size:14px;font-weight:700;line-height:1.5}
+.note.g{background:#E3F8EC}.note.b{background:#EAF2FF}.note.y{background:#FFF1D6}.note.p{background:#F1EBFF}
+.pm{font-weight:900;font-size:20px;color:#6C3CE9;width:24px;text-align:center}
+.rb{width:44px;height:44px;border-radius:50%;font-size:24px;font-weight:900;flex:none;line-height:1}
+.rb.minus{background:#fff;color:#D62839;box-shadow:0 2px 0 #EADBC0}.rb.plus{background:#12805C;color:#fff}
+.line{display:flex;align-items:center;gap:10px;background:#FFF6E5;border-radius:14px;padding:6px 10px}
+.line .ln{flex:1;font-weight:900;font-size:16px}
+.line .qn{width:28px;text-align:center;font-weight:900;font-size:20px}
+.line .ls{width:90px;text-align:right;font-weight:900;font-size:15px}
+.tot{display:flex;align-items:center;gap:12px;background:#2B1B6B;color:#fff;border-radius:16px;padding:10px 14px}
+.tot span{flex:1;font-size:15px;font-weight:800}.tot b{font-size:24px;font-weight:900}
+.bill{background:#fff;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.bt{font-size:16px;font-weight:900}
+.gcard{background:#F7F3FF;border-radius:16px}.gcard.open{background:#F1EBFF}
+.grow{display:flex;align-items:center;gap:10px;padding:6px 12px;flex-wrap:wrap}
+.gtoggle{flex:1;min-width:220px;display:flex;align-items:center;gap:10px;min-height:48px;background:transparent;text-align:left;color:#1F2340}
+.av{width:40px;height:40px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff}
+.gtxt{display:flex;flex-direction:column;flex:1;min-width:0}
+.gtxt b{font-size:16px;font-weight:900}.gtxt small{font-size:13px;font-weight:700;color:#5B5F85}
+.gdet{padding:0 14px 14px 62px;display:flex;flex-direction:column;gap:10px}
+.hd{background:#fff;display:flex;align-items:center;gap:12px;min-height:56px;width:100%;padding:14px 18px;text-align:left;color:#1F2340;font-size:19px;font-weight:900}
+.acc{background:#fff;border-radius:22px;box-shadow:0 5px 0 #F0DFC0;overflow:hidden}
+.dish{display:flex;align-items:center;gap:12px;background:#FFF6E5;border-radius:16px;padding:8px 12px}
+.dish .nm{flex:1;font-weight:800;font-size:15px;line-height:1.3}
+.mt{font-weight:800;font-size:12px;padding:5px 10px;border-radius:999px;min-width:60px;text-align:center}
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal .h{text-align:center;font-size:13px;font-weight:900;color:#5B5F85}
+.day{min-height:92px;border-radius:14px;padding:6px;display:flex;flex-direction:column;gap:3px;background:#FFF6E5;border:3px solid transparent;min-width:0}
+.day.out{background:#F4F1EA}.day.today{border-color:#00857F}
+.dn{font-size:14px;font-weight:900}.day.out .dn{color:#A9A6B8}.day.today .dn{color:#00857F}
+.bar{display:block;font-size:12px;font-weight:800;color:#fff;padding:3px 6px;min-height:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;border-radius:0}
+.bar.sel{box-shadow:0 0 0 3px #1F2340;position:relative}
+.more{font-size:11px;font-weight:800;color:#5B5F85}
+.dot{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:5px;vertical-align:-2px}
+/* teal summary */
+.sum{background:#00857F;color:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 5px 0 #005E5A}
+.sum .r{background:rgba(255,255,255,.18);border-radius:16px;padding:12px 14px;display:flex;justify-content:space-between;font-weight:800;font-size:16px}
+.sum .r.y{background:#FFC21A;color:#1F2340;font-weight:900;font-size:20px}
+.ord{background:rgba(255,255,255,.18);border-radius:16px}
+.ord button{display:flex;align-items:center;gap:8px;padding:8px 12px;min-height:44px;width:100%;background:transparent;color:#fff;text-align:left}
+/* phone */
+.ov{position:fixed;inset:0;background:rgba(31,35,64,.72);z-index:50;display:flex;align-items:center;justify-content:center;gap:24px;padding:16px;overflow:auto}
+.phone{width:390px;max-width:100%;height:min(780px,94vh);background:#fff;border:10px solid #1F2340;border-radius:40px;overflow-y:auto;position:relative;flex:none}
+.ph-h{background:#00857F;color:#fff;padding:20px 18px 16px;display:flex;flex-direction:column;gap:4px}
+.ph-b{padding:14px;display:flex;flex-direction:column;gap:12px;background:#FFF6E5}
+.ovside{display:flex;flex-direction:column;gap:12px;max-width:260px;color:#fff}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1F2340;color:#fff;padding:14px 22px;border-radius:999px;font-weight:800;font-size:16px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:90vw;text-align:center}
+.pw{display:flex;align-items:center;gap:6px}
+.inp.pi{width:92px;min-height:40px;padding:0 8px;text-align:right;font-weight:900;font-size:16px}
+.inp.pi.chg{border-color:#F0A500;background:#FFF1D6}
+.rs{width:36px;height:36px;font-size:18px;background:#FFF1D6;color:#1F2340}
+.rx{background:#FFE3E6;color:#D62839;font-size:22px}
+.inp.xn{flex:1;min-width:150px;width:auto}
+.line.xl{background:#EAF2FF}
+.paybtn{min-height:58px;border-radius:16px;font-weight:900;font-size:18px;color:#fff;width:100%}
+.seg{display:inline-flex;border-radius:999px;overflow:hidden;box-shadow:0 0 0 2px #C9B8FF;background:#fff}
+.seg button{min-height:46px;padding:0 22px;font-weight:800;font-size:15px;background:#fff;color:#5B5F85}
+.seg button.y{background:#12805C;color:#fff}.seg button.n{background:#D62839;color:#fff}
+.gs{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;align-items:start}
+.gs.one{grid-template-columns:minmax(0,1fr)}
+.fg5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.badge{border:none;cursor:pointer}
+@media (max-width:900px){
+ .app{flex-direction:column}
+ .side{width:100%;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding:8px 10px;gap:6px;align-items:center;flex:none}
+ .side>*{flex:none}
+ .logo,.sidenote{display:none}
+ .nav{width:auto;min-height:46px;font-size:15px;padding:4px 14px}.nav i{display:none}
+ .sidebtn{width:auto;padding:0 18px;min-height:46px;margin:0!important;font-size:15px}
+ .top{padding:12px 16px 6px}.top h1{font-size:24px}.scroll{padding:4px 16px 28px}
+ .grid2,.fg,.fg3,.gs{grid-template-columns:minmax(0,1fr)}
+ .fg5{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .day{min-height:70px;padding:3px}.bar{font-size:10px;padding:2px 3px}
+ .gdet{padding-left:14px}
+}
+
+/* větší písmo a tlačítka (slabší zrak) */
+.btn{min-height:54px;font-size:17px;padding:0 22px}
+.btn.big{min-height:60px;font-size:19px}
+.pill{min-height:54px;font-size:17px;padding:0 22px}
+.rb{width:54px;height:54px;font-size:30px}
+.nav{min-height:56px;font-size:19px}.nav i{width:36px;height:36px;font-size:18px}
+.sidebtn{min-height:58px;font-size:19px}
+.top h1{font-size:36px}.top small{font-size:16px}.badge{font-size:15px;padding:10px 16px}
+.tag{font-size:14px;padding:6px 12px}
+.inp{min-height:54px;font-size:18px}
+.small{font-size:15px}
+.gtxt b{font-size:19px}.gtoggle{min-height:60px}
+.av{width:46px;height:46px;font-size:16px}
+.line .ln{font-size:18px;min-width:120px}.line .qn{font-size:22px;width:34px}.line .ls{font-size:17px;width:100px}
+.inp.pi{min-height:50px;font-size:18px;width:104px}
+.tot b{font-size:28px}.tot span{font-size:17px}
+.bt{font-size:19px}
+.seg button{min-height:54px;font-size:17px;padding:0 24px}
+.hd{font-size:21px}
+.pm{font-size:26px}
+.bar{font-size:13px;min-height:26px}.dn{font-size:16px}.cal .h{font-size:15px}
+.day{min-height:100px}
+.fld label{font-size:15px}
+.note{font-size:16px}
+.bill{container-type:inline-size}
+.line{display:grid;grid-template-columns:minmax(0,1fr) 232px 154px 104px 48px;gap:10px;align-items:center;flex-wrap:nowrap}
+.line .ln{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.line .ln small{font-size:13px;font-weight:700;color:#5B5F85}
+.line .pw{display:flex;align-items:center;gap:6px}
+.line .pw.pc{width:232px}
+.line .pw.pc .small{flex:1;white-space:nowrap;font-size:14px}
+.line .ls{width:auto;text-align:right}
+.inp.pi{width:96px;flex:none}
+.rs{flex:none}.rs.off{visibility:hidden}
+.line .xn{width:100%;min-width:0}
+@container (max-width:760px){
+ .line{grid-template-columns:auto auto minmax(0,1fr) auto}
+ .line>.ln,.line>.xn{grid-column:1/-1}
+}
+.ck{width:46px;height:46px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 3px #C9B8FF;flex:none;font-size:28px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center}
+.ck.on{background:#6C3CE9;box-shadow:none}
+.krow{display:flex;align-items:center;gap:10px;padding:6px 12px}
+.ktg{flex:1;min-width:0;display:flex;align-items:center;gap:10px;min-height:56px;background:transparent;text-align:left;color:#1F2340;flex-wrap:wrap}
+.ktg .kn{flex:1;min-width:180px;display:flex;flex-direction:column}
+.ktg .kn b{font-size:19px;font-weight:900}
+@media (max-width:900px){
+ .side{flex-wrap:wrap;overflow:visible;justify-content:center}
+ .side>*{flex:1 1 30%}
+ .nav{min-height:52px;font-size:17px;padding:4px 8px;justify-content:center;text-align:center;width:auto}
+ .sidebtn{min-height:52px;font-size:17px;padding:0 8px}
+}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:8px;align-items:start}
+.ggrid .gcard.open{grid-column:1/-1}
+.ggrid .gtoggle{min-width:0;min-height:52px;gap:6px}
+.ggrid .gcard:not(.open) .av{display:none}
+.ggrid .gcard:not(.open){border-left:8px solid #C9B8FF}
+.ggrid .gtxt b{font-size:17px;white-space:normal;line-height:1.2}
+.ggrid .gtoggle .tag{font-size:12px;padding:4px 8px}
+.ggrid .grow{padding-left:4px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="supabase.js"></script>
+<script>
+/* QR Code Generator for JavaScript, Copyright (c) 2009 Kazuhiko Arase, MIT license, http://www.d-project.com/ */
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});
+</script>
+<script>
+(function(){
+'use strict';
+var TODAY=toIso(new Date()),TY=new Date().getFullYear(),TM=new Date().getMonth();
+
+/* ---------- pomocné funkce ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function kc(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' Kč';}
+var DN=['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'];
+var MN=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+function parse(i){var p=i.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+function toIso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function addDays(i,n){var d=parse(i);d.setDate(d.getDate()+n);return toIso(d);}
+function dm(i){var d=parse(i);return d.getDate()+'. '+(d.getMonth()+1)+'.';}
+function dmy(i){return dm(i)+' '+parse(i).getFullYear();}
+function diffDays(a,b){return Math.round((parse(b)-parse(a))/864e5);}
+function dayLabel(i){return DN[parse(i).getDay()]+' '+dm(i);}
+function rangeTxt(a,b){var x=parse(a),y=parse(b);if(a===b)return dm(a);return x.getMonth()===y.getMonth()?x.getDate()+'.–'+y.getDate()+'. '+(x.getMonth()+1)+'.':dm(a)+' – '+dm(b);}
+function initials(n){return n.split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w[0].toUpperCase();}).join('');}
+function pl(n,a,b,c){return n===1?a:(n>=2&&n<=4?b:c);}
+function persTxt(n){return n+' '+pl(n,'osoba','osoby','osob');}
+
+var PL={ub:['Ubytování','noc'],sn:['Snídaně','ks'],ob:['Oběd','ks'],ve:['Večeře','ks'],ka:['Káva','ks'],pp:['Místní poplatek z pobytu','os. a noc'],pes:['Pes','pes a noc']};
+var METHODS={hotove:['Hotově','#12805C','#E3F8EC'],qr:['QR kód','#1D6FE0','#EAF2FF'],prevod:['Převodem','#6C3CE9','#F1EBFF'],predem:['Zaplaceno předem','#C2410C','#FFE9D6']};
+
+var HIST0=[];
+
+/* ---------- výchozí (prázdná) data; skutečná data se načítají z úložiště ---------- */
+var S;
+var DEFP={ub1:530,ub2:530,sn:120,ob:150,ve:100,ka:20,pp:15,pes:100};
+function seed(){
+ return {guests:[],stays:[],payments:[],groupDefs:[],
+  priceLists:[{id:'pl1',name:'Běžný ceník',from:'',to:'',groups:['indiv'],p:Object.assign({},DEFP)}],
+  manual:[],rebook:{},police:{},mailed:{},bank:{acc:'',name:''},biz:{name:'',addr:'',ico:'',dic:'',vat:false,phone:''},seq:100};
+}
+function nightsOfStay(stays,x){var s=stays.filter(function(t){return t.guestId===x.id;})[0];return s?Math.max(1,diffDays(s.from,s.to)):1;}
+function grpNights(k){var s=curStay(k);return s?Math.max(1,diffDays(s.from,s.to)):1;}
+function defBill(x,M,nights){
+ M={sn:0,ob:0,ve:0,ka:0};
+ return x.only?{ub:0,sn:0,ob:M.ob,ve:M.ve,ka:M.ka,pp:0}:{ub:nights,sn:M.sn,ob:M.ob,ve:M.ve,ka:M.ka,pp:x.persons*nights};
+}
+function fresh(){
+ var d=seed();
+ Object.assign(d,{screen:'kal',scrollTop:true,calOff:0,calSel:null,calNewOpen:false,calKind:null,calGrp:null,calMsg:'',calOk:false,
+  grp:'',stayPick:{},open:{},form:{},newGroupOpen:false,newGuestOpen:false,payM:{},resetArm:false,
+  payGroup:'',payGuest:'',pay:'qr',payFilter:'all',bookFilter:'all',bookFormOpen:false,bookPeriod:'all',kFrom:'',kTo:'',bookSel:{},eetFilter:'all',focusId:null,pickFor:null,indivFocus:null,calView:'cal',resF:'up',grpF:'all',payGF:'all',query:''});
+ var keep=S;S=d;d.payments.forEach(function(p){var g=G(p.gid);if(g)p.sum=total(g);});S=keep;
+ return d;
+}
+
+/* ---------- vyhledávače ---------- */
+function G(id){return S.guests.filter(function(x){return x.id===id;})[0];}
+function grpDef(k){return S.groupDefs.filter(function(d){return d.key===k;})[0];}
+function grpName(k){var d=grpDef(k);return k==='indiv'?'Individuálové':(d?d.name:k);}
+function grpColor(k){var d=grpDef(k);return k==='indiv'?'#C2410C':(d?d.color:'#6C3CE9');}
+function staysOf(k){return S.stays.filter(function(s){return s.grp===k;}).sort(function(a,b){return a.from<b.from?-1:1;});}
+function curStay(k){
+ var l=staysOf(k);if(!l.length)return null;
+ var p=S.stayPick[k];var f=l.filter(function(s){return s.id===p;})[0];if(f)return f;
+ var up=l.filter(function(s){return s.to>=TODAY;});return up.length?up[0]:l[l.length-1];
+}
+function stayOfGuest(g){return S.stays.filter(function(s){return s.guestId===g.id;})[0];}
+function stayName(s){return s.grp==='indiv'?G(s.guestId).name:grpName(s.grp);}
+function stayColor(s){return s.to<TODAY?'#B8B5C8':grpColor(s.grp);}
+function stayPersons(s){
+ if(s.grp==='indiv')return G(s.guestId).persons;
+ return S.guests.filter(function(x){return x.grp===s.grp&&x.here;}).reduce(function(a,x){return a+x.persons;},0);
+}
+function stayOf(g){return g.grp==='indiv'?stayOfGuest(g):curStay(g.grp);}
+function guestDates(g){var s=stayOf(g);if(!s)return {from:TODAY,to:TODAY};if(g.grp==='indiv')return s;return {from:g.arr||s.from,to:g.dep||s.to};}
+function inBookNow(g){if(g.inBook)return true;var s=stayOf(g);return !!(g.here&&!g.only&&s&&guestDates(g).from<=TODAY);}
+function nightsOf(g){var d=guestDates(g);return Math.max(1,diffDays(d.from,d.to));}
+function listFor(g){
+ var d=guestDates(g).from;
+ var c=S.priceLists.filter(function(l){return l.groups.indexOf(g.grp)>=0;});
+ var dated=c.filter(function(l){return l.from&&l.to&&l.from<=d&&d<=l.to;}).sort(function(a,b){return diffDays(a.from,a.to)-diffDays(b.from,b.to);});
+ if(dated.length)return dated[0];
+ var und=c.filter(function(l){return !l.from||!l.to;});
+ if(und.length)return und[0];
+ return c[0]||S.priceLists[0];
+}
+function basePrice(g,k){var l=listFor(g);if(k==='ub')return g.persons>=2?l.p.ub2:l.p.ub1;return l.p[k]||0;}
+function pr(g,k){return (g.price&&g.price[k]!=null)?g.price[k]:basePrice(g,k);}
+function extrasSum(g){return (g.extra||[]).reduce(function(a,x){return a+(x.qty||0)*(x.price||0);},0);}
+function lineSum(g,k){return (g.bill[k]||0)*pr(g,k)*((k==='pp'||k==='pes')?1:g.persons);}
+function total(g){return Object.keys(PL).reduce(function(a,k){return a+lineSum(g,k);},0)+extrasSum(g);}
+function syncAll(){S.payments.forEach(function(p){var g=G(p.gid);if(g)p.sum=total(g);});}
+function syncPay(g){S.payments.forEach(function(p){if(p.gid===g.id)p.sum=total(g);});}
+function refresh(g){
+ Object.keys(PL).forEach(function(k){document.querySelectorAll('[data-lsum="'+g.id+'|'+k+'"]').forEach(function(e){e.textContent=kc(lineSum(g,k));});});
+ (g.extra||[]).forEach(function(x){document.querySelectorAll('[data-xsum="'+g.id+'|'+x.id+'"]').forEach(function(e){e.textContent=kc((x.qty||0)*(x.price||0));});});
+ document.querySelectorAll('[data-total="'+g.id+'"]').forEach(function(e){e.textContent=kc(total(g));});
+ document.querySelectorAll('[data-qr="'+g.id+'"]').forEach(function(e){e.innerHTML=qrBlock(g);});
+ syncPay(g);
+}
+function dn(n){var w=n.replace(/,/g,'').trim().split(/\s+/);return w.length<2?n:w[w.length-1]+' '+w.slice(0,-1).join(' ');}
+function sk(n){var w=n.replace(/,.*$/,'').trim().split(/\s+/);return w[w.length-1]+' '+w[0];}
+function guestsSorted(l){return l.slice().sort(function(a,b){return sk(a.name).localeCompare(sk(b.name),'cs')||a.name.localeCompare(b.name,'cs');});}
+function curMethod(g){return g.paid||S.payM[g.id]||'hotove';}
+function presentEntries(){
+ var out=[];
+ S.groupDefs.forEach(function(d){
+  var st=staysOf(d.key).filter(function(s){return s.from<=TODAY&&TODAY<=s.to;})[0];
+  if(!st)return;
+  out.push({key:d.key,name:d.name,color:d.color,stay:st,guests:guestsSorted(S.guests.filter(function(x){return x.grp===d.key&&x.here;}))});
+ });
+ var ig=S.guests.filter(function(x){var s=x.grp==='indiv'&&stayOfGuest(x);return s&&s.from<=TODAY&&TODAY<=s.to;});
+ if(ig.length)out.push({key:'indiv',name:'Individuálové',color:'#C2410C',stay:null,guests:guestsSorted(ig)});
+ return out;
+}
+function isOpen(k,def){return S.open[k]===undefined?def:S.open[k];}
+function tg(k,def){return 'data-a="tog" data-p="'+esc(k)+'" data-d="'+(def?1:0)+'"';}
+function guestSub(g){
+ var p=[];var st=g.grp==='indiv'?stayOfGuest(g):null;
+ if(st)p.push(rangeTxt(st.from,st.to));
+ p.push(persTxt(g.persons));
+ p.push(g.only?'jen stravování':'ubytování + strava');
+ if(g.foreign)p.push('cizinec ('+g.nat+')');
+ return p.join(' · ');
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function toast(m){
+ var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);
+ setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},2600);
+}
+var QR=(function(){var N=25,seed=7,p='';function fin(x,y){return (x<8&&y<8)||(x>16&&y<8)||(x<8&&y>16);}
+ for(var y=0;y<N;y++)for(var x=0;x<N;x++){var on;
+  if(fin(x,y)){var fx=x>16?x-18:x,fy=y>16?y-18:y;on=fx>=0&&fx<=6&&fy>=0&&fy<=6&&(fx===0||fx===6||fy===0||fy===6||(fx>=2&&fx<=4&&fy>=2&&fy<=4));}
+  else{seed=(seed*1103515245+12345)%2147483648;on=((seed>>8)%2)===0;}
+  if(on)p+='M'+x+' '+y+'h1v1h-1z';}
+ return p;})();
+
+/* ---------- drobné stavební kameny ---------- */
+function fi(key,label,ph,type,cls){
+ var id='f_'+key;
+ return '<div class="fld"><label for="'+id+'">'+label+'</label><input class="inp '+(cls||'')+'" id="'+id+'" data-f="'+key+'" type="'+(type||'text')+'" value="'+esc(S.form[key]||'')+'" placeholder="'+esc(ph||'')+'"></div>';
+}
+function chip(label,act,p,on,color){
+ return '<button class="pill'+(on?' on':'')+'" style="'+(on?'background:'+color+';':'')+'" data-a="'+act+'" data-p="'+esc(p)+'">'+label+'</button>';
+}
+function personsRow(g){
+ return '<span class="row" style="flex:none;gap:8px"><span class="small b">Osob</span><button class="rb minus" aria-label="Méně osob" data-a="persons" data-p="'+g.id+'|-1">−</button><b style="width:24px;text-align:center;font-size:20px">'+g.persons+'</b><button class="rb plus" aria-label="Více osob" data-a="persons" data-p="'+g.id+'|1">+</button></span>';
+}
+function billBlock(g){
+ var lines=Object.keys(PL).map(function(k){
+  var q=g.bill[k]||0,ov=g.price&&g.price[k]!=null&&g.price[k]!==basePrice(g,k);
+  var nm=PL[k][0],ln;
+  if(k==='pes')ln='<span class="ln">'+nm+'<small>počet = psi × noci</small></span>';
+  else if(k==='pp')ln='<span class="ln">'+nm+'<small>vybírá se pro obec · počet = osoby × noci</small></span>';
+  else if(k==='ub')ln='<span class="ln">'+nm+'<small>'+(g.persons>=2?'cena za osobu (ve dvou a více)':'cena za osobu (sám v pokoji)')+'</small></span>';
+  else ln='<span class="ln">'+nm+'</span>';
+  return '<div class="line">'+ln+'<span class="pw pc"><input class="inp pi'+(ov?' chg':'')+'" inputmode="numeric" enterkeyhint="done" aria-label="Cena: '+nm+'" data-gprice="'+g.id+'|'+k+'" value="'+pr(g,k)+'"><span class="small">Kč / '+PL[k][1]+'</span><button class="rb rs'+(ov?'':' off')+'" aria-label="Vrátit cenu z ceníku" data-a="resetPrice" data-p="'+g.id+'|'+k+'">↺</button></span><span class="pw"><button class="rb minus" aria-label="Méně" data-a="bill" data-p="'+g.id+'|'+k+'|-1">−</button><span class="qn">'+q+'</span><button class="rb plus" aria-label="Více" data-a="bill" data-p="'+g.id+'|'+k+'|1">+</button></span><span class="ls" data-lsum="'+g.id+'|'+k+'">'+kc(lineSum(g,k))+'</span><span></span></div>';
+ }).join('');
+ var ex=(g.extra||[]).map(function(x){
+  return '<div class="line xl"><input class="inp xn" id="xn_'+g.id+'_'+x.id+'" enterkeyhint="done" data-gx="'+g.id+'|'+x.id+'|name" value="'+esc(x.name)+'" placeholder="Název položky" aria-label="Název položky"><span class="pw pc"><input class="inp pi" inputmode="numeric" enterkeyhint="done" aria-label="Cena položky" placeholder="Cena" data-gx="'+g.id+'|'+x.id+'|price" value="'+(x.price?x.price:'')+'"><span class="small">Kč</span></span><span class="pw"><button class="rb minus" aria-label="Méně" data-a="xq" data-p="'+g.id+'|'+x.id+'|-1">−</button><span class="qn">'+x.qty+'</span><button class="rb plus" aria-label="Více" data-a="xq" data-p="'+g.id+'|'+x.id+'|1">+</button></span><span class="ls" data-xsum="'+g.id+'|'+x.id+'">'+kc(x.qty*x.price)+'</span><button class="rb rx" aria-label="Smazat položku" data-a="xdel" data-p="'+g.id+'|'+x.id+'">×</button></div>';
+ }).join('');
+ var add='<div class="row"><button class="btn big blue" data-a="xadd" data-p="'+g.id+'">+ Přidat položku</button></div>';
+ return '<div class="bill"><div class="row wrap"><b class="bt">Pobyt a konzumace</b><span class="sp"></span>'+personsRow(g)+'</div><div class="row wrap"><div class="fld" style="width:190px"><label for="gdf_'+g.id+'">Příjezd</label><input class="inp" id="gdf_'+g.id+'" type="date" data-gd="'+g.id+'|from" value="'+esc(guestDates(g).from)+'"></div><div class="fld" style="width:190px"><label for="gdt_'+g.id+'">Odjezd</label><input class="inp" id="gdt_'+g.id+'" type="date" data-gd="'+g.id+'|to" value="'+esc(guestDates(g).to)+'"></div><span class="small" style="flex:1;min-width:200px">Změna data přepočítá počet nocí a poplatek.'+(g.grp==='indiv'?'':' Platí jen pro tohoto hosta.')+'</span></div><div class="small">Ceník: <b>'+esc(listFor(g).name)+'</b>. Počty i ceny jdou u tohoto hosta přepsat. Ubytování a strava se násobí počtem osob, poplatek a další položky ne.</div>'+lines+'<div class="small">Místní poplatek se neplatí za děti do 18 let a osoby nad 70 let: snižte počet.</div>'+ex+add+'<div class="tot"><span>Celkem</span><b data-total="'+g.id+'">'+kc(total(g))+'</b></div></div>';
+}
+function guestCard(g){
+ var o=isOpen('g:'+g.id,false),col=grpColor(g.grp);
+ var past=g.grp==='indiv'&&stayOfGuest(g)&&stayOfGuest(g).to<TODAY;
+ var det='';
+ if(o){
+  det='<div class="gdet"><div class="small">'+esc(guestSub(g))+'</div>'+(g.note?'<div class="small">'+esc(g.note)+'</div>':'')+
+   '<div class="row wrap"><b style="font-size:17px">Na tento pobyt:</b><div class="seg"><button class="'+(g.here?'y':'')+'" data-a="setHere" data-p="'+g.id+'|1">Přijede</button><button class="'+(!g.here?'n':'')+'" data-a="setHere" data-p="'+g.id+'|0">Nepřijede</button></div><span class="sp"></span><button class="btn '+(inBookNow(g)?'lgreen':'blue')+'" data-a="book" data-p="'+g.id+'">'+(inBookNow(g)?'V knize hostů ✓':'Zapsat do knihy hostů')+'</button></div>'+
+   '<div class="row wrap"><input class="inp" style="flex:1;min-width:200px;width:auto" data-bind="'+g.id+'|email" value="'+esc(g.email)+'" placeholder="E-mail" aria-label="E-mail hosta"><input class="inp" style="flex:1;min-width:160px;width:auto" data-bind="'+g.id+'|phone" value="'+esc(g.phone)+'" placeholder="Telefon" aria-label="Telefon hosta"><span class="tag '+(g.email?'ok':'bad')+'" data-mail>'+(g.email?'e-mail ✓':'chybí e-mail')+'</span></div>'+
+   '<div class="fg"><div class="fld"><label for="ga_'+g.id+'">Adresa bydliště</label><input class="inp w" id="ga_'+g.id+'" data-bind="'+g.id+'|addr" value="'+esc(g.addr)+'" placeholder="ulice, číslo, město, PSČ" autocomplete="off"></div><div class="fld"><label for="gd_'+g.id+'">'+(g.foreign?'Číslo pasu nebo dokladu':'Číslo občanky nebo pasu')+'</label><input class="inp w" id="gd_'+g.id+'" data-bind="'+g.id+'|doc" value="'+esc(g.doc)+'" placeholder="např. 123456789" autocomplete="off"></div><div class="fld"><label for="gb_'+g.id+'">Datum narození</label><input type="date" class="inp w" id="gb_'+g.id+'" data-bind="'+g.id+'|born" value="'+esc(g.born||'')+'"></div></div>'+
+   '<div class="row wrap" style="align-items:flex-end"><button class="btn '+(g.foreign?'yellow':'white')+'" style="'+(g.foreign?'':'color:#6C3CE9;')+'" data-a="setForeign" data-p="'+g.id+'">'+(g.foreign?'Cizinec ✓':'Je to cizinec?')+'</button>'+(g.foreign?'<div class="fld" style="flex:1;min-width:200px"><label for="gn_'+g.id+'">Státní příslušnost</label><input class="inp w" id="gn_'+g.id+'" data-bind="'+g.id+'|nat" value="'+esc(g.nat==='CZ'?'':g.nat)+'" placeholder="např. Slovensko, Německo" autocomplete="off"></div><span class="small" style="flex:1;min-width:200px">V knize hostů dostane štítek cizinec a čeká na nahlášení cizinecké policii.</span>':'')+'</div>'+
+   billBlock(g)+forgetBtn('forgetGuest',g.id,'Smazat hosta navždy')+'</div>';
+ }
+ return '<div class="gcard'+(o?' open':'')+'"><div class="grow"><button class="gtoggle" '+tg('g:'+g.id,false)+'><span class="av" style="background:'+(past?'#B8B5C8':col)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b></span>'+(!g.here&&!o?'<span class="tag g">nepřijede</span>':'')+'<span class="pm">'+(o?'–':'+')+'</span></button></div>'+det+'</div>';
+}
+/* ---------- obrazovky ---------- */
+function calSwitch(){return '<div class="row wrap">'+chip('Kalendář','calView','cal',S.calView!=='list','#6C3CE9')+chip('Seznam rezervací','calView','list',S.calView==='list','#6C3CE9')+'</div>';}
+function vRes(){
+ var f=S.resF||'up',q=(S.query||'').toLowerCase();
+ var l=S.stays.filter(function(s){return f==='all'||(f==='up'?s.to>=TODAY:s.to<TODAY);}).sort(function(a,b){return f==='past'?(a.from<b.from?1:-1):(a.from<b.from?-1:1);});
+ if(q)l=l.filter(function(s){return stayName(s).toLowerCase().indexOf(q)>=0;});
+ var rows=l.map(function(s){
+  var cur=s.from<=TODAY&&TODAY<=s.to,past=s.to<TODAY,n=Math.max(1,diffDays(s.from,s.to)),d=diffDays(TODAY,s.from);
+  var st=cur?['právě ubytovaní','#12805C','#fff']:(past?['proběhlo','#B8B5C8','#1F2340']:['za '+d+' '+pl(d,'den','dny','dní'),'#FFC21A','#1F2340']);
+  return '<div class="row wrap" style="background:#fff;border-radius:18px;padding:10px 14px;box-shadow:0 3px 0 #F0DFC0;border-left:12px solid '+stayColor(s)+'"><span style="flex:1;min-width:200px;display:flex;flex-direction:column"><b style="font-size:20px">'+esc(stayName(s))+'</b><span class="small" style="font-size:16px">'+dmy(s.from)+' – '+dmy(s.to)+' · '+n+' '+pl(n,'noc','noci','nocí')+' · '+persTxt(stayPersons(s))+'</span></span><span class="tag" style="background:'+st[1]+';color:'+st[2]+'">'+st[0]+'</span><button class="btn dark" data-a="openStay" data-p="'+s.id+'">Otevřít</button>'+(cur?'<button class="btn yellow" data-a="payStay" data-p="'+s.id+'">Účtovat</button>':'')+'</div>';
+ }).join('')||'<div class="note p">Žádné rezervace.</div>';
+ return '<div class="card">'+calSwitch()+'<div class="row wrap"><input class="inp t" style="flex:1;min-width:240px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat skupinu nebo hosta" aria-label="Hledat rezervaci"><button class="btn green big" data-a="calNewGo">+ Nová rezervace</button></div><div class="row wrap">'+[['up','Nadcházející a probíhající'],['past','Proběhlé'],['all','Všechny']].map(function(c){return chip(c[1],'resF',c[0],f===c[0],'#00857F');}).join('')+'<span class="small b">'+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací')+'</span></div>'+rows+'</div>';
+}
+function vKal(){
+ if(S.calView==='list')return vRes();
+ var base=new Date(TY,TM+S.calOff,1),idx=(base.getDay()+6)%7,nd=new Date(base.getFullYear(),base.getMonth()+1,0).getDate(),cnt=Math.ceil((idx+nd)/7)*7;
+ var cells='';
+ for(var i=0;i<cnt;i++){
+  var dt=new Date(base.getFullYear(),base.getMonth(),1-idx+i),t=toIso(dt),inM=dt.getMonth()===base.getMonth();
+  var here=S.stays.filter(function(s){return s.from<=t&&t<=s.to;});
+  var chips=here.slice(0,3).map(function(s){
+   var st=s.from===t,en=s.to===t;
+   var lab=st?'▶ '+esc(stayName(s)):(en?'◀':((dt.getDay()===1||dt.getDate()===1)?esc(stayName(s)):'&nbsp;'));
+   var geo=(st&&en)?'margin:0 25%;border-radius:7px;':(st?'margin:0 -9px 0 50%;border-radius:7px 0 0 7px;':(en?'margin:0 50% 0 -9px;border-radius:0 7px 7px 0;':'margin:0 -9px;'));
+   return '<button class="bar'+(S.calSel===s.id?' sel':'')+'" data-a="selStay" data-p="'+s.id+'" aria-label="'+esc(stayName(s))+'" style="background:'+stayColor(s)+';'+geo+'">'+lab+'</button>';
+  }).join('');
+  cells+='<div class="day'+(inM?'':' out')+(t===TODAY?' today':'')+'"><span class="dn">'+dt.getDate()+'</span>'+chips+(here.length>3?'<span class="more">+'+(here.length-3)+' další</span>':'')+'</div>';
+ }
+ var sel=S.stays.filter(function(s){return s.id===S.calSel;})[0],detail='';
+ if(sel){
+  var bg=sel.to<TODAY?'#ECEAF3':(sel.grp==='gestalt'?'#EFE9FF':(sel.grp==='vip5'?'#DDF5F2':(sel.grp==='indiv'?'#FFE9D6':'#FCE4EE')));
+  var np=stayPersons(sel),note='';
+  if(sel.grp==='indiv')note=G(sel.guestId).note||'';
+  else{var ms=S.guests.filter(function(x){return x.grp===sel.grp&&x.here;});var only=ms.filter(function(x){return x.only;}).reduce(function(a,x){return a+x.persons;},0);var fo=ms.filter(function(x){return x.foreign;}).length;note=(np-only)+' ubytováno, '+only+' jen na stravu'+(fo?' · '+fo+' cizinec':'')+' · platba na konci pobytu.';}
+  detail='<div class="panel" style="background:'+bg+'"><div class="row wrap"><b style="font-size:24px;font-weight:900">'+esc(stayName(sel))+'</b><span class="tag" style="background:#fff;font-size:16px;padding:5px 14px">'+(sel.grp==='indiv'?'individuál':'skupina')+'</span><span class="sp"></span><button class="rb" style="background:#fff" aria-label="Zavřít" data-a="selStay" data-p="">×</button></div>'+
+   '<div style="font-size:19px;font-weight:800">'+rangeTxt(sel.from,sel.to)+(sel.to<TODAY?' (proběhlo)':'')+' · '+persTxt(np)+'</div><div style="font-size:17px;font-weight:700;line-height:1.45">'+esc(note)+'</div>'+
+   '<div class="row wrap"><button class="btn dark big" data-a="openStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Otevřít hosta':'Otevřít skupinu')+'</button><button class="btn yellow big" data-a="payStay" data-p="'+sel.id+'">Účtovat</button></div>'+stayEdit(sel)+'</div>';
+ }
+ var form='';
+ if(S.calNewOpen){
+  var ready=S.calKind==='indiv'||(S.calKind==='group'&&S.calGrp);
+  form='<div class="panel" style="background:#E3F8EC"><div class="row wrap"><b style="font-size:17px;font-weight:900">Kdo přijíždí:</b>'+chip('Skupina','calKind','group',S.calKind==='group','#12805C')+chip('Jednotlivec','calKind','indiv',S.calKind==='indiv','#12805C')+'</div>';
+  if(S.calKind==='group'){
+   form+='<div class="row wrap"><b style="font-size:17px;font-weight:900">Vyberte skupinu:</b>'+S.groupDefs.map(function(d){return chip(esc(d.name),'calGrp',d.key,S.calGrp===d.key,d.color);}).join('')+'</div>';
+   if(S.calGrp)form+='<div style="font-size:16px;font-weight:700;color:#0B5A40">Členové se převezmou z posledního pobytu ('+S.guests.filter(function(x){return x.grp===S.calGrp;}).length+' hostů). Jednotlivé hosty pak upravíte ve Skupinách.</div>';
+  }
+  if(ready){
+   form+='<b style="font-size:18px;font-weight:900">'+(S.calKind==='group'?'Nová rezervace pro skupinu '+esc(grpName(S.calGrp)):'Nová rezervace pro jednotlivce')+'</b><div class="fg3 fg">'+
+    (S.calKind==='indiv'?fi('cName','Jméno hosta','např. Rodina Novotných','text','gr'):'')+fi('cFrom','Příjezd','','date','gr')+fi('cTo','Odjezd','','date','gr')+(S.calKind==='indiv'?fi('cPers','Počet osob','2','number','gr'):'')+'</div>'+
+    '<div class="row wrap"><button class="btn green big" data-a="calSave">Uložit rezervaci</button><span style="font-weight:800;font-size:16px;color:'+(S.calOk?'#0B5A40':'#B4232F')+'">'+esc(S.calMsg)+'</span></div>';
+  }
+  form+='</div>';
+ }
+ var legend='<span class="small b" style="color:#1F2340">▶ příjezd (pravá půlka dne) · ◀ odjezd (levá půlka)</span>'+
+  S.groupDefs.map(function(d){return '<span class="small b" style="color:#1F2340"><i class="dot" style="background:'+d.color+'"></i>'+esc(d.name)+'</span>';}).join('')+
+  '<span class="small b" style="color:#1F2340"><i class="dot" style="background:#C2410C"></i>Individuálové</span><span class="small b" style="color:#1F2340"><i class="dot" style="background:#B8B5C8"></i>proběhlo</span>';
+ return '<div class="card">'+calSwitch()+'<div class="row wrap"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí měsíc" data-a="calGo" data-p="-1">‹</button><b style="font-size:26px;font-weight:900;min-width:190px;text-align:center">'+MN[base.getMonth()]+' '+base.getFullYear()+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další měsíc" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button><span class="sp"></span><button class="btn green big" data-a="calNew">+ Nová rezervace</button></div>'+
+  '<div class="row wrap" style="gap:14px">'+legend+'</div>'+form+detail+
+  '<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div></div>';
+}
+
+function vGroups(isIndiv){
+ var key=isIndiv?'indiv':S.grp;
+ if(!isIndiv&&!S.groupDefs.length)return '<div class="col" style="max-width:560px"><div class="note p" style="font-size:17px">Zatím tu není žádná skupina. Založte ji tlačítkem níže, termín jí pak zadáte v Kalendáři.</div><button style="min-height:56px;border:3px dashed #6C3CE9;background:#fff;color:#6C3CE9;border-radius:20px;font-weight:900;font-size:19px" data-a="newGroupToggle">+ Nová skupina</button>'+(S.newGroupOpen?'<div class="card" style="padding:14px">'+fi('ngName','Název skupiny','např. Jóga Brno')+'<button class="btn big" data-a="newGroup">Založit</button></div>':'')+'</div>';
+ if(!isIndiv&&!grpDef(key))key=S.grp=S.groupDefs[0].key;
+ var def=isIndiv?{name:'Individuálové',color:'#C2410C'}:grpDef(key);
+ var foc=isIndiv&&S.indivFocus?G(S.indivFocus):null;
+ var allM=guestsSorted(S.guests.filter(function(x){return x.grp===key;})),members=foc?[foc]:allM;
+ if(!isIndiv){var gq=(S.query||'').toLowerCase();members=allM.filter(function(x){return (!gq||(x.name+' '+x.email).toLowerCase().indexOf(gq)>=0)&&(S.grpF==='all'||(S.grpF==='here'?x.here:!x.here));});}
+ var st=isIndiv?null:curStay(key);
+ var left='';
+ if(!isIndiv){
+  left='<div class="col" style="gap:10px">'+S.groupDefs.map(function(d){
+   var a=S.grp===d.key,cs=curStay(d.key);
+   return '<button style="display:flex;flex-direction:column;gap:2px;padding:14px 18px;border-radius:20px;min-height:64px;text-align:left;background:'+(a?d.color:'#fff')+';color:'+(a?'#fff':'#1F2340')+';box-shadow:0 5px 0 '+(a?'rgba(31,35,64,.3)':'#F0DFC0')+'" data-a="pickGroup" data-p="'+d.key+'"><b style="font-size:20px;font-weight:900">'+esc(d.name)+'</b><span style="font-size:15px;font-weight:700">'+(cs?rangeTxt(cs.from,cs.to):'zatím bez termínu')+'</span></button>';
+  }).join('')+'<button style="min-height:56px;border:3px dashed #6C3CE9;background:#fff;color:#6C3CE9;border-radius:20px;font-weight:900;font-size:19px" data-a="newGroupToggle">+ Nová skupina</button>'+
+  (S.newGroupOpen?'<div class="card" style="padding:14px;box-shadow:0 5px 0 #E3D8FF">'+fi('ngName','Název skupiny','např. Jóga Brno')+'<button class="btn big" data-a="newGroup">Založit</button></div>':'')+'</div>';
+ }
+ var stayChips='';
+ if(!isIndiv){var ls=staysOf(key);if(ls.length>1)stayChips='<div class="row wrap"><span class="small b">Pobyt:</span>'+ls.map(function(s){return chip(rangeTxt(s.from,s.to)+(s.to<TODAY?' (proběhl)':''),'pickStay',key+'|'+s.id,st&&st.id===s.id,def.color);}).join('')+'</div>';}
+ var note=isIndiv?'Hosté mimo skupiny, kteří přijíždějí zvlášť. Nový termín zadáte v Kalendáři nebo tlačítkem „+ Přidat hosta“.':(st?'Pobyt '+rangeTxt(st.from,st.to)+' · '+persTxt(stayPersons(st)):'Skupina zatím nemá žádný termín. Nový termín zadejte v Kalendáři.');
+ var head='<div class="row wrap"><div style="flex:1;min-width:200px;display:flex;flex-direction:column"><b style="font-size:26px;font-weight:900">'+esc(def.name)+'</b><span class="small" style="font-size:16px">'+esc(note)+'</span></div>'+
+  
+  '<button class="btn green" data-a="guestFormToggle">+ Přidat hosta</button></div>'+stayChips;
+ var info='';
+ if(foc){var fs=stayOfGuest(foc);head='<div class="row wrap"><button class="btn white" data-a="backCal">‹ Zpět do kalendáře</button><div style="flex:1;min-width:200px;display:flex;flex-direction:column"><b style="font-size:26px;font-weight:900">'+esc(foc.name)+'</b><span class="small" style="font-size:16px">Individuální host'+(fs?' · pobyt '+dmy(fs.from)+' – '+dmy(fs.to):'')+'</span></div></div>';}
+ var gform='';
+ if(S.newGuestOpen){
+  gform='<div class="panel" style="background:#FFF1D6"><div class="row wrap"><b style="flex:1;font-size:18px;font-weight:900">Nový host '+(isIndiv?'(individuál)':'do skupiny '+esc(def.name))+'</b><button class="btn white" style="color:#00857F" data-a="goHist">Už tu byl? Najít v knize hostů</button></div>'+
+   '<div class="fg">'+fi('nName','Jméno a příjmení','např. Alena Procházková','text','w')+fi('nMail','E-mail (pro účtenku)','jmeno@email.cz','email','w')+(isIndiv?fi('nFrom','Příjezd','','date','w')+fi('nTo','Odjezd','','date','w'):'')+fi('nTel','Telefon','+420 …','tel','w')+fi('nPers','Počet osob','1','number','w')+'</div>'+
+   '<div class="row wrap">'+(isIndiv?'':chip('Ubytování + strava','nType','ub',!S.form.only,'#6C3CE9')+chip('Jen stravování','nType','jen',!!S.form.only,'#6C3CE9'))+chip(S.form.foreign?'Cizinec ✓':'Cizinec?','nForeign','',!!S.form.foreign,'#C28A00')+'</div>'+
+   '<div class="row"><button class="btn green big" data-a="saveGuest">Uložit hosta</button><button class="btn white big" data-a="guestFormToggle">Zrušit</button></div></div>';
+ }
+ var list=members.length?'<div class="ggrid">'+members.map(guestCard).join('')+'</div>':'<div class="note p">Zatím tu nejsou žádní hosté. Přidejte je tlačítkem „+ Přidat hosta“.</div>';
+ var tools='';
+ if(!foc&&!isIndiv){var hp=allM.filter(function(x){return x.here;}).reduce(function(a,x){return a+x.persons;},0),nh=allM.filter(function(x){return x.here;}).length;tools='<div class="row wrap"><input class="inp t" style="flex:1;min-width:240px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat hosta ve skupině" aria-label="Hledat hosta">'+[['all','Všichni ('+allM.length+')'],['here','Přijede ('+nh+')'],['not','Nepřijede ('+(allM.length-nh)+')']].map(function(c){return chip(c[1],'grpF',c[0],S.grpF===c[0],def.color);}).join('')+'</div><div class="small b">Celkem '+persTxt(hp)+' · hosté jsou podle abecedy (příjmení). Klepnutím na jméno rozbalíte detail.</div>';}else if(isIndiv&&!foc)tools='<div class="small b">Hosté jsou podle abecedy (příjmení).</div>';
+ var card='<div class="card">'+head+info+gform+tools+list+'</div>';
+ return '<div class="gs'+(isIndiv?' one':'')+'">'+left+card+'</div>';
+}
+
+function payPanel(g){
+ var m=curMethod(g),sum=total(g),rec=S.payments.filter(function(p){return p.gid===g.id;})[0],eetNA=m==='prevod'||m==='predem',mailed=!!S.mailed[g.id];
+ var amt='<b data-total="'+g.id+'">'+kc(sum)+'</b>';
+ var h='<div class="bill" style="gap:10px"><b class="bt">Jak host platí</b><div class="row wrap">'+Object.keys(METHODS).map(function(k){var a=m===k;return '<button style="flex:1 1 22%;min-width:130px;min-height:52px;border-radius:14px;font-weight:900;font-size:17px;background:'+(a?METHODS[k][1]:METHODS[k][2])+';color:'+(a?'#fff':'#1F2340')+'" data-a="payMethod" data-p="'+g.id+'|'+k+'">'+METHODS[k][0]+'</button>';}).join('')+'</div>';
+ if(m==='qr')h+='<div data-qr="'+g.id+'">'+qrBlock(g)+'</div>';
+ if(m==='prevod')h+='<div class="note p" style="font-size:15px">Hostovi se e-mailem pošle faktura s číslem účtu a variabilním symbolem. Platbu zapíšete, až peníze dorazí.</div>';
+ if(m==='predem')h+='<div class="note p" style="font-size:15px">Host už zaplatil dopředu. Zapíše se jen, že je vyrovnáno.</div>';
+ if(!g.paid){var bk=(m==='qr'||m==='prevod');if(bk)h+='<div class="note p" style="font-size:15px">Nejdřív se podívejte do banky, jestli peníze opravdu přišly. Teprve pak klepněte na tlačítko níže.</div>';h+='<button class="paybtn" style="background:'+METHODS[m][1]+'" data-a="doPay" data-p="'+g.id+'">'+(bk?'Platba zkontrolována, přišla ✓':'Platba proběhla')+'</button>';}
+ else h+='<div class="note g">Zaplaceno: <b>'+METHODS[g.paid][0]+'</b> · '+amt+'. Klikli jste omylem nebo host zaplatí jinak? Vyberte výše jiný způsob platby, nebo platbu vraťte zpět.</div><button class="btn red big" style="width:100%" data-a="undoPay" data-p="'+g.id+'">Vrátit zpět (platba neproběhla)</button>';
+ h+='<div class="row wrap"><button class="btn big '+(mailed?'green':'teal')+'" data-a="doMail" data-p="'+g.id+'">'+(S.mailBusy===g.id?'Odesílám…':(mailed?'Potvrzení odesláno ✓ (poslat znovu)':'Poslat potvrzení platby e-mailem'))+'</button><button class="btn big" style="background:'+(eetNA?'#9A9DB8':(rec&&rec.eet==='ok'?'#12805C':(rec&&rec.eet==='err'?'#8A1020':'#D62839')))+'" data-a="eetPay" data-p="'+g.id+'">'+(eetNA?'EET se netýká':(rec&&rec.eet==='ok'?'EET odesláno ✓':(rec&&rec.eet==='err'?'Chyba EET – zkusit znovu':'Odeslat do EET')))+'</button></div></div>';
+ return h;
+}
+function guestPayRow(g){
+ var k='pu:'+g.id,o=isOpen(k,false);
+ return '<div class="gcard'+(o?' open':'')+'"><div class="grow"><button class="gtoggle" '+tg(k,false)+'><span class="av" style="background:'+grpColor(g.grp)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b>'+(g.grp==='indiv'&&stayOfGuest(g)?'<small>'+rangeTxt(stayOfGuest(g).from,stayOfGuest(g).to)+' · '+persTxt(g.persons)+'</small>':'')+'</span>'+(g.paid?'<span class="tag" style="background:'+METHODS[g.paid][2]+';color:#1F2340">✓ '+METHODS[g.paid][0]+'</span>':'')+'<span class="pm">'+(o?'–':'+')+'</span></button></div>'+(o?'<div class="gdet" style="padding:0 14px 14px;gap:12px">'+billBlock(g)+payPanel(g)+'<button class="btn big '+(g.paid?'green':'white')+'" style="width:100%;'+(g.paid?'':'color:#6C3CE9;')+'" data-a="closeGuest" data-p="'+g.id+'">‹ Zpět na seznam hostů</button></div>':'')+'</div>';
+}
+function entryHtml(e){
+ var k='pg:'+e.key,o=isOpen(k,false),paid=e.guests.filter(function(x){return x.paid;}).length;
+ var sub=e.stay?('pobyt '+rangeTxt(e.stay.from,e.stay.to)+(e.stay.to===TODAY?' · odjíždí dnes':'')):'právě ubytovaní';
+ return '<div class="acc" id="acc_'+e.key+'"><button class="hd" style="background:'+e.color+';color:#fff" '+tg(k,false)+'><span style="flex:1;display:flex;flex-direction:column"><b style="font-size:22px">'+esc(e.name)+'</b><span style="font-size:15px;font-weight:700">'+sub+'</span></span><span class="tag" style="background:rgba(255,255,255,.25);color:#fff;font-size:15px">zaplaceno '+paid+' z '+e.guests.length+'</span><span class="pm" style="color:#fff">'+(o?'–':'+')+'</span></button>'+
+  (o?'<div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px"><div class="row wrap"><input class="inp t" style="flex:1;min-width:220px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat hosta" aria-label="Hledat hosta">'+[['all','Všichni'],['unpaid','Nezaplatili'],['paid','Zaplatili']].map(function(c){return chip(c[1],'payGF',c[0],S.payGF===c[0],e.color);}).join('')+'</div>'+(e.guests.length?'<div class="ggrid">'+e.guests.filter(function(x){var q=(S.query||'').toLowerCase();return (!q||x.name.toLowerCase().indexOf(q)>=0)&&(S.payGF==='all'||(S.payGF==='paid'?!!x.paid:!x.paid));}).map(guestPayRow).join('')+'</div>':'<div class="note p">Nikdo z této skupiny není označený jako „přijede“.</div>')+'</div>':'')+'</div>';
+}
+function vPay(){
+ var ents=presentEntries();
+ var top='<div class="small" style="font-size:16px">Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta.</div>',price='';
+ var body=ents.length?ents.map(entryHtml).join(''):'<div class="note p">Teď není nikdo ubytovaný, takže tu není co účtovat.</div>';
+ var shown=S.payments.filter(function(p){return p.date===TODAY&&(S.payFilter==='all'||p.method===S.payFilter);});
+ var filters=[['all','Všechny','#2B1B6B'],['hotove','Hotově','#12805C'],['qr','QR (banka)','#1D6FE0'],['prevod','Převodem (banka)','#6C3CE9'],['predem','Předem','#C2410C']];
+ var rows=shown.map(function(p){var m=METHODS[p.method];return '<div class="row wrap" style="border-radius:14px;padding:10px 14px;background:'+m[2]+'"><b style="flex:1;font-size:18px;min-width:140px">'+esc(p.name)+'</b><span class="tag" style="background:'+m[1]+';color:#fff;font-size:15px;padding:5px 14px">'+m[0]+'</span><b style="width:110px;text-align:right;font-size:18px">'+kc(p.sum)+'</b></div>';}).join('')||'<div class="note p">Dnes zatím nikdo nezaplatil.</div>';
+ var paid='<div class="card"><div class="row wrap"><b style="font-size:19px">Přijaté platby dnes</b><span class="sp"></span>'+filters.map(function(f){return chip(f[1],'payFilter',f[0],S.payFilter===f[0],f[2]);}).join('')+'</div><span class="small">Jen dnešní platby, pro kontrolu s bankou.</span>'+rows+'<div class="row" style="justify-content:flex-end;font-weight:900;font-size:18px"><span>Součet ve filtru:</span><span>'+kc(shown.reduce(function(a,p){return a+p.sum;},0))+'</span></div></div>';
+ return '<div class="col">'+top+price+body+paid+'</div>';
+}
+function isoFromHist(s){
+ var m=s.match(/(\d+)\.\s*(\d+)\.\s*–\s*(\d+)\.\s*(\d+)\.\s*(\d{4})/);if(!m)return null;
+ function z(n){n=Number(n);return (n<10?'0':'')+n;}
+ return {from:m[5]+'-'+z(m[2])+'-'+z(m[1]),to:m[5]+'-'+z(m[4])+'-'+z(m[3])};
+}
+function nk(n){return n.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g,'');}
+function bookRows(){
+ var map={},order=[];
+ function row(name){var k=nk(name);if(!map[k]){map[k]={id:'k_'+k,name:name,grp:'',foreign:false,nat:'CZ',addr:'',doc:'',email:'',phone:'',stays:[]};order.push(k);}return map[k];}
+ function addStay(r,s){if(!s||!s.from)return;if(!r.stays.some(function(x){return x.from===s.from&&x.to===s.to;}))r.stays.push({from:s.from,to:s.to});}
+ HIST0.forEach(function(h){var r=row(h[1]);r.grp={'Gestalt':'gestalt','VIP 5':'vip5','Individuál':'indiv'}[h[2]]||'indiv';r.email=h[3];r.phone=h[4];r.foreign=h[5];if(h[5])r.nat='zahraničí';h[6].forEach(function(x){addStay(r,isoFromHist(x));});});
+ S.guests.forEach(function(g){if(!inBookNow(g))return;var r=row(g.name);r.gid=g.id;r.pending=!g.inBook&&!g.arrived;r.grp=g.grp;r.foreign=g.foreign;r.nat=g.nat;if(g.addr)r.addr=g.addr;if(g.doc)r.doc=g.doc;if(g.born)r.born=g.born;if(g.email)r.email=g.email;if(g.phone)r.phone=g.phone;addStay(r,stayOf(g)?guestDates(g):null);});
+ S.manual.forEach(function(m){var r=row(m.name);if(!r.grp)r.grp='manual';r.foreign=m.foreign;r.nat=m.nat;r.addr=m.addr;r.doc=m.doc;if(m.born)r.born=m.born;if(m.email)r.email=m.email;if(m.phone)r.phone=m.phone;addStay(r,{from:m.from,to:m.to});});
+ var out=order.map(function(k){var r=map[k];(S.rebook[r.id]||[]).forEach(function(s){addStay(r,s);});r.stays.sort(function(a,b){return a.from<b.from?1:-1;});return r;});
+ return guestsSorted(out);
+}
+function periodRange(){
+ var p=S.bookPeriod,d=parse(TODAY),y=d.getFullYear(),m=d.getMonth();
+ if(p==='week'){var i=(d.getDay()+6)%7;return [toIso(new Date(y,m,d.getDate()-i)),toIso(new Date(y,m,d.getDate()-i+6))];}
+ if(p==='month')return [toIso(new Date(y,m,1)),toIso(new Date(y,m+1,0))];
+ if(p==='prev')return [toIso(new Date(y,m-1,1)),toIso(new Date(y,m,0))];
+ if(p==='custom'&&S.kFrom&&S.kTo&&S.kTo>=S.kFrom)return [S.kFrom,S.kTo];
+ return null;
+}
+function staysIn(r,rg){return rg?r.stays.filter(function(s){return s.from<=rg[1]&&s.to>=rg[0];}):r.stays;}
+function bookView(){
+ var rg=periodRange(),q=(S.query||'').toLowerCase(),f=S.bookFilter;
+ var vis=bookRows().filter(function(r){
+  var okF=f==='all'||(f==='foreign'&&r.foreign)||(f==='pending'&&r.pending)||r.grp===f;
+  var okQ=!q||(r.name+' '+r.email+' '+r.phone).toLowerCase().indexOf(q)>=0;
+  return okF&&okQ&&staysIn(r,rg).length>0;
+ });
+ return {rg:rg,vis:vis};
+}
+function bGrpName(k){return k==='manual'?'Ručně':grpName(k);}
+function bGrpColor(k){return k==='manual'?'#6B6F8F':grpColor(k);}
+function vBook(){
+ var bv=bookView(),vis=bv.vis,rg=bv.rg;
+ var nsel=Object.keys(S.bookSel).filter(function(k){return S.bookSel[k];}).length;
+ var form='';
+ if(S.bookFormOpen){
+  form='<div class="panel" style="background:#FFF1D6"><b style="font-size:18px">Zapsat hosta, kterého v systému nemáme</b><div class="fg">'+fi('bName','Jméno a příjmení','','text','w')+fi('bAddr','Adresa','','text','w')+fi('bDoc','Číslo dokladu','','text','w')+fi('bBorn','Datum narození','','date','w')+fi('bNat','Státní příslušnost','CZ','text','w')+fi('bFrom','Příjezd','','date','w')+fi('bTo','Odjezd','','date','w')+fi('bMail','E-mail','jmeno@email.cz','email','w')+fi('bTel','Telefon','+420 …','tel','w')+'</div>'+
+   '<div class="row wrap">'+chip(S.form.bForeign?'Cizinec ✓':'Cizinec?','bForeign','',!!S.form.bForeign,'#C28A00')+'<span class="sp"></span><button class="btn white big" data-a="bookFormToggle">Zrušit</button><button class="btn green big" data-a="saveBook">Zapsat do knihy</button></div></div>';
+ }
+ var gch=[['all','Všichni','#6C3CE9']].concat(S.groupDefs.map(function(d){return [d.key,d.name,d.color];})).concat([['indiv','Individuálové','#C2410C'],['foreign','Cizinci','#C28A00']]);
+ var npend=bookRows().filter(function(r){return r.pending;}).length,vpend=vis.filter(function(r){return r.pending;}).length;
+ if(npend)gch.push(['pending','Čeká na potvrzení ('+npend+')','#D62839']);
+ var pch=[['all','Celé období'],['week','Tento týden'],['month','Tento měsíc'],['prev','Minulý měsíc'],['custom','Vlastní období']];
+ var custom=S.bookPeriod==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="kd_from">Od</label><input class="inp" id="kd_from" type="date" data-kd="kFrom" value="'+esc(S.kFrom)+'"></div><div class="fld" style="width:190px"><label for="kd_to">Do</label><input class="inp" id="kd_to" type="date" data-kd="kTo" value="'+esc(S.kTo)+'"></div>'+(rg?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':'';
+ var pm=S.pickFor,pg=pm&&pm!=='indiv';
+ var exp=pm?'':'<div class="panel" style="background:#EFE9FF"><div class="row wrap"><b style="font-size:19px;font-weight:900">Export do tabulky k tisku</b><span class="tag" style="background:#6C3CE9;color:#fff;font-size:15px">vybráno: '+nsel+'</span><span class="sp"></span><button class="btn white" data-a="bkAll">Vybrat vše zobrazené</button><button class="btn white" data-a="bkNone">Zrušit výběr</button></div>'+
+  '<span class="small" style="font-size:15px">Zaškrtněte hosty vlevo, nebo nastavte období a klepněte na „Vybrat vše zobrazené“. Do souboru půjdou jen pobyty ve zvoleném období.</span>'+
+  (DL?'<div class="row wrap"><button class="btn green big" '+(nsel?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(nsel?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="pdf">Stáhnout PDF</button></div>':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>')+'</div>';
+ var list=vis.map(function(b){
+  var o=isOpen(b.id,false),pd=!!S.police[b.id],sh=staysIn(b,rg),sel=!!S.bookSel[b.id];
+  var last=sh[0];
+  var det='';
+  var act=pg?'<div class="row wrap"><button class="btn green big" data-a="addToGroup" data-p="'+b.id+'">Přidat ke skupině '+esc(grpName(pm))+'</button></div><span class="small">Termín pobytu zadáte až v Kalendáři, až ho budete znát.</span>':'<div class="row wrap" style="align-items:flex-end"><div style="width:170px">'+fi('hf_'+b.id,'Nový příjezd','','date','t')+'</div><div style="width:170px">'+fi('ht_'+b.id,'Nový odjezd','','date','t')+'</div><button class="btn teal big" data-a="rebook" data-p="'+b.id+'">Přidat nový pobyt</button></div><span class="small">Pobyt se zapíše do kalendáře. Profil hosta se nezakládá znovu.</span>';
+  if(o)det='<div style="padding:0 16px 14px;display:flex;flex-direction:column;gap:12px"><div style="display:flex;flex-direction:column;gap:6px"><span class="small b">Pobyty</span><span class="row wrap">'+b.stays.map(function(x){return '<span class="tag" style="background:#fff;font-size:15px;padding:6px 14px">'+dmy(x.from)+' – '+dmy(x.to)+'</span>';}).join('')+'</span></div>'+
+   (b.gid?'<div class="fg">'+[['addr','Adresa'],['doc','Číslo dokladu'],['born','Datum narození'],['nat','Státní příslušnost'],['email','E-mail'],['phone','Telefon']].map(function(f){return '<div class="fld"><label for="bi_'+b.gid+f[0]+'">'+f[1]+'</label><input '+(f[0]==='born'?'type="date" ':'')+'class="inp w" id="bi_'+b.gid+f[0]+'" data-bind="'+b.gid+'|'+f[0]+'" value="'+esc(b[f[0]]||'')+'"></div>';}).join('')+'</div>':'<span style="font-size:16px;font-weight:700;line-height:1.5">Narozen(a): '+(b.born?dmy(b.born):'[doplní se]')+' · Adresa: '+esc(b.addr||'[doplní se]')+' · Doklad: '+esc(b.doc||'[doplní se]')+' · Státní příslušnost: '+esc(b.nat)+' · E-mail: '+esc(b.email||'[doplní se]')+' · Telefon: '+esc(b.phone||'[doplní se]')+'</span>')+
+   (b.foreign?'<span class="row wrap"><b style="font-size:16px">Hlášení cizinecké policii:</b><button class="btn" style="background:'+(pd?'#12805C':'#D62839')+'" data-a="police" data-p="'+b.id+'">'+(pd?'Nahlášeno ✓':'Čeká na nahlášení')+'</button></span>':'')+
+   act+(pm?'':forgetBtn('forgetBook',b.id,'Smazat z knihy navždy'))+'</div>';
+  return '<div class="gcard" style="background:'+(o?'#F1EBFF':'#fff')+';box-shadow:0 3px 0 #F0DFC0"><div class="krow">'+(pm?'':'<button class="ck'+(sel?' on':'')+'" aria-label="Vybrat k exportu" data-a="bkSel" data-p="'+b.id+'">'+(sel?'✓':'')+'</button>')+'<button class="ktg" '+tg(b.id,false)+'><span class="kn"><b>'+esc(b.name)+'</b><span class="small">'+(last?'naposledy '+dmy(last.from)+' – '+dmy(last.to):'')+'</span></span><span class="tag" style="background:'+bGrpColor(b.grp)+';color:#fff">'+esc(bGrpName(b.grp))+'</span><span class="tag '+(b.foreign?'y':'g')+'">'+(b.foreign?'cizinec':'tuzemec')+'</span>'+(b.pending?'<span class="tag" style="background:#FFC21A;color:#1F2340">čeká na potvrzení</span>':'')+(b.gid&&(!b.addr||!b.doc||!b.born)?'<span class="tag bad">doplnit údaje</span>':'')+'<span class="tag" style="background:#EEE9FF;font-size:14px">'+sh.length+' '+pl(sh.length,'pobyt','pobyty','pobytů')+'</span><span class="pm">'+(o?'–':'+')+'</span></button>'+(b.pending&&!pm?'<button class="btn green" data-a="bkConfirm" data-p="'+b.gid+'">Potvrdit příjezd</button>':'')+'</div>'+det+'</div>';
+ }).join('')||'<div class="note p" style="text-align:center">Nikdo takový tu zatím nebyl. Přidejte ho tlačítkem „+ Přidat do knihy“.</div>';
+ var banner=pm?'<div class="panel" style="background:#FFF1D6"><div class="row wrap"><b style="flex:1;min-width:220px;font-size:19px;font-weight:900">'+(pg?'Vyberte hosta, kterého přidáte do skupiny '+esc(grpName(pm))+'.':'Vyberte hosta, kterého přidáte mezi individuály.')+'</b><button class="btn white" data-a="pickCancel">Zpět bez přidání</button></div></div>':'';
+ return '<div class="col">'+banner+'<div class="card"><div class="row wrap"><input class="inp t" style="flex:1;min-width:260px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat jméno, e-mail nebo telefon" aria-label="Hledat hosta"><span class="small b" style="font-size:16px">'+vis.length+' '+pl(vis.length,'host','hosté','hostů')+'</span><button class="btn green big" data-a="bookFormToggle">+ Přidat do knihy</button></div>'+
+  '<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(f){return chip(esc(f[1]),'bookFilter',f[0],S.bookFilter===f[0],f[2]);}).join('')+'</div>'+
+  '<div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(f){return chip(f[1],'bookPeriod',f[0],S.bookPeriod===f[0],'#00857F');}).join('')+'</div>'+custom+
+  (vpend&&!pm?'<div class="row wrap"><button class="btn green big" data-a="bkConfirmAll">Potvrdit příjezd všem čekajícím ('+vpend+')</button><span class="small b" style="flex:1;min-width:200px">Hosté se v den příjezdu objeví v knize sami a čekají na potvrzení, že opravdu dorazili.</span></div>':'')+'<span class="small">Host, který u vás už byl, má v knize svůj profil. Rozbalte ho a jen přidejte nový příjezd a odjezd. V den příjezdu se host v knize objeví sám (kromě těch, kdo jen stravují) a vy potvrdíte, že dorazil. Chybějící adresu a doklad doplníte po rozkliknutí.</span></div>'+form+exp+list+'</div>';
+}
+
+/* ---------- ceník ---------- */
+function PLg(id){return S.priceLists.filter(function(l){return l.id===id;})[0];}
+function plDates(l){return l.from&&l.to?dmy(l.from)+' – '+dmy(l.to):'bez omezení data';}
+function allGroups(){return S.groupDefs.map(function(d){return [d.key,d.name,d.color];}).concat([['indiv','Individuálové','#C2410C']]);}
+function vPrice(){
+ var rows=[['ub1','Ubytování – 1 osoba v pokoji','Kč za noc'],['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
+ var cards=S.priceLists.map(function(l){
+  var k='pl:'+l.id,o=isOpen(k,false);
+  var tags=l.groups.map(function(g){return '<span class="tag" style="background:rgba(255,255,255,.25);color:#fff;font-size:14px">'+esc(grpName(g))+'</span>';}).join('')||'<span class="tag bad">žádná skupina</span>';
+  var det='';
+  if(o)det='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg"><div class="fld"><label for="pn_'+l.id+'">Název ceníku</label><input class="inp w" id="pn_'+l.id+'" data-pl="'+l.id+'|name" value="'+esc(l.name)+'"></div><div class="row" style="align-items:flex-end"><div class="fld" style="flex:1"><label for="pf_'+l.id+'">Platí od</label><input class="inp w" id="pf_'+l.id+'" type="date" data-pl="'+l.id+'|from" value="'+esc(l.from)+'"></div><div class="fld" style="flex:1"><label for="pt_'+l.id+'">Platí do</label><input class="inp w" id="pt_'+l.id+'" type="date" data-pl="'+l.id+'|to" value="'+esc(l.to)+'"></div></div></div>'+
+   '<span class="small">Data nechte prázdná, má-li ceník platit celoročně. Platí ceník, do jehož data spadá příjezd hosta; když žádný nesedí, použije se ceník bez dat.</span>'+
+   '<div class="row wrap"><b style="font-size:17px">Platí pro skupiny:</b>'+allGroups().map(function(g){return chip(esc(g[1]),'plGroup',l.id+'|'+g[0],l.groups.indexOf(g[0])>=0,g[2]);}).join('')+'</div>'+
+   '<div class="fg">'+rows.map(function(r){return '<div class="fld"><label for="pp_'+l.id+'_'+r[0]+'">'+r[1]+' <span style="font-weight:700">('+r[2]+')</span></label><input class="inp w" style="font-weight:900" id="pp_'+l.id+'_'+r[0]+'" inputmode="numeric" data-plp="'+l.id+'|'+r[0]+'" value="'+(l.p[r[0]]||0)+'"></div>';}).join('')+'</div>'+
+   '<div class="row"><button class="btn red" data-a="plDel" data-p="'+l.id+'">Smazat ceník</button></div></div>';
+  return '<div class="acc"><button class="hd" style="background:#00857F;color:#fff" '+tg(k,false)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px" data-plname="'+l.id+'">'+esc(l.name)+'</b><span style="font-size:15px;font-weight:700" data-pldates="'+l.id+'">'+plDates(l)+'</span></span>'+tags+'<span class="pm" style="color:#fff">'+(o?'–':'+')+'</span></button>'+det+'</div>';
+ }).join('')+bankCard()+bizCard()+accountCard();
+ return '<div class="col"><div class="row wrap"><div class="small" style="flex:1;min-width:240px;font-size:16px">Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. Ceny ubytování se liší podle toho, jestli je v pokoji jeden host, nebo dva a více. Skupina bez vlastního ceníku použije první ceník v seznamu.</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
+}
+
+/* ---------- export knihy hostů ---------- */
+function exportData(){
+ var rg=periodRange(),lines=[],n=0;
+ bookRows().forEach(function(r){
+  if(!S.bookSel[r.id])return;
+  staysIn(r,rg).slice().sort(function(a,b){return a.from<b.from?-1:1;}).forEach(function(s){
+   lines.push([r.name,r.born?dmy(r.born):'',bGrpName(r.grp),dmy(s.from),dmy(s.to),String(Math.max(1,diffDays(s.from,s.to))),r.nat+(r.foreign?' (cizinec)':''),r.addr||'',r.doc||'',r.foreign?'ano':'ne']);
+  });
+ });
+ var sub=rg?'Období: '+dmy(rg[0])+' – '+dmy(rg[1]):'Všechny pobyty';
+ return {title:'Kniha hostů – Penzion',sub:sub+' · vytištěno '+dmy(TODAY),head:['Jméno a příjmení','Datum narození','Skupina','Příjezd','Odjezd','Nocí','Státní příslušnost','Adresa','Číslo dokladu','Cizinec'],w:[.15,.09,.09,.09,.09,.04,.11,.15,.12,.07],rows:lines};
+}
+function xe(s){return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+var CRC=(function(){var t=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u){var c=0xFFFFFFFF;for(var i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zipStore(files){
+ var enc=new TextEncoder(),chunks=[],cd=[],off=0;
+ function u16(v){return [v&255,(v>>>8)&255];}function u32(v){return [v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];}
+ files.forEach(function(f){
+  var nm=enc.encode(f.name),d=enc.encode(f.data),crc=crc32(d);
+  var lh=[].concat(u32(0x04034b50),u16(20),u16(0x0800),u16(0),u16(0),u16(0x21),u32(crc),u32(d.length),u32(d.length),u16(nm.length),u16(0));
+  chunks.push(new Uint8Array(lh),nm,d);
+  cd.push({nm:nm,crc:crc,len:d.length,off:off});
+  off+=lh.length+nm.length+d.length;
+ });
+ var cs=off;
+ cd.forEach(function(e){
+  var h=[].concat(u32(0x02014b50),u16(20),u16(20),u16(0x0800),u16(0),u16(0),u16(0x21),u32(e.crc),u32(e.len),u32(e.len),u16(e.nm.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(e.off));
+  chunks.push(new Uint8Array(h),e.nm);off+=h.length+e.nm.length;
+ });
+ chunks.push(new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(cd.length),u16(cd.length),u32(off-cs),u32(cs),u16(0))));
+ return new Blob(chunks,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+function colL(i){return String.fromCharCode(65+i);}
+function buildXlsx(d){
+ var cell=function(c,r,v,s){return '<c r="'+colL(c)+r+'" t="inlineStr" s="'+s+'"><is><t xml:space="preserve">'+xe(v)+'</t></is></c>';};
+ var rows='<row r="1" ht="28" customHeight="1">'+cell(0,1,d.title,2)+'</row><row r="2">'+cell(0,2,d.sub,5)+'</row><row r="4" ht="30" customHeight="1">'+d.head.map(function(h,i){return cell(i,4,h,1);}).join('')+'</row>';
+ d.rows.forEach(function(r,j){var rn=5+j,st=j%2?4:3;rows+='<row r="'+rn+'">'+r.map(function(v,i){return cell(i,rn,v,st);}).join('')+'</row>';});
+ var widths=[26,14,13,13,7,22,32,18,10];
+ var sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="20"/><cols>'+widths.map(function(w,i){return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>';}).join('')+'</cols><sheetData>'+rows+'</sheetData><pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>';
+ var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="4"><font><sz val="12"/><name val="Calibri"/></font><font><b/><sz val="12"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="18"/><color rgb="FF2B1B6B"/><name val="Calibri"/></font><font><sz val="12"/><color rgb="FF5B5F85"/><name val="Calibri"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF6C3CE9"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF4F0FF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFC9B8FF"/></left><right style="thin"><color rgb="FFC9B8FF"/></right><top style="thin"><color rgb="FFC9B8FF"/></top><bottom style="thin"><color rgb="FFC9B8FF"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+ return zipStore([
+  {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
+  {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+  {name:'xl/workbook.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Kniha hostů" sheetId="1" r:id="rId1"/></sheets></workbook>'},
+  {name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+  {name:'xl/styles.xml',data:styles},
+  {name:'xl/worksheets/sheet1.xml',data:sheet}
+ ]);
+}
+async function buildPdf(d){
+ try{await document.fonts.load('700 22px Nunito');await document.fonts.load('600 22px Nunito');}catch(e){}
+ var W=1754,H=1240,M=70,TW=W-2*M,FF='Nunito, "Segoe UI", Arial, sans-serif';
+ var cv=document.createElement('canvas');cv.width=W;cv.height=H;var cx=cv.getContext('2d');
+ var cw=d.w.map(function(f){return Math.floor(TW*f);});
+ function wrap(t,w){
+  cx.font='600 22px '+FF;var words=String(t).split(/\s+/),ln=[],cur='';
+  words.forEach(function(wd){var tr=cur?cur+' '+wd:wd;if(cx.measureText(tr).width<=w||!cur)cur=tr;else{ln.push(cur);cur=wd;}});
+  if(cur||!ln.length)ln.push(cur);return ln;
+ }
+ var topFirst=M+130,topNext=M+20,bottom=H-M-30,hh=52;
+ var pages=[[]],y=topFirst+hh;
+ d.rows.forEach(function(r){
+  var cells=r.map(function(v,i){return wrap(v,cw[i]-20);}),lines=Math.max.apply(null,cells.map(function(c){return c.length;})),rh=lines*30+18;
+  if(y+rh>bottom){pages.push([]);y=topNext+hh;}
+  pages[pages.length-1].push({cells:cells,rh:rh});y+=rh;
+ });
+ var jpgs=[];
+ pages.forEach(function(pg,pi){
+  cx.fillStyle='#fff';cx.fillRect(0,0,W,H);
+  var y0=M;
+  if(pi===0){cx.fillStyle='#2B1B6B';cx.font='800 48px '+FF;cx.textBaseline='top';cx.fillText(d.title,M,y0);cx.fillStyle='#5B5F85';cx.font='600 26px '+FF;cx.fillText(d.sub,M,y0+66);y0=topFirst;}else y0=topNext;
+  cx.fillStyle='#6C3CE9';cx.fillRect(M,y0,TW,hh);cx.fillStyle='#fff';cx.font='800 22px '+FF;cx.textBaseline='middle';
+  var x=M;d.head.forEach(function(h,i){cx.fillText(h,x+10,y0+hh/2);x+=cw[i];});
+  var yy=y0+hh;
+  pg.forEach(function(r,j){
+   cx.fillStyle=j%2?'#F4F0FF':'#fff';cx.fillRect(M,yy,TW,r.rh);
+   cx.strokeStyle='#D9CFFF';cx.lineWidth=1;cx.strokeRect(M+.5,yy+.5,TW-1,r.rh-1);
+   cx.fillStyle='#1F2340';cx.font='600 22px '+FF;cx.textBaseline='top';
+   var xx=M;r.cells.forEach(function(c,i){c.forEach(function(t,k){cx.fillText(t,xx+10,yy+10+k*30);});xx+=cw[i];});
+   yy+=r.rh;
+  });
+  cx.fillStyle='#5B5F85';cx.font='600 20px '+FF;cx.textBaseline='alphabetic';cx.fillText('Strana '+(pi+1)+' z '+pages.length,W-M-130,H-M+10);
+  var b=atob(cv.toDataURL('image/jpeg',0.92).split(',')[1]),u=new Uint8Array(b.length);for(var q=0;q<b.length;q++)u[q]=b.charCodeAt(q);jpgs.push(u);
+ });
+ var parts=[],len=0,offs=[];
+ function add(x){if(typeof x==='string'){var u=new Uint8Array(x.length);for(var i=0;i<x.length;i++)u[i]=x.charCodeAt(i)&255;x=u;}parts.push(x);len+=x.length;}
+ var n=jpgs.length,kids=[];for(var i=0;i<n;i++)kids.push((3+3*i)+' 0 R');
+ add('%PDF-1.4\n');
+ offs[1]=len;add('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+ offs[2]=len;add('2 0 obj\n<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+n+' >>\nendobj\n');
+ for(var p=0;p<n;p++){
+  var pid=3+3*p,cid=4+3*p,iid=5+3*p,cs='q 841.89 0 0 595.28 0 0 cm /Im0 Do Q';
+  offs[pid]=len;add(pid+' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 841.89 595.28] /Resources << /XObject << /Im0 '+iid+' 0 R >> >> /Contents '+cid+' 0 R >>\nendobj\n');
+  offs[cid]=len;add(cid+' 0 obj\n<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream\nendobj\n');
+  offs[iid]=len;add(iid+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+W+' /Height '+H+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jpgs[p].length+' >>\nstream\n');add(jpgs[p]);add('\nendstream\nendobj\n');
+ }
+ var xo=len,tot=3+3*n;
+ var xr='xref\n0 '+tot+'\n0000000000 65535 f \n';for(var o=1;o<tot;o++)xr+=String(offs[o]).padStart(10,'0')+' 00000 n \n';
+ add(xr+'trailer\n<< /Size '+tot+' /Root 1 0 R >>\nstartxref\n'+xo+'\n%%EOF');
+ return new Blob(parts,{type:'application/pdf'});
+}
+var DL=null;
+async function doExport(kind){
+ if(!DL){toast('Stažení souboru tu není dostupné.');return;}
+ var d=exportData();if(!d.rows.length){toast('Nejdřív zaškrtněte hosty, nebo zvolte období.');return;}
+ try{
+  toast('Připravuji soubor…');
+  var base='Kniha-hostu-'+TODAY,data=kind==='xlsx'?buildXlsx(d):await buildPdf(d);
+  await DL.save({filename:base+(kind==='xlsx'?'.xlsx':'.pdf'),data:data});
+  toast('Soubor je uložený.');
+ }catch(e){toast(e&&e.code==='declined'?'Ukládání jste zrušili.':'Soubor se nepodařilo uložit.');}
+}
+
+function eetRows(){return S.payments.filter(function(p){return p.method==='hotove'||p.method==='qr';}).sort(function(a,b){return a.date<b.date?1:(a.date>b.date?-1:0);});}
+function vEet(){
+ var all=eetRows(),cnt={wait:0,err:0,ok:0};all.forEach(function(p){cnt[p.eet||'wait']++;});
+ var f=S.eetFilter,rows=all.filter(function(p){return f==='all'||(p.eet||'wait')===f;});
+ var ST={wait:['Čeká na odeslání','#FFC21A','#1F2340'],ok:['Odesláno','#12805C','#fff'],err:['Chyba','#D62839','#fff']};
+ var list=rows.map(function(p){
+  var s=p.eet||'wait',st=ST[s],mt=p.method==='qr'?'QR kód na místě':'hotovost';
+  return '<div class="row wrap" style="background:'+(s==='err'?'#FFE3E6':(s==='ok'?'#E3F8EC':'#FFF6E5'))+';border-radius:16px;padding:10px 14px"><span style="flex:1;min-width:170px;display:flex;flex-direction:column"><b style="font-size:18px">'+esc(p.name)+'</b><span class="small">'+dmy(p.date)+' · '+mt+'</span>'+(s==='err'?'<span class="small" style="color:#B4232F">'+esc(p.err||'Odeslání se nezdařilo.')+'</span>':'')+'</span><b style="font-size:18px">'+kc(p.sum)+'</b><span class="tag" style="background:'+st[1]+';color:'+st[2]+';font-size:14px;padding:7px 14px">'+st[0]+'</span>'+(s==='ok'?'':'<button class="btn" style="background:'+(s==='err'?'#8A1020':'#D62839')+'" data-a="eetSend" data-p="'+p.id+'">'+(s==='err'?'Zkusit znovu':'Odeslat do EET')+'</button>')+'</div>';
+ }).join('')||'<div class="note p">V tomto přehledu nic není.</div>';
+ var io=isOpen('eetInfo',true);
+ var chips=[['all','Všechny ('+all.length+')','#2B1B6B'],['wait','Čeká ('+cnt.wait+')','#C28A00'],['err','Chyba ('+cnt.err+')','#D62839'],['ok','Odesláno ('+cnt.ok+')','#12805C']];
+ return '<div class="grid2"><div class="card"><div class="row wrap"><b style="font-size:19px">Platby, kterých se EET týká</b><span class="sp"></span>'+(cnt.wait?'<button class="btn green" data-a="eetAll">Odeslat všechny čekající</button>':'')+'</div><div class="row wrap">'+chips.map(function(c){return chip(c[1],'eetFilter',c[0],f===c[0],c[2]);}).join('')+'</div><span class="small">Jen hotovost a QR kód na místě. Převody a platby předem se sem nedostanou.</span>'+list+'</div><div class="col">'+
+  '<div style="background:#D62839;color:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 5px 0 #9E1B29"><span style="font-size:16px;font-weight:800">EET 2.0 · povinnost od</span><b style="font-size:30px;font-weight:900">1. 1. 2027</b><span style="font-size:16px;font-weight:700;line-height:1.4">Čeká na odeslání: '+cnt.wait+' · s chybou: '+cnt.err+' · odesláno: '+cnt.ok+'. Stav napojení: zatím nenapojeno. Tlačítka jen zaznamenávají stav, skutečné odesílání Finanční správě doplníme před 1. 1. 2027.</span></div>'+
+  '<div class="acc"><button class="hd" style="font-size:19px" '+tg('eetInfo',true)+'><span style="flex:1">Co se vlastně eviduje?</span><span class="pm">'+(io?'–':'+')+'</span></button>'+(io?'<div style="padding:0 18px 16px;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;gap:6px"><span>Hotovost a QR kód ukázaný přímo u hosta.</span><span>Převod na účet předem nebo platba z e-mailu se neeviduje. Platby kartou se u vás nedělají.</span><span>Když se odeslání nepovede, platba zůstane v přehledu s chybou a jde ji odeslat znovu.</span><span>Před ostrým provozem je potřeba s účetní ověřit, na které platby se povinnost přesně vztahuje.</span></div>':'')+'</div></div></div>';
+}
+
+/* ---------- celkové vykreslení ---------- */
+var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['eet','EET','#FF8A8A']];
+var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',eet:'EET'};
+function render(){
+ if(!LOADED){renderLoading();return;}
+ var app=document.getElementById('app'),old=app.querySelector('.scroll'),st=old?old.scrollTop:0;
+ var ae=document.activeElement,fid=ae&&ae.id,ss=null;try{if(fid)ss=ae.selectionStart;}catch(e){}
+ var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,eet:vEet}[S.screen]();
+ var nav=NAV.map(function(n,i){return '<button class="nav'+(S.screen===n[0]?' act':'')+'" data-a="nav" data-p="'+n[0]+'"><i style="background:'+n[2]+'">'+(i+1)+'</i><span>'+n[1]+'</span></button>';}).join('');
+ app.innerHTML='<div class="app"><nav class="side"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+nav+
+  '</nav>'+
+  '<div class="main"><div class="top"><div><h1>'+TITLES[S.screen]+'</h1><small>'+DN[parse(TODAY).getDay()].toLowerCase()+' '+dmy(TODAY)+'</small></div>'+syncChip()+'</div><div class="scroll">'+body+'</div></div></div>';
+ var sc=app.querySelector('.scroll');if(sc)sc.scrollTop=S.scrollTop?0:st;S.scrollTop=false;
+ if(S.scrollToId){var se=document.getElementById(S.scrollToId);if(se)se.scrollIntoView({block:'start'});S.scrollToId=null;}
+ if(S.focusId){var fq=document.getElementById(S.focusId);if(fq)fq.focus();S.focusId=null;}
+ if(fid){var f=document.getElementById(fid);if(f){try{f.focus();if(ss!=null)f.setSelectionRange(ss,ss);}catch(e){}}}
+}
+/* ---------- akce ---------- */
+var A={};
+/* ---------- QR platba (formát SPAYD, český standard pro QR platby) ---------- */
+function ibanOf(v){
+ var s=String(v||'').replace(/\s+/g,'').toUpperCase(),i,r,t;
+ function m97(x){r=0;for(i=0;i<x.length;i++)r=(r*10+(x.charCodeAt(i)-48))%97;return r;}
+ if(/^CZ\d{22}$/.test(s)){t=s.slice(4)+'1235'+s.slice(2,4);return m97(t)===1?s:'';}
+ var m=s.match(/^(?:(\d{1,6})-)?(\d{2,10})\/(\d{4})$/);if(!m)return '';
+ var pre=('000000'+(m[1]||'')).slice(-6),num=('0000000000'+m[2]).slice(-10);
+ function w11(d,w){var a=0;for(var k=0;k<d.length;k++)a+=(+d[k])*w[k];return a%11===0;}
+ if(!w11(pre,[10,5,8,4,2,1])||!w11(num,[6,3,7,9,10,5,8,4,2,1]))return '';
+ var bban=m[3]+pre+num,c=98-m97(bban+'123500');
+ return 'CZ'+(c<10?'0':'')+c+bban;
+}
+function ibanTxt(ib){return ib.replace(/(.{4})/g,'$1 ').trim();}
+function ascii(v){return String(v||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x20-\x7E]/g,'').replace(/\*/g,' ').trim();}
+function spayd(g,sum){
+ var b=S.bank||{},ib=ibanOf(b.acc);if(!ib)return '';
+ var t='SPD*1.0*ACC:'+ib+'*AM:'+sum.toFixed(2)+'*CC:CZK';
+ if(b.name)t+='*RN:'+ascii(b.name).slice(0,35);
+ return t+'*MSG:'+ascii('Penzion '+g.name).slice(0,60);
+}
+function qrSvg(txt,size){
+ var q=qrcode(0,'M');q.addData(txt);q.make();var n=q.getModuleCount(),d='';
+ for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(q.isDark(r,c))d+='M'+c+' '+r+'h1v1h-1z';
+ return '<svg viewBox="-4 -4 '+(n+8)+' '+(n+8)+'" width="'+size+'" height="'+size+'" role="img" aria-label="QR kód pro platbu" style="background:#fff;border-radius:12px;flex:none;shape-rendering:crispEdges"><path d="'+d+'" fill="#000"/></svg>';
+}
+function qrBlock(g){
+ var sum=total(g),txt=sum>0?spayd(g,sum):'';
+ if(!txt)return '<div class="col" style="gap:8px"><div class="note p" style="font-size:16px">'+(sum>0?'Pro QR platbu chybí platné číslo účtu. Doplňte ho v Ceníku, v části „Platební údaje pro QR kód“.':'Částka je nulová, není co platit.')+'</div>'+(sum>0?'<button class="btn" data-a="nav" data-p="cen">Otevřít Ceník</button>':'')+'</div>';
+ return '<div class="panel" style="background:#EAF2FF;flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px;gap:14px">'+qrSvg(txt,220)+
+  '<span style="flex:1;min-width:180px;font-size:16px;font-weight:700;line-height:1.45">Host naskenuje kód v mobilní bance, částka <b>'+kc(sum)+'</b> se vyplní sama.<br><span class="small">Účet '+esc(ibanTxt(ibanOf(S.bank.acc)))+'. Až host ukáže potvrzení platby, klepněte na „Platba proběhla“.</span></span></div>';
+}
+function bizCard(){
+ var b=S.biz,miss=!b.name||!b.ico,o=isOpen('biz',miss);
+ var h='<div class="acc"><button class="hd" style="background:#C2410C;color:#fff" '+tg('biz',miss)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Údaje podnikatele (na potvrzení platby)</b><span style="font-size:15px;font-weight:700">'+(miss?'Zatím nevyplněno':esc(b.name)+' · IČO '+esc(b.ico))+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
+ if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg">'+[['name','Jméno a příjmení podnikatele / firma','např. Zdeňka Zichová'],['addr','Sídlo (adresa)','ulice, číslo, PSČ, obec'],['ico','IČO',''],['dic','DIČ','např. CZ…'],['phone','Telefon','']].map(function(f){return '<div class="fld"><label for="bz_'+f[0]+'">'+f[1]+'</label><input class="inp w" id="bz_'+f[0]+'" data-biz="'+f[0]+'" value="'+esc(b[f[0]]||'')+'" placeholder="'+esc(f[2])+'"></div>';}).join('')+'</div><div class="row wrap">'+chip(b.vat?'Plátce DPH ✓':'Neplátce DPH','bizVat','',!!b.vat,'#C2410C')+'<span class="small">Tyto údaje se tisknou do e-mailu s potvrzením platby.</span></div></div>';
+ return h+'</div>';
+}
+A.bizVat=function(){S.biz.vat=!S.biz.vat;};
+function receiptData(g){
+ var lines=[];
+ Object.keys(PL).forEach(function(k){var q=(g.bill[k]||0)*((k==='pp'||k==='pes')?1:g.persons);if(!q)return;var p=pr(g,k);lines.push({name:PL[k][0],unit:PL[k][1],qty:q,price:p,sum:q*p});});
+ (g.extra||[]).forEach(function(x){if(!x.qty||!x.name)return;lines.push({name:x.name,unit:'ks',qty:x.qty,price:x.price||0,sum:x.qty*(x.price||0)});});
+ var d=guestDates(g),rec=S.payments.filter(function(x){return x.gid===g.id;})[0];
+ return {gid:g.id,method:g.paid,methodName:METHODS[g.paid]?METHODS[g.paid][0]:'',date:rec?rec.date:TODAY,from:d.from,to:d.to,total:total(g),lines:lines};
+}
+function bankState(){var b=S.bank||{};if(!b.acc)return 'Číslo účtu zatím chybí, QR platba nejde.';var ib=ibanOf(b.acc);return ib?'Účet '+ibanTxt(ib)+' ✓':'Číslo účtu nevypadá správně, zkontrolujte ho.';}
+function bankCard(){
+ var b=S.bank,def=!ibanOf(b.acc),o=isOpen('bank',def);
+ var h='<div class="acc"><button class="hd" style="background:#1D6FE0;color:#fff" '+tg('bank',def)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Platební údaje pro QR kód</b><span style="font-size:15px;font-weight:700" data-bankst>'+esc(bankState())+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
+ if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg"><div class="fld"><label for="bk_acc">Číslo účtu</label><input class="inp w" id="bk_acc" data-bank="acc" value="'+esc(b.acc)+'" placeholder="např. 19-2000145399/0800"></div><div class="fld"><label for="bk_name">Jméno příjemce (host ho uvidí v bance)</label><input class="inp w" id="bk_name" data-bank="name" value="'+esc(b.name)+'" placeholder="např. Penzion U Lípy"></div></div><span class="small">Stačí obyčejné číslo účtu s kódem banky, nebo IBAN. Aplikace ho zkontroluje a u hosta z něj vytvoří QR kód na přesnou částku.</span></div>';
+ return h+'</div>';
+}
+
+/* ---------- úprava a zrušení rezervace v kalendáři ---------- */
+function stayEdit(sel){
+ return '<div class="row wrap" style="align-items:flex-end;gap:12px"><div class="fld"><label for="sd_f">Příjezd</label><input type="date" class="inp" id="sd_f" data-sdt="'+sel.id+'|from" value="'+sel.from+'"></div><div class="fld"><label for="sd_t">Odjezd</label><input type="date" class="inp" id="sd_t" data-sdt="'+sel.id+'|to" value="'+sel.to+'"></div><span class="sp"></span>'+(S.delArm===sel.id?'<button class="btn red" data-a="delStay" data-p="'+sel.id+'">Ano, zrušit</button><button class="btn white" style="color:#6C3CE9" data-a="disarm" data-p="">Ne, vrátit zpět</button>':'<button class="btn red" data-a="delStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Zrušit rezervaci a smazat hosta':'Zrušit rezervaci')+'</button>')+'</div>';
+}
+function rescale(x,on,nn){if(!x||x.paid||on===nn)return;x.bill.ub=x.only?0:nn;x.bill.pp=x.only?0:x.persons*nn;['sn','ob','ve','pes'].forEach(function(k){x.bill[k]=Math.round((x.bill[k]||0)*nn/on);});syncPay(x);}
+function dropGuest(id){
+ S.guests=S.guests.filter(function(x){return x.id!==id;});
+ S.payments=S.payments.filter(function(x){return x.gid!==id;});
+ S.stays=S.stays.filter(function(x){return x.guestId!==id;});
+ delete S.mailed[id];delete S.payM[id];delete S.open['g:'+id];delete S.open['pu:'+id];
+ if(S.payGuest===id)S.payGuest='';if(S.indivFocus===id)S.indivFocus=null;
+}
+function arm(k,t){if(S.delArm!==k){S.delArm=k;toast(t);return true;}S.delArm=null;return false;}
+function forgetBtn(act,id,label){
+ if(S.delArm===act+id)return '<div class="row wrap"><button class="btn red big" data-a="'+act+'" data-p="'+id+'">Ano, smazat navždy</button><button class="btn white big" style="color:#6C3CE9" data-a="disarm" data-p="">Ne, vrátit zpět</button></div>';
+ return '<button class="btn red" style="align-self:flex-start" data-a="'+act+'" data-p="'+id+'">'+label+'</button>';
+}
+A.disarm=function(){S.delArm=null;toast('Nic se nesmazalo.');};
+A.setForeign=function(p){var g=G(p);if(!g)return;g.foreign=!g.foreign;if(g.foreign){if(g.nat==='CZ')g.nat='';S.focusId='gn_'+g.id;}else g.nat='CZ';};
+A.forgetGuest=function(p){
+ var g=G(p);if(!g)return;
+ if(arm('forgetGuest'+p,'Opravdu? Host „'+g.name+'“ se smaže navždy i s platbou a zápisem v knize hostů.'))return;
+ var nm=g.name;dropGuest(p);toast('Host „'+nm+'“ byl smazán navždy.');
+};
+A.forgetBook=function(p){
+ var r=bookRows().filter(function(x){return x.id===p;})[0];if(!r)return;
+ if(arm('forgetBook'+p,'Opravdu? „'+r.name+'“ se smaže navždy z knihy hostů, ze skupin, z kalendáře i z plateb.'))return;
+ var k=nk(r.name);
+ S.guests.filter(function(x){return nk(x.name)===k;}).forEach(function(x){dropGuest(x.id);});
+ S.manual=S.manual.filter(function(m){return nk(m.name)!==k;});
+ delete S.rebook[p];delete S.police[p];delete S.bookSel[p];delete S.open[p];
+ toast('„'+r.name+'“ byl smazán navždy.');
+};
+A.delStay=function(p){
+ var sx=S.stays.filter(function(q){return q.id===p;})[0];if(!sx)return;
+ if(S.delArm!==p){S.delArm=p;return;}
+ S.delArm=null;
+ if(sx.grp==='indiv'){var g=G(sx.guestId);
+  if(g)dropGuest(g.id);}
+ S.stays=S.stays.filter(function(q){return q.id!==p;});S.calSel=null;toast('Rezervace zrušena.');
+};
+
+/* ---------- ukládání do úložiště (sdílená databáze aplikace) ---------- */
+var DB=null,LAST={},LOADED=false,SYNC='load',SAVE_T=null,SAVING=false,AGAIN=false,RO=false,LOADMSG='',DEFER=false,GOT={};
+var COLS=['guests','stays','payments'],CFGK=['groupDefs','priceLists','manual','rebook','police','mailed','bank','biz'];
+function cj(o){
+ if(o===null||typeof o!=='object')return (o===undefined||(typeof o==='number'&&!isFinite(o)))?'null':JSON.stringify(o);
+ if(Array.isArray(o))return '['+o.map(cj).join(',')+']';
+ return '{'+Object.keys(o).sort().filter(function(k){return o[k]!==undefined;}).map(function(k){return JSON.stringify(k)+':'+cj(o[k]);}).join(',')+'}';
+}
+function cfgObj(){var c={};CFGK.forEach(function(k){c[k]=S[k];});return c;}
+function curDocs(){var m={};COLS.forEach(function(c){S[c].forEach(function(o){if(o&&o.id)m[c+'/'+o.id]=o;});});m['cfg/main']=cfgObj();return m;}
+var SYNCTXT={load:['Načítám…','#FFC21A','#1F2340'],ok:['Uloženo ✓','#12805C','#fff'],save:['Ukládám…','#FFC21A','#1F2340'],err:['Neuloženo, zkouším znovu','#D62839','#fff'],ro:['Jen pro čtení','#6B6F8E','#fff'],off:['Bez spojení – obnovte stránku','#D62839','#fff']};
+function syncChip(){var t=SYNCTXT[SYNC];return '<span class="badge" id="syncchip" style="background:'+t[1]+';color:'+t[2]+';cursor:default">'+t[0]+'</span>';}
+function setSync(v){SYNC=v;var e=document.getElementById('syncchip');if(e)e.outerHTML=syncChip();}
+function dirty(){if(!LOADED||!DB||RO)return;clearTimeout(SAVE_T);SAVE_T=setTimeout(flush,600);}
+function flush(){
+ clearTimeout(SAVE_T);if(!LOADED||!DB||RO)return;
+ if(SAVING){AGAIN=true;return;}
+ var m=curDocs(),ops=[];
+ Object.keys(m).forEach(function(p){var j=cj(m[p]);if(LAST[p]!==j)ops.push({p:p,j:j});});
+ Object.keys(LAST).forEach(function(p){if(!m[p])ops.push({p:p,j:null});});
+ if(!ops.length){if(SYNC!=='off')setSync('ok');return;}
+ SAVING=true;setSync('save');
+ var i=0,fails=0;
+ function done(st){SAVING=false;setSync(st);if(st==='err')setTimeout(flush,15000);else if(AGAIN){AGAIN=false;flush();}}
+ function next(){
+  if(i>=ops.length){done(fails?'err':'ok');return;}
+  var o=ops[i++],ref=DB.doc(o.p),pr;
+  try{pr=o.j===null?ref.delete():ref.set(JSON.parse(o.j));}catch(x){fails++;next();return;}
+  pr.then(function(){if(o.j===null)delete LAST[o.p];else LAST[o.p]=o.j;next();},function(e){
+   var c=e&&e.code;
+   if((c==='unavailable'||c==='resource_exhausted')&&!o.r){o.r=1;i--;setTimeout(next,1500+Math.random()*1500);return;}
+   if(c==='invalid_argument'&&!fails&&i===1){RO=true;SAVING=false;setSync('ro');toast('Změny se neukládají: tento účet nemá oprávnění k úpravám.');return;}
+   if(c==='quota_exceeded'){toast('Úložiště je plné, změnu nejde uložit. Dejte vědět správci aplikace.');}
+   if(c==='revoked'||c==='not_granted'||c==='capability_disabled'){SAVING=false;setSync('off');return;}
+   fails++;next();
+  });
+ }
+ next();
+}
+function editing(){var a=document.activeElement;return !!(a&&a.closest&&a.closest('#app')&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));}
+function remoteRender(){if(!LOADED)return;if(editing()){DEFER=true;return;}render();}
+function applyCol(name,snap){
+ var arr=S[name],changed=false;
+ snap.docChanges().forEach(function(ch){
+  var id=ch.doc.id,p=name+'/'+id,idx=-1,k;
+  for(k=0;k<arr.length;k++)if(arr[k].id===id){idx=k;break;}
+  var locJ=idx>=0?cj(arr[idx]):null,unsaved=LOADED&&idx>=0&&LAST[p]!==undefined&&locJ!==LAST[p];
+  if(ch.type==='removed'){delete LAST[p];if(idx>=0&&!unsaved){arr.splice(idx,1);changed=true;}return;}
+  var d=ch.doc.data();if(!d)return;var j=cj(d);
+  if(locJ===j){LAST[p]=j;return;}
+  LAST[p]=j;if(unsaved)return;
+  var o=JSON.parse(j);if(!o.id)o.id=id;if(idx>=0)arr[idx]=o;else arr.push(o);changed=true;
+ });
+ return changed;
+}
+function applyCfg(snap){
+ if(!snap.exists)return false;
+ var d=snap.data();if(!d)return false;var j=cj(d),loc=cj(cfgObj());
+ if(loc===j){LAST['cfg/main']=j;return false;}
+ var unsaved=LOADED&&LAST['cfg/main']!==undefined&&loc!==LAST['cfg/main'];
+ LAST['cfg/main']=j;if(unsaved)return false;
+ var o=JSON.parse(j);CFGK.forEach(function(k){if(o[k]!==undefined&&o[k]!==null)S[k]=o[k];});
+ return true;
+}
+function afterLoad(){
+ if(!S.priceLists.length)S.priceLists=seed().priceLists;
+ if(!S.bank)S.bank={acc:'',name:''};
+ if(!S.biz)S.biz={name:'',addr:'',ico:'',dic:'',vat:false,phone:''};
+ if(!grpDef(S.grp))S.grp=S.groupDefs.length?S.groupDefs[0].key:'';
+}
+function gotSnap(k,snap){
+ if(!snap.metadata||!snap.metadata.fromCache)GOT[k]=1;
+ if(!LOADED&&GOT.guests&&GOT.stays&&GOT.payments&&GOT.cfg){LOADED=true;LOADMSG='';afterLoad();setSync('ok');render();}
+}
+function dbErr(e){
+ if(!LOADED){LOADMSG='err';renderLoading();return;}
+ setSync('off');toast('Spojení s úložištěm se přerušilo. Obnovte prosím stránku.');
+}
+function startDb(db){
+ DB=db;
+ COLS.forEach(function(c){
+  db.collection(c).onSnapshot(function(snap){var ch=applyCol(c,snap);gotSnap(c,snap);if(ch)remoteRender();},dbErr);
+ });
+ db.doc('cfg/main').onSnapshot(function(snap){var ch=applyCfg(snap);gotSnap('cfg',snap);if(ch)remoteRender();},dbErr);
+}
+window.__logout=function(){if(SB)SB.auth.signOut().then(function(){location.reload();});};
+function renderLoading(){
+ if(LOADMSG==='login'&&document.getElementById('loginf'))return;
+ var msg={'' :'Načítám data penzionu…',
+  slow:'Data se zatím nedaří načíst. Zkontrolujte připojení k internetu, aplikace to zkouší dál.',
+  login:'Přihlaste se prosím.',
+  noaccess:'Tento účet nemá do recepce přístup. Požádejte Luboše, aby vás přidal.',
+  nolib:'Aplikaci se nepodařilo spustit. Obnovte prosím stránku.',
+  err:'Data se nepodařilo načíst. Zkontrolujte internet a obnovte stránku.'}[LOADMSG];
+ document.getElementById('app').innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px"><div class="card" style="max-width:520px;text-align:center;align-items:center;gap:14px;padding:28px"><div style="width:72px;height:72px;border-radius:22px;background:linear-gradient(145deg,#34D17A,#0E9F4F);display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:900;color:#fff;box-shadow:0 5px 0 #087338">9</div><b style="font-size:26px;font-weight:900">Penzion Na Devítce</b><span style="font-size:18px;font-weight:700;line-height:1.5">'+esc(msg)+'</span>'+(LOADMSG==='login'?loginHtml():'')+(LOADMSG==='noaccess'?'<button class="btn red big" onclick="window.__logout()">Odhlásit se</button>':'')+'</div></div>';
+}
+
+A.nav=function(p){S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
+A.tog=function(p,el){var d=el.dataset.d==='1';S.open[p]=!isOpen(p,d);};
+A.quickGuest=function(){S.screen='indiv';S.scrollTop=true;S.newGuestOpen=true;S.form={};};
+/* kalendář */
+A.calView=function(p){S.calView=p;S.query='';S.scrollTop=true;};
+A.resF=function(p){S.resF=p;};
+A.calNewGo=function(){S.calView='cal';S.calNewOpen=true;S.calMsg='';S.calKind=null;S.calGrp=null;S.scrollTop=true;};
+A.grpF=function(p){S.grpF=p;};
+A.payGF=function(p){S.payGF=p;};
+A.backCal=function(){S.indivFocus=null;S.screen='kal';S.scrollTop=true;};
+A.closeGuest=function(p){var g=G(p);S.open['pu:'+p]=false;S.scrollToId='acc_'+g.grp;};
+A.calGo=function(p){S.calOff=p==='0'?0:S.calOff+Number(p);};
+A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;};
+A.calNew=function(){S.calNewOpen=!S.calNewOpen;S.calMsg='';S.calKind=null;S.calGrp=null;};
+A.calKind=function(p){S.calKind=p;S.calGrp=null;S.calMsg='';};
+A.calGrp=function(p){S.calGrp=p;};
+A.calSave=function(){
+ var f=S.form,kind=S.calKind;
+ if(!kind||(kind==='group'&&!S.calGrp))return;
+ if(!f.cFrom||!f.cTo||f.cTo<f.cFrom){S.calOk=false;S.calMsg='Vyberte příjezd a odjezd (odjezd nesmí být dřív než příjezd).';return;}
+ var id;
+ if(kind==='indiv'){
+  if(!(f.cName||'').trim()){S.calOk=false;S.calMsg='Doplňte jméno hosta.';return;}
+  var gid='gi'+uid();id='s'+uid();
+  var g={id:gid,grp:'indiv',name:f.cName.trim(),persons:Math.max(1,parseInt(f.cPers,10)||1),email:'',phone:'',only:false,foreign:false,nat:'CZ',addr:'',doc:'',here:true,inBook:false,note:'Nová rezervace.',paid:null};
+  g.bill=defBill(g,null,Math.max(1,diffDays(f.cFrom,f.cTo)));S.guests.push(g);
+  S.stays.push({id:id,grp:'indiv',guestId:gid,from:f.cFrom,to:f.cTo});
+ }else{
+  id='s'+uid();
+  S.stays.push({id:id,grp:S.calGrp,from:f.cFrom,to:f.cTo,menuSet:S.calGrp==='gestalt'?'gestalt-now':(S.calGrp==='vip5'?'vip5-now':'blank'),dish:{},published:false});
+  S.stayPick[S.calGrp]=id;
+ }
+ var fd=parse(f.cFrom);S.calOff=(fd.getFullYear()-TY)*12+fd.getMonth()-TM;S.calSel=id;S.calOk=true;S.calMsg='Rezervace uložena a zapsána do kalendáře.';
+ S.form.cName=S.form.cFrom=S.form.cTo=S.form.cPers='';
+ toast('Rezervace uložena do kalendáře.');
+};
+A.openStay=function(p){
+ var s=S.stays.filter(function(x){return x.id===p;})[0];
+ if(s.grp==='indiv'){S.screen='indiv';S.indivFocus=s.guestId;S.open['g:'+s.guestId]=true;}else{S.screen='skupiny';S.grp=s.grp;S.stayPick[s.grp]=s.id;}
+ S.scrollTop=true;
+};
+A.payStay=function(p){
+ var s=S.stays.filter(function(x){return x.id===p;})[0];
+ S.screen='platba';S.scrollTop=true;S.payGroup=s.grp;
+ var gs=s.grp==='indiv'?[G(s.guestId)]:S.guests.filter(function(x){return x.grp===s.grp;});
+ S.payGuest=gs.length?gs[0].id:'';
+};
+/* skupiny */
+A.pickGroup=function(p){S.grp=p;S.menuMsg='';S.newGuestOpen=false;S.form={};};
+A.pickStay=function(p){var a=p.split('|');S.stayPick[a[0]]=a[1];S.menuMsg='';};
+A.newGroupToggle=function(){S.newGroupOpen=!S.newGroupOpen;};
+A.newGroup=function(){
+ var n=(S.form.ngName||'').trim();if(!n){toast('Napište název skupiny.');return;}
+ var cols=['#E0357A','#1D6FE0','#B7791F','#7B3FA0','#6C3CE9','#00857F'],k='x'+uid();
+ S.groupDefs.push({key:k,name:n,color:cols[S.groupDefs.length%cols.length]});
+ S.priceLists.forEach(function(l){if(l.groups.indexOf('indiv')<0&&l.groups.length&&l.groups.indexOf(k)<0&&!l.from)l.groups.push(k);});
+ S.grp=k;S.newGroupOpen=false;S.form.ngName='';toast('Skupina „'+n+'“ založena. Termín jí zadejte v Kalendáři.');
+};
+A.importToggle=function(){S.importOpen=!S.importOpen;};
+A.sendLinks=function(){S.linksSent[S.grp]=true;};
+A.guestFormToggle=function(){S.newGuestOpen=!S.newGuestOpen;S.form={};};
+A.goHist=function(){S.pickFor=S.screen==='indiv'?'indiv':S.grp;S.screen='kniha';S.scrollTop=true;S.newGuestOpen=false;};
+A.nType=function(p){S.form.only=p==='jen';};
+A.nForeign=function(){S.form.foreign=!S.form.foreign;};
+A.saveGuest=function(){
+ var f=S.form,isIndiv=S.screen==='indiv';
+ if(!(f.nName||'').trim()){toast('Doplňte jméno hosta.');return;}
+ var key=isIndiv?'indiv':S.grp,gid='gn'+uid();
+ var g={id:gid,grp:key,name:f.nName.trim(),persons:Math.max(1,parseInt(f.nPers,10)||1),email:(f.nMail||'').trim(),phone:(f.nTel||'').trim(),only:!!f.only&&!isIndiv,foreign:!!f.foreign,nat:f.foreign?'zahraničí':'CZ',addr:'',doc:'',here:true,inBook:false,note:'',paid:null};
+ if(isIndiv){
+  if(!f.nFrom||!f.nTo||f.nTo<f.nFrom){toast('Vyberte příjezd a odjezd.');return;}
+  S.stays.push({id:'s'+uid(),grp:'indiv',guestId:gid,from:f.nFrom,to:f.nTo});
+  g.bill=defBill(g,null,Math.max(1,diffDays(f.nFrom,f.nTo)));
+ }else g.bill=defBill(g,null,grpNights(key));
+ S.guests.push(g);S.newGuestOpen=false;S.form={};S.open['g:'+gid]=true;
+ toast(isIndiv?'Host uložen a zapsán do kalendáře.':'Host přidán do skupiny.');
+};
+A.here=function(p){var g=G(p);g.here=!g.here;};
+A.book=function(p){var g=G(p);if(!g.inBook&&inBookNow(g)){toast('Host je v knize hostů automaticky od příjezdu.');return;}g.inBook=!g.inBook;toast(g.inBook?'Zapsáno do knihy hostů.':'Odebráno z knihy hostů.');};
+A.goPay=function(p){var g=G(p);S.screen='platba';S.scrollTop=true;S.payGroup=g.grp;S.payGuest=g.id;};
+A.bill=function(p){var a=p.split('|'),g=G(a[0]);g.bill[a[1]]=Math.max(0,(g.bill[a[1]]||0)+Number(a[2]));syncPay(g);};
+A.setHere=function(p){var a=p.split('|');G(a[0]).here=a[1]==='1';};
+A.resetPrice=function(p){var a=p.split('|'),g=G(a[0]);if(g.price)delete g.price[a[1]];syncPay(g);};
+A.xdel=function(p){var a=p.split('|'),g=G(a[0]);g.extra=(g.extra||[]).filter(function(x){return x.id!==a[1];});syncPay(g);};
+A.xq=function(p){var a=p.split('|'),g=G(a[0]),x=(g.extra||[]).filter(function(e){return e.id===a[1];})[0];if(x)x.qty=Math.max(1,(x.qty||1)+Number(a[2]));syncPay(g);};
+/* platba */
+A.persons=function(p){var a=p.split('|'),g=G(a[0]),old=g.persons;g.persons=Math.max(1,old+Number(a[1]));var df=g.persons-old;if(df&&!g.only)g.bill.pp=Math.max(0,(g.bill.pp||0)+df*nightsOf(g));syncPay(g);};
+A.xadd=function(p){var g=G(p);g.extra=g.extra||[];var id='x'+uid();g.extra.push({id:id,name:'',price:0,qty:1});S.focusId='xn_'+g.id+'_'+id;syncPay(g);};
+A.plNew=function(){var id='pl'+uid();S.priceLists.push({id:id,name:'Nový ceník',from:'',to:'',groups:[],p:Object.assign({},S.priceLists[0].p)});S.open['pl:'+id]=true;S.focusId='pn_'+id;};
+A.plDel=function(p){if(S.priceLists.length<2){toast('Aspoň jeden ceník musí zůstat.');return;}S.priceLists=S.priceLists.filter(function(l){return l.id!==p;});syncAll();};
+A.plGroup=function(p){var a=p.split('|'),l=PLg(a[0]),i=l.groups.indexOf(a[1]);if(i>=0)l.groups.splice(i,1);else l.groups.push(a[1]);syncAll();};
+A.bookPeriod=function(p){S.bookPeriod=p;};
+A.bkSel=function(p){S.bookSel[p]=!S.bookSel[p];};
+A.bkConfirm=function(p){G(p).arrived=true;toast('Příjezd potvrzen.');};
+A.bkConfirmAll=function(){var n=0;bookView().vis.forEach(function(r){if(r.pending&&r.gid){G(r.gid).arrived=true;n++;}});toast('Příjezd potvrzen u '+n+' hostů.');};
+A.bkAll=function(){bookView().vis.forEach(function(r){S.bookSel[r.id]=true;});};
+A.bkNone=function(){S.bookSel={};};
+A.exportX=function(p){doExport(p);};
+A.pickCancel=function(){var k=S.pickFor;S.pickFor=null;S.screen=k==='indiv'?'indiv':'skupiny';S.scrollTop=true;};
+A.addToGroup=function(p){
+ var k=S.pickFor,h=bookRows().filter(function(x){return x.id===p;})[0];
+ if(!h||!k||k==='indiv')return;
+ if(S.guests.some(function(g){return g.grp===k&&nk(g.name)===nk(h.name);})){toast('Tento host už ve skupině je.');return;}
+ var gid='gn'+uid();
+ var g={id:gid,grp:k,name:h.name,persons:1,email:h.email,phone:h.phone,only:false,foreign:h.foreign,nat:h.nat,addr:h.addr,doc:h.doc,here:true,inBook:true,note:'',paid:null};
+ g.bill=defBill(g,null,grpNights(k));
+ S.guests.push(g);S.open['g:'+gid]=true;S.pickFor=null;S.screen='skupiny';S.grp=k;S.scrollTop=true;
+ toast(h.name+' přidán(a) do skupiny '+grpName(k)+'.');
+};
+A.eetFilter=function(p){S.eetFilter=p;};
+A.eetAll=function(){S.payments.forEach(function(p){if((p.method==='hotove'||p.method==='qr')&&(p.eet||'wait')==='wait')p.eet='ok';});toast('Zaznamenáno jako odesláno. Skutečné napojení na EET zatím není – doplníme do 1. 1. 2027.');};
+A.payFilter=function(p){S.payFilter=p;};
+A.payMethod=function(p){
+ var a=p.split('|'),g=G(a[0]),m=a[1];
+ if(g.paid){g.paid=m;var r=S.payments.filter(function(x){return x.gid===g.id;})[0];if(r){r.method=m;r.eet=(m==='hotove'||m==='qr')?(r.eet||'wait'):null;}toast('Způsob platby změněn na: '+METHODS[m][0]+'.');}
+ else S.payM[g.id]=m;
+};
+A.doPay=function(p){
+ var g=G(p);if(g.paid)return;
+ var m=curMethod(g);g.paid=m;g.inBook=true;
+ S.payments.push({id:'p'+uid(),gid:g.id,name:g.name,method:m,sum:total(g),date:TODAY,eet:(m==='hotove'||m==='qr')?'wait':null,err:''});
+ toast('Platba zapsána. Klikli jste omylem? Je tu tlačítko „Vrátit zpět“.');
+};
+A.undoPay=function(p){var g=G(p);S.payments=S.payments.filter(function(x){return x.gid!==g.id;});g.paid=null;toast('Platba vrácena zpět, host je zase nezaplacený.');};
+A.doMail=function(p){
+ var g=G(p);if(!g)return;
+ if(!g.paid){toast('Nejdřív zapište platbu, potvrzení se posílá až po zaplacení.');return;}
+ if(!g.email){toast('Host nemá vyplněný e-mail.');return;}
+ if(typeof sendReceipt!=='function'){S.mailed[p]=TODAY;toast('V téhle verzi se e-maily neodesílají.');return;}
+ if(S.mailBusy)return;S.mailBusy=p;toast('Odesílám potvrzení na '+g.email+'…');
+ sendReceipt(receiptData(g)).then(function(){S.mailed[p]=TODAY;S.mailBusy=null;toast('Potvrzení platby odesláno na '+g.email+'.');render();dirty();},function(e){S.mailBusy=null;toast('E-mail se nepodařilo odeslat: '+((e&&e.message)||'neznámá chyba'));render();});
+};
+A.eetPay=function(p){
+ var g=G(p),m=curMethod(g);
+ if(m==='prevod'||m==='predem'){toast('Platba převodem nebo předem se do EET neeviduje.');return;}
+ var r=S.payments.filter(function(x){return x.gid===p;})[0];
+ if(!r){toast('Nejdřív zapište platbu („Platba proběhla“).');return;}
+ r.eet='ok';r.err='';toast('Zaznamenáno jako odesláno. Skutečné napojení na EET zatím není – doplníme do 1. 1. 2027.');
+};
+A.eetSend=function(p){var r=S.payments.filter(function(x){return x.id===p;})[0];r.eet='ok';r.err='';toast('Zaznamenáno jako odesláno. Skutečné napojení na EET zatím není – doplníme do 1. 1. 2027.');};
+A.payStay=function(p){
+ var s=S.stays.filter(function(x){return x.id===p;})[0];
+ if(!(s.from<=TODAY&&TODAY<=s.to)){toast('Účtovat jde, až jsou hosté ubytovaní (menu Odjezd a platba).');return;}
+ S.screen='platba';S.scrollTop=true;S.open['pg:'+s.grp]=true;
+};
+/* kniha */
+A.bookFilter=function(p){S.bookFilter=p;};
+A.bookFormToggle=function(){S.bookFormOpen=!S.bookFormOpen;S.form={};};
+A.bForeign=function(){S.form.bForeign=!S.form.bForeign;};
+A.saveBook=function(){
+ var f=S.form;if(!(f.bName||'').trim()){toast('Doplňte jméno hosta.');return;}
+ var bf=f.bFrom||TODAY,bt=(f.bTo&&f.bTo>=bf)?f.bTo:bf;
+ S.manual.push({id:'bm'+uid(),name:f.bName.trim(),addr:f.bAddr||'',doc:f.bDoc||'',born:f.bBorn||'',nat:f.bNat||(f.bForeign?'zahraničí':'CZ'),foreign:!!f.bForeign,from:bf,to:bt,email:f.bMail||'',phone:f.bTel||''});
+ S.bookFormOpen=false;S.form={};toast('Host zapsán do knihy.');
+};
+A.police=function(p){S.police[p]=!S.police[p];};
+A.rebook=function(p){
+ var f=S.form,a=f['hf_'+p],b=f['ht_'+p];
+ if(!a||!b||b<a){toast('Vyberte nový příjezd a odjezd.');return;}
+ var h=bookRows().filter(function(x){return x.id===p;})[0];
+ var gid='gh'+uid();
+ var g={id:gid,grp:'indiv',name:h.name,persons:1,email:h.email,phone:h.phone,only:false,foreign:h.foreign,nat:h.nat,addr:h.addr,doc:h.doc,here:true,inBook:false,note:'Vrací se, nový pobyt přidán z knihy hostů.',paid:null};
+ g.bill=defBill(g,null,Math.max(1,diffDays(a,b)));S.guests.push(g);
+ var sid='s'+uid();S.stays.push({id:sid,grp:'indiv',guestId:gid,from:a,to:b});
+ (S.rebook[p]=S.rebook[p]||[]).push({from:a,to:b});
+ S.form['hf_'+p]=S.form['ht_'+p]='';
+ var fd=parse(a);S.calOff=(fd.getFullYear()-TY)*12+fd.getMonth()-TM;
+ toast('Pobyt přidán do kalendáře.');
+};
+
+/* ---------- události ---------- */
+document.addEventListener('click',function(e){
+ var el=e.target.closest('[data-a]');if(!el)return;
+ var fn=A[el.dataset.a];if(!fn)return;
+ fn(el.dataset.p===undefined?'':el.dataset.p,el);render();dirty();
+});
+document.addEventListener('input',function(){dirty();});
+document.addEventListener('change',function(){dirty();});
+document.addEventListener('focusout',function(){if(DEFER)setTimeout(function(){if(DEFER&&!editing()){DEFER=false;render();}},80);});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});
+window.addEventListener('pagehide',function(){flush();});
+document.addEventListener('input',function(e){
+ var t=e.target,a,g,v;
+ if(t.dataset.f!==undefined){S.form[t.dataset.f]=t.value;return;}
+ if(t.dataset.biz){S.biz[t.dataset.biz]=t.value;return;}
+ if(t.dataset.bank){S.bank[t.dataset.bank]=t.value;var bs=document.querySelector('[data-bankst]');if(bs)bs.textContent=bankState();return;}
+ if(t.dataset.sdt){a=t.dataset.sdt.split('|');var sx=S.stays.filter(function(q){return q.id===a[0];})[0];if(!sx||!t.value)return;
+  var nf=a[1]==='from'?t.value:sx.from,nt=a[1]==='to'?t.value:sx.to;if(nt<=nf){toast('Odjezd musí být až po příjezdu.');return;}
+  var aff=sx.grp==='indiv'?[G(sx.guestId)]:(curStay(sx.grp)===sx?S.guests.filter(function(x){return x.grp===sx.grp&&!x.arr&&!x.dep;}):[]),olds=aff.map(function(x){return x?nightsOf(x):1;});
+  sx.from=nf;sx.to=nt;aff.forEach(function(x,i){if(x)rescale(x,olds[i],nightsOf(x));});render();return;}
+ if(t.dataset.bind){a=t.dataset.bind.split('|');g=G(a[0]);if(g){g[a[1]]=t.value;if(a[1]==='email'){var c=t.closest('.gcard'),tag=c&&c.querySelector('[data-mail]');if(tag){tag.textContent=g.email?'e-mail ✓':'chybí e-mail';tag.className='tag '+(g.email?'ok':'bad');}}}return;}
+  if(t.dataset.gprice){a=t.dataset.gprice.split('|');g=G(a[0]);g.price=g.price||{};v=parseInt(String(t.value).replace(/\D/g,''),10);if(isNaN(v))v=0;var bp=basePrice(g,a[1]);if(v===bp)delete g.price[a[1]];else g.price[a[1]]=v;t.classList.toggle('chg',v!==bp);var rsb=t.closest('.pw').querySelector('.rs');if(rsb)rsb.classList.toggle('off',v===bp);refresh(g);return;}
+ if(t.dataset.gd){a=t.dataset.gd.split('|');g=G(a[0]);var dd=guestDates(g),on=Math.max(1,diffDays(dd.from,dd.to)),nf=a[1]==='from'?t.value:dd.from,nt=a[1]==='to'?t.value:dd.to;
+  if(!nf||!nt||nt<nf)return;
+  if(g.grp==='indiv'){var st=stayOfGuest(g);st.from=nf;st.to=nt;}else{g.arr=nf;g.dep=nt;}
+  var nn=Math.max(1,diffDays(nf,nt));g.bill.ub=g.only?0:nn;g.bill.pp=g.only?0:g.persons*nn;['sn','ob','ve','pes'].forEach(function(k){g.bill[k]=Math.round((g.bill[k]||0)*nn/on);});
+  syncPay(g);render();return;}
+ if(t.dataset.kd){S[t.dataset.kd]=t.value;render();return;}
+ if(t.dataset.pl){a=t.dataset.pl.split('|');var l=PLg(a[0]);l[a[1]]=t.value;document.querySelectorAll('[data-plname="'+l.id+'"]').forEach(function(e){e.textContent=l.name;});document.querySelectorAll('[data-pldates="'+l.id+'"]').forEach(function(e){e.textContent=plDates(l);});syncAll();return;}
+ if(t.dataset.plp){a=t.dataset.plp.split('|');v=parseInt(String(t.value).replace(/\D/g,''),10);PLg(a[0]).p[a[1]]=isNaN(v)?0:v;syncAll();return;}
+
+if(t.dataset.gx){a=t.dataset.gx.split('|');g=G(a[0]);var x=(g.extra||[]).filter(function(q){return q.id===a[1];})[0];if(x){if(a[2]==='name')x.name=t.value;else{v=parseInt(String(t.value).replace(/\D/g,''),10);x.price=isNaN(v)?0:v;}refresh(g);}return;}
+ if(t.dataset.q){S.query=t.value;
+  clearTimeout(window.__qt);window.__qt=setTimeout(function(){var pos=t.selectionStart;render();var n=document.querySelector('[data-q]');if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(x2){}}},180);}
+});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.tagName==='INPUT'&&(e.target.dataset.gprice||e.target.dataset.gx||e.target.dataset.pl||e.target.dataset.plp)){e.preventDefault();e.target.blur();}});
+S=fresh();
+render();
+/* ---------- Supabase: přihlášení a ukládání ---------- */
+var SB_URL='https://bnckyiveqebzzzxuoluj.supabase.co',SB_KEY='sb_publishable_9-08pVFy82_mNy3rRVh-6w_gUZwOe3I';
+var SB=null,ME='',SBCH=null,RESYNC_T=null;
+DL={save:function(o){return new Promise(function(res){var b=o.data instanceof Blob?o.data:new Blob([o.data]);var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},2000);res();});}};
+function sbErr(e){var c=e&&e.code,s=e&&e.status;return {code:(c==='42501'||s===403)?'invalid_argument':(s===401?'revoked':'unavailable'),message:(e&&e.message)||''};}
+function sbChk(r){if(r&&r.error)throw sbErr(r.error);}
+function mkSnap(id,data){return {id:id,exists:data!=null,data:function(){return data==null?undefined:data;},metadata:{fromCache:false,hasPendingWrites:false}};}
+function sbApply(coll,changes){
+ if(!changes.length)return false;
+ if(coll==='cfg'){var c=changes.filter(function(x){return x.doc.id==='main'&&x.type!=='removed';})[0];return c?applyCfg(c.doc):false;}
+ if(COLS.indexOf(coll)<0)return false;
+ return applyCol(coll,{docChanges:function(){return changes;}});
+}
+async function sbFetchAll(){
+ var out=[],from=0,step=1000;
+ for(;;){var r=await SB.from('pz_docs').select('coll,id,data').order('coll').order('id').range(from,from+step-1);sbChk(r);out=out.concat(r.data||[]);if(!r.data||r.data.length<step)break;from+=step;}
+ return out;
+}
+async function sbResync(first){
+ var rows=await sbFetchAll(),by={guests:[],stays:[],payments:[],cfg:[]},seen={};
+ rows.forEach(function(r){if(by[r.coll]){by[r.coll].push({type:'modified',doc:mkSnap(r.id,r.data)});seen[r.coll+'/'+r.id]=1;}});
+ var ch=false;
+ COLS.forEach(function(c){
+  if(!first)S[c].forEach(function(o){var p=c+'/'+o.id;if(!seen[p]&&LAST[p]!==undefined&&LAST[p]===cj(o))by[c].push({type:'removed',doc:mkSnap(o.id,o)});});
+  if(sbApply(c,by[c]))ch=true;
+ });
+ if(sbApply('cfg',by.cfg))ch=true;
+ return ch;
+}
+function sbRealtime(){
+ SBCH=SB.channel('pz-docs').on('postgres_changes',{event:'*',schema:'public',table:'pz_docs'},function(pl){
+  var n=pl.new&&pl.new.coll?pl.new:null,o=pl.old||{};
+  var coll=n?n.coll:o.coll,id=n?n.id:o.id;if(!coll||!id)return;
+  var chs=pl.eventType==='DELETE'?[{type:'removed',doc:mkSnap(id,{})}]:[{type:'modified',doc:mkSnap(id,n.data)}];
+  if(sbApply(coll,chs))remoteRender();
+ }).subscribe(function(st){
+  if(st==='SUBSCRIBED'&&LOADED)queueResync(300);
+  if(st==='CHANNEL_ERROR'||st==='TIMED_OUT')queueResync(5000);
+ });
+}
+function queueResync(ms){clearTimeout(RESYNC_T);RESYNC_T=setTimeout(function(){if(!LOADED||!SB)return;sbResync(false).then(function(c){if(SYNC==='off')setSync('ok');if(c)remoteRender();},function(){setSync('off');});},ms||0);}
+async function startSb(){
+ LOADMSG='';renderLoading();
+ var t=setTimeout(function(){if(!LOADED){LOADMSG='slow';renderLoading();}},10000);
+ try{
+  var adm=await SB.rpc('pz_is_admin');sbChk(adm);
+  if(!adm.data){clearTimeout(t);LOADMSG='noaccess';renderLoading();return;}
+  DB={doc:function(p){var a=p.split('/');return {
+   set:function(d){return SB.from('pz_docs').upsert({coll:a[0],id:a[1],data:d}).then(sbChk);},
+   delete:function(){return SB.from('pz_docs').delete().eq('coll',a[0]).eq('id',a[1]).then(sbChk);}};}};
+  await sbResync(true);
+  clearTimeout(t);LOADED=true;LOADMSG='';afterLoad();setSync('ok');render();
+  sbRealtime();
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')queueResync(200);});
+  window.addEventListener('online',function(){queueResync(500);});
+  setInterval(function(){if(document.visibilityState==='visible'&&!SAVING)queueResync(0);},60000);
+ }catch(e){clearTimeout(t);LOADMSG='err';renderLoading();}
+}
+function loginHtml(){
+ return '<form id="loginf" class="col" style="gap:12px;width:100%;text-align:left"><div class="fld"><label for="lg_e">E-mail</label><input class="inp w" id="lg_e" type="email" autocomplete="username" required></div><div class="fld"><label for="lg_p">Heslo</label><input class="inp w" id="lg_p" type="password" autocomplete="current-password" required></div><button class="btn green big" type="submit" style="width:100%">Přihlásit se</button><span id="lg_msg" class="small" style="color:#B4232F"></span></form>';
+}
+document.addEventListener('submit',function(e){
+ if(e.target.id!=='loginf')return;e.preventDefault();
+ var em=document.getElementById('lg_e').value.trim().toLowerCase(),pw=document.getElementById('lg_p').value,msg=document.getElementById('lg_msg'),b=e.target.querySelector('button');
+ b.disabled=true;msg.textContent='Přihlašuji…';
+ SB.auth.signInWithPassword({email:em,password:pw}).then(function(r){
+  if(r.error){b.disabled=false;msg.textContent=/invalid/i.test(r.error.message)?'Špatný e-mail nebo heslo.':'Přihlášení se nepovedlo: '+r.error.message;return;}
+  ME=em;startSb();
+ },function(){b.disabled=false;msg.textContent='Nejde se připojit. Zkontrolujte internet.';});
+});
+function accountCard(){
+ var o=isOpen('acct',false);
+ var h='<div class="acc"><button class="hd" style="background:#2B1B6B;color:#fff" '+tg('acct',false)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Můj účet</b><span style="font-size:15px;font-weight:700">Přihlášen(a): '+esc(ME)+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
+ if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg"><div class="fld"><label for="f_pw1">Nové heslo (aspoň 10 znaků)</label><input class="inp w" id="f_pw1" data-f="pw1" type="password" autocomplete="new-password"></div><div class="fld"><label for="f_pw2">Nové heslo znovu</label><input class="inp w" id="f_pw2" data-f="pw2" type="password" autocomplete="new-password"></div></div><div class="row wrap"><button class="btn green big" data-a="pwChange">Změnit heslo</button><span class="sp"></span><button class="btn red big" data-a="logout">Odhlásit se</button></div></div>';
+ return h+'</div>';
+}
+A.pwChange=function(){
+ var a=S.form.pw1||'',b=S.form.pw2||'';
+ if(a.length<10){toast('Heslo musí mít aspoň 10 znaků.');return;}
+ if(a!==b){toast('Hesla se neshodují.');return;}
+ SB.auth.updateUser({password:a}).then(function(r){if(r.error)toast('Heslo se nepodařilo změnit: '+r.error.message);else{S.form.pw1='';S.form.pw2='';toast('Heslo je změněné.');render();}});
+};
+A.logout=function(){flush();setTimeout(function(){SB.auth.signOut().then(function(){location.reload();});},800);};
+function sbBoot(){
+ if(!window.supabase||!supabase.createClient){LOADMSG='nolib';renderLoading();return;}
+ SB=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false},realtime:{params:{eventsPerSecond:5}}});
+ SB.auth.getSession().then(function(r){
+  var s=r&&r.data&&r.data.session;
+  if(!s){LOADMSG='login';renderLoading();return;}
+  ME=(s.user&&s.user.email)||'';startSb();
+ },function(){LOADMSG='login';renderLoading();});
+ SB.auth.onAuthStateChange(function(ev,s){if(s&&s.access_token)SB.realtime.setAuth(s.access_token);if(ev==='SIGNED_OUT'&&LOADED)location.reload();});
+}
+function sendReceipt(d){
+ return SB.functions.invoke('pz-receipt',{body:d}).then(async function(r){
+  if(r.error){var m=r.error.message;try{if(r.error.context&&r.error.context.json){var j=await r.error.context.json();if(j&&j.error)m=j.error;}}catch(x){}throw {message:m};}
+  if(r.data&&r.data.error)throw {message:r.data.error};
+  return r.data;
+ });
+}
+
+sbBoot();
+})();
+</script>
+</body>
+</html>
