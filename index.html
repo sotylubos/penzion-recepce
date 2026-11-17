@@ -596,7 +596,7 @@ function PLg(id){return S.priceLists.filter(function(l){return l.id===id;})[0];}
 function plDates(l){return l.from&&l.to?dmy(l.from)+' – '+dmy(l.to):'bez omezení data';}
 function allGroups(){return S.groupDefs.map(function(d){return [d.key,d.name,d.color];}).concat([['indiv','Individuálové','#C2410C']]);}
 function vPrice(){
- var rows=[['ub1','Ubytování – 1 osoba v pokoji','Kč za noc'],['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['di','Dítě 3–12 let (mladší 3 let zdarma)','Kč za dítě a noc'],['st','Dítě / student 12–18 let','Kč za osobu a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
+ var rows=[['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['ub1','Ubytování – pouze 1 osoba v pokoji','Kč za noc'],['di','Dítě 3–12 let (mladší 3 let zdarma)','Kč za dítě a noc'],['st','Dítě / student 12–18 let','Kč za osobu a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
  var cards=S.priceLists.map(function(l){
   var k='pl:'+l.id,o=isOpen(k,false);
   var tags=l.groups.map(function(g){return '<span class="tag" style="background:rgba(255,255,255,.25);color:#fff;font-size:14px">'+esc(grpName(g))+'</span>';}).join('')||'<span class="tag bad">žádná skupina</span>';
