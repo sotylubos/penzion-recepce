@@ -794,14 +794,14 @@ function qrBlock(g){
 function bizCard(){
  var b=S.biz,miss=!b.name||!b.ico,o=isOpen('biz',miss);
  var h='<div class="acc"><button class="hd" style="background:#C2410C;color:#fff" '+tg('biz',miss)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Údaje podnikatele (na potvrzení platby)</b><span style="font-size:15px;font-weight:700">'+(miss?'Zatím nevyplněno':esc(b.name)+' · IČO '+esc(b.ico))+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
- if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg">'+[['name','Jméno a příjmení podnikatele / firma','např. Zdeňka Zichová'],['addr','Sídlo (adresa)','ulice, číslo, PSČ, obec'],['ico','IČO',''],['dic','DIČ','např. CZ…'],['phone','Telefon','']].map(function(f){return '<div class="fld"><label for="bz_'+f[0]+'">'+f[1]+'</label><input class="inp w" id="bz_'+f[0]+'" data-biz="'+f[0]+'" value="'+esc(b[f[0]]||'')+'" placeholder="'+esc(f[2])+'"></div>';}).join('')+'</div><div class="row wrap">'+chip(b.vat?'Plátce DPH ✓':'Neplátce DPH','bizVat','',!!b.vat,'#C2410C')+'<span class="small">Tyto údaje se tisknou do e-mailu s potvrzením platby.</span></div></div>';
+ if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg">'+[['name','Jméno a příjmení podnikatele / firma','např. Zdeňka Zichová'],['addr','Sídlo (adresa)','ulice, číslo, PSČ, obec'],['ico','IČO',''],['dic','DIČ','např. CZ…'],['phone','Telefon','']].map(function(f){return '<div class="fld"><label for="bz_'+f[0]+'">'+f[1]+'</label><input class="inp w" id="bz_'+f[0]+'" data-biz="'+f[0]+'" value="'+esc(b[f[0]]||'')+'" placeholder="'+esc(f[2])+'"></div>';}).join('')+'</div><div class="row wrap">'+chip(b.vat?'Plátce DPH ✓':'Neplátce DPH','bizVat','',!!b.vat,'#C2410C')+'<span class="small">Tyto údaje se tisknou do e-mailu s potvrzením platby. Po vyplnění jména a DIČ se z něj stane zjednodušený daňový doklad s rozpisem DPH (ubytování a jídla 12 %, káva a pes 21 %, místní poplatek mimo DPH).</span></div></div>';
  return h+'</div>';
 }
 A.bizVat=function(){S.biz.vat=!S.biz.vat;};
 function receiptData(g){
  var lines=[];
- Object.keys(PL).forEach(function(k){var q=(g.bill[k]||0)*(NOMUL[k]?1:g.persons),p=pr(g,k);if(!q||!p)return;lines.push({name:PL[k][0],unit:PL[k][1],qty:q,price:p,sum:q*p});});
- (g.extra||[]).forEach(function(x){if(!x.qty||!x.name||!x.price)return;lines.push({name:x.name,unit:'ks',qty:x.qty,price:x.price||0,sum:x.qty*(x.price||0)});});
+ Object.keys(PL).forEach(function(k){var q=(g.bill[k]||0)*(NOMUL[k]?1:g.persons),p=pr(g,k);if(!q||!p)return;lines.push({k:k,name:PL[k][0],unit:PL[k][1],qty:q,price:p,sum:q*p});});
+ (g.extra||[]).forEach(function(x){if(!x.qty||!x.name||!x.price)return;lines.push({k:'x',name:x.name,unit:'ks',qty:x.qty,price:x.price||0,sum:x.qty*(x.price||0)});});
  var d=guestDates(g),rec=S.payments.filter(function(x){return x.gid===g.id;})[0];
  return {gid:g.id,method:g.paid,methodName:METHODS[g.paid]?METHODS[g.paid][0]:'',date:rec?rec.date:TODAY,from:d.from,to:d.to,total:total(g),lines:lines};
 }
@@ -1083,7 +1083,7 @@ A.doMail=function(p){
  if(!g.email){toast('Host nemá vyplněný e-mail.');return;}
  if(typeof sendReceipt!=='function'){S.mailed[p]=TODAY;toast('V téhle verzi se e-maily neodesílají.');return;}
  if(S.mailBusy)return;S.mailBusy=p;toast('Odesílám potvrzení na '+g.email+'…');
- sendReceipt(receiptData(g)).then(function(){S.mailed[p]=TODAY;S.mailBusy=null;toast('Potvrzení platby odesláno na '+g.email+'.');render();dirty();},function(e){S.mailBusy=null;toast('E-mail se nepodařilo odeslat: '+((e&&e.message)||'neznámá chyba'));render();});
+ sendReceipt(receiptData(g)).then(function(r){S.mailed[p]=TODAY;S.mailBusy=null;toast(r&&r.taxdoc?'Daňový doklad č. '+r.docno+' odeslán na '+g.email+'.':'Potvrzení platby odesláno na '+g.email+'.'+((S.biz&&S.biz.vat&&!(S.biz.dic&&S.biz.name))?' Pozor: bez jména a DIČ v Ceníku to není daňový doklad.':''));render();dirty();},function(e){S.mailBusy=null;toast('E-mail se nepodařilo odeslat: '+((e&&e.message)||'neznámá chyba'));render();});
 };
 A.eetPay=function(p){
  var g=G(p),m=curMethod(g);
