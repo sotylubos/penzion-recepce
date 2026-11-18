@@ -570,9 +570,9 @@ function vBook(){
  var pch=[['all','Celé období'],['week','Tento týden'],['month','Tento měsíc'],['prev','Minulý měsíc'],['custom','Vlastní období']];
  var custom=S.bookPeriod==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="kd_from">Od</label><input class="inp" id="kd_from" type="date" data-kd="kFrom" value="'+esc(S.kFrom)+'"></div><div class="fld" style="width:190px"><label for="kd_to">Do</label><input class="inp" id="kd_to" type="date" data-kd="kTo" value="'+esc(S.kTo)+'"></div>'+(rg?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':'';
  var pm=S.pickFor,pg=pm&&pm!=='indiv';
- var exp=pm?'':'<div class="panel" style="background:#EFE9FF"><div class="row wrap"><b style="font-size:19px;font-weight:900">Export do tabulky k tisku</b><span class="tag" style="background:#6C3CE9;color:#fff;font-size:15px">vybráno: '+nsel+'</span><span class="sp"></span><button class="btn white" data-a="bkAll">Vybrat vše zobrazené</button><button class="btn white" data-a="bkNone">Zrušit výběr</button></div>'+
-  '<span class="small" style="font-size:15px">Zaškrtněte hosty vlevo, nebo nastavte období a klepněte na „Vybrat vše zobrazené“. Do souboru půjdou jen pobyty ve zvoleném období.</span>'+
-  (DL?'<div class="row wrap"><button class="btn green big" '+(nsel?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(nsel?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="pdf">Stáhnout PDF</button></div>':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>')+'</div>';
+ var exp=pm?'':'<div class="panel" style="background:#EFE9FF"><div class="row wrap"><b style="font-size:19px;font-weight:900">Export do tabulky k tisku</b><span class="tag" style="background:#6C3CE9;color:#fff;font-size:15px">v seznamu: '+vis.length+'</span></div>'+
+  '<span class="small" style="font-size:15px">Do souboru půjdou všichni hosté zobrazení v seznamu a jen jejich pobyty ve zvoleném období. Skupinu a období nastavíte filtry výše.</span>'+
+  (DL?'<div class="row wrap"><button class="btn green big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="pdf">Stáhnout PDF</button></div>':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>')+'</div>';
  var list=vis.map(function(b){
   var o=isOpen(b.id,false),pd=!!S.police[b.id],sh=staysIn(b,rg),sel=!!S.bookSel[b.id];
   var last=sh[0];
@@ -582,7 +582,7 @@ function vBook(){
    (b.gid?'<div class="fg">'+[['addr','Adresa'],['doc','Číslo dokladu'],['born','Datum narození'],['nat','Státní příslušnost'],['email','E-mail'],['phone','Telefon']].map(function(f){return '<div class="fld"><label for="bi_'+b.gid+f[0]+'">'+f[1]+'</label><input '+(f[0]==='born'?'type="date" ':'')+'class="inp w" id="bi_'+b.gid+f[0]+'" data-bind="'+b.gid+'|'+f[0]+'" value="'+esc(b[f[0]]||'')+'"></div>';}).join('')+'</div>':'<span style="font-size:16px;font-weight:700;line-height:1.5">Narozen(a): '+(b.born?dmy(b.born):'[doplní se]')+' · Adresa: '+esc(b.addr||'[doplní se]')+' · Doklad: '+esc(b.doc||'[doplní se]')+' · Státní příslušnost: '+esc(b.nat)+' · E-mail: '+esc(b.email||'[doplní se]')+' · Telefon: '+esc(b.phone||'[doplní se]')+'</span>')+
    (b.foreign?'<span class="row wrap"><b style="font-size:16px">Hlášení cizinecké policii:</b><button class="btn" style="background:'+(pd?'#12805C':'#D62839')+'" data-a="police" data-p="'+b.id+'">'+(pd?'Nahlášeno ✓':'Čeká na nahlášení')+'</button></span>':'')+
    act+(pm?'':forgetBtn('forgetBook',b.id,'Smazat z knihy navždy'))+'</div>';
-  return '<div class="gcard" style="background:'+(o?'#F1EBFF':'#fff')+';box-shadow:0 3px 0 #F0DFC0"><div class="krow">'+(pm?'':'<button class="ck'+(sel?' on':'')+'" aria-label="Vybrat k exportu" data-a="bkSel" data-p="'+b.id+'">'+(sel?'✓':'')+'</button>')+'<button class="ktg" '+tg(b.id,false)+'><span class="kn"><b>'+esc(b.name)+'</b><span class="small">'+(last?'naposledy '+dmy(last.from)+' – '+dmy(last.to):'')+'</span></span><span class="tag" style="background:'+bGrpColor(b.grp)+';color:#fff">'+esc(bGrpName(b.grp))+'</span><span class="tag '+(b.foreign?'y':'g')+'">'+(b.foreign?'cizinec':'tuzemec')+'</span>'+(b.pending?'<span class="tag" style="background:#FFC21A;color:#1F2340">čeká na potvrzení</span>':'')+(b.gid&&(!b.addr||!b.doc||!b.born)?'<span class="tag bad">doplnit údaje</span>':'')+'<span class="tag" style="background:#EEE9FF;font-size:14px">'+sh.length+' '+pl(sh.length,'pobyt','pobyty','pobytů')+'</span><span class="pm">'+(o?'–':'+')+'</span></button>'+(b.pending&&!pm?'<button class="btn green" data-a="bkConfirm" data-p="'+b.gid+'">Potvrdit příjezd</button>':'')+'</div>'+det+'</div>';
+  return '<div class="gcard" style="background:'+(o?'#F1EBFF':'#fff')+';box-shadow:0 3px 0 #F0DFC0"><div class="krow">'+'<button class="ktg" '+tg(b.id,false)+'><span class="kn"><b>'+esc(b.name)+'</b><span class="small">'+(last?'naposledy '+dmy(last.from)+' – '+dmy(last.to):'')+'</span></span><span class="tag" style="background:'+bGrpColor(b.grp)+';color:#fff">'+esc(bGrpName(b.grp))+'</span><span class="tag '+(b.foreign?'y':'g')+'">'+(b.foreign?'cizinec':'tuzemec')+'</span>'+(b.pending?'<span class="tag" style="background:#FFC21A;color:#1F2340">čeká na potvrzení</span>':'')+(b.gid&&(!b.addr||!b.doc||!b.born)?'<span class="tag bad">doplnit údaje</span>':'')+'<span class="tag" style="background:#EEE9FF;font-size:14px">'+sh.length+' '+pl(sh.length,'pobyt','pobyty','pobytů')+'</span><span class="pm">'+(o?'–':'+')+'</span></button>'+(b.pending&&!pm?'<button class="btn green" data-a="bkConfirm" data-p="'+b.gid+'">Potvrdit příjezd</button>':'')+'</div>'+det+'</div>';
  }).join('')||'<div class="note p" style="text-align:center">Nikdo takový tu zatím nebyl. Přidejte ho tlačítkem „+ Přidat do knihy“.</div>';
  var banner=pm?'<div class="panel" style="background:#FFF1D6"><div class="row wrap"><b style="flex:1;min-width:220px;font-size:19px;font-weight:900">'+(pg?'Vyberte hosta, kterého přidáte do skupiny '+esc(grpName(pm))+'.':'Vyberte hosta, kterého přidáte mezi individuály.')+'</b><button class="btn white" data-a="pickCancel">Zpět bez přidání</button></div></div>':'';
  return '<div class="col">'+banner+'<div class="card"><div class="row wrap"><input class="inp t" style="flex:1;min-width:260px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat jméno, e-mail nebo telefon" aria-label="Hledat hosta"><span class="small b" style="font-size:16px">'+vis.length+' '+pl(vis.length,'host','hosté','hostů')+'</span><button class="btn green big" data-a="bookFormToggle">+ Přidat do knihy</button></div>'+
@@ -614,8 +614,7 @@ function vPrice(){
 /* ---------- export knihy hostů ---------- */
 function exportData(){
  var rg=periodRange(),lines=[],n=0;
- bookRows().forEach(function(r){
-  if(!S.bookSel[r.id])return;
+ bookView().vis.forEach(function(r){
   staysIn(r,rg).slice().sort(function(a,b){return a.from<b.from?-1:1;}).forEach(function(s){
    lines.push([r.name,r.born?dmy(r.born):'',bGrpName(r.grp),dmy(s.from),dmy(s.to),String(Math.max(1,diffDays(s.from,s.to))),r.nat+(r.foreign?' (cizinec)':''),r.addr||'',r.doc||'',r.foreign?'ano':'ne']);
   });
@@ -716,7 +715,7 @@ async function buildPdf(d){
 var DL=null;
 async function doExport(kind){
  if(!DL){toast('Stažení souboru tu není dostupné.');return;}
- var d=exportData();if(!d.rows.length){toast('Nejdřív zaškrtněte hosty, nebo zvolte období.');return;}
+ var d=exportData();if(!d.rows.length){toast('V seznamu nejsou žádní hosté k exportu.');return;}
  try{
   toast('Připravuji soubor…');
   var base='Kniha-hostu-'+TODAY,data=kind==='xlsx'?buildXlsx(d):await buildPdf(d);
