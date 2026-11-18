@@ -294,7 +294,7 @@ function listFor(g){
  if(und.length)return und[0];
  return c[0]||S.priceLists[0];
 }
-function basePrice(g,k){var l=listFor(g);if(k==='ub')return g.persons>=2?l.p.ub2:l.p.ub1;return l.p[k]||0;}
+function basePrice(g,k){var l=listFor(g);if(k==='ub')return (g.grp==='indiv'&&g.persons<2)?l.p.ub1:l.p.ub2;return l.p[k]||0;}
 function pr(g,k){return (g.price&&g.price[k]!=null)?g.price[k]:basePrice(g,k);}
 function extrasSum(g){return (g.extra||[]).reduce(function(a,x){return a+(x.qty||0)*(x.price||0);},0);}
 var NOMUL={pp:1,pes:1,di:1,st:1};
@@ -596,19 +596,19 @@ function PLg(id){return S.priceLists.filter(function(l){return l.id===id;})[0];}
 function plDates(l){return l.from&&l.to?dmy(l.from)+' – '+dmy(l.to):'bez omezení data';}
 function allGroups(){return S.groupDefs.map(function(d){return [d.key,d.name,d.color];}).concat([['indiv','Individuálové','#C2410C']]);}
 function vPrice(){
- var rows=[['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['ub1','Ubytování – pouze 1 osoba v pokoji','Kč za noc'],['di','Dítě 3–12 let (mladší 3 let zdarma)','Kč za dítě a noc'],['st','Dítě / student 12–18 let','Kč za osobu a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
+ var rows=[['ub2','Ubytování – 2 a více osob v pokoji','Kč za osobu a noc'],['di','Dítě 3–12 let (mladší 3 let zdarma)','Kč za dítě a noc'],['st','Dítě / student 12–18 let','Kč za osobu a noc'],['sn','Snídaně','Kč za kus'],['ob','Oběd','Kč za kus'],['ve','Večeře','Kč za kus'],['ka','Káva','Kč za kus'],['pp','Místní poplatek z pobytu (pro obec)','Kč za osobu a noc'],['pes','Pes','Kč za psa a noc']];
  var cards=S.priceLists.map(function(l){
-  var k='pl:'+l.id,o=isOpen(k,false);
+  var k='pl:'+l.id,o=isOpen(k,false),rws=l.groups.indexOf('indiv')>=0?rows.slice(0,1).concat([['ub1','Ubytování – pouze 1 osoba v pokoji','Kč za noc']],rows.slice(1)):rows;
   var tags=l.groups.map(function(g){return '<span class="tag" style="background:rgba(255,255,255,.25);color:#fff;font-size:14px">'+esc(grpName(g))+'</span>';}).join('')||'<span class="tag bad">žádná skupina</span>';
   var det='';
   if(o)det='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg"><div class="fld"><label for="pn_'+l.id+'">Název ceníku</label><input class="inp w" id="pn_'+l.id+'" data-pl="'+l.id+'|name" value="'+esc(l.name)+'"></div><div class="row" style="align-items:flex-end"><div class="fld" style="flex:1"><label for="pf_'+l.id+'">Platí od</label><input class="inp w" id="pf_'+l.id+'" type="date" data-pl="'+l.id+'|from" value="'+esc(l.from)+'"></div><div class="fld" style="flex:1"><label for="pt_'+l.id+'">Platí do</label><input class="inp w" id="pt_'+l.id+'" type="date" data-pl="'+l.id+'|to" value="'+esc(l.to)+'"></div></div></div>'+
    '<span class="small">Data nechte prázdná, má-li ceník platit celoročně. Platí ceník, do jehož data spadá příjezd hosta; když žádný nesedí, použije se ceník bez dat.</span>'+
    '<div class="row wrap"><b style="font-size:17px">Platí pro skupiny:</b>'+allGroups().map(function(g){return chip(esc(g[1]),'plGroup',l.id+'|'+g[0],l.groups.indexOf(g[0])>=0,g[2]);}).join('')+'</div>'+
-   '<div class="fg">'+rows.map(function(r){return '<div class="fld"><label for="pp_'+l.id+'_'+r[0]+'">'+r[1]+' <span style="font-weight:700">('+r[2]+')</span></label><input class="inp w" style="font-weight:900" id="pp_'+l.id+'_'+r[0]+'" inputmode="numeric" data-plp="'+l.id+'|'+r[0]+'" value="'+(l.p[r[0]]||0)+'"></div>';}).join('')+'</div>'+
+   '<div class="fg">'+rws.map(function(r){return '<div class="fld"><label for="pp_'+l.id+'_'+r[0]+'">'+r[1]+' <span style="font-weight:700">('+r[2]+')</span></label><input class="inp w" style="font-weight:900" id="pp_'+l.id+'_'+r[0]+'" inputmode="numeric" data-plp="'+l.id+'|'+r[0]+'" value="'+(l.p[r[0]]||0)+'"></div>';}).join('')+'</div>'+
    '<div class="row"><button class="btn red" data-a="plDel" data-p="'+l.id+'">Smazat ceník</button></div></div>';
   return '<div class="acc"><button class="hd" style="background:#00857F;color:#fff" '+tg(k,false)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px" data-plname="'+l.id+'">'+esc(l.name)+'</b><span style="font-size:15px;font-weight:700" data-pldates="'+l.id+'">'+plDates(l)+'</span></span>'+tags+'<span class="pm" style="color:#fff">'+(o?'–':'+')+'</span></button>'+det+'</div>';
  }).join('')+bankCard()+bizCard()+accountCard();
- return '<div class="col"><div class="row wrap"><div class="small" style="flex:1;min-width:240px;font-size:16px">Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. Ceny ubytování se liší podle toho, jestli je v pokoji jeden host, nebo dva a více. Skupina bez vlastního ceníku použije první ceník v seznamu.</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
+ return '<div class="col"><div class="row wrap"><div class="small" style="flex:1;min-width:240px;font-size:16px">Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. U individuálů se cena ubytování liší podle toho, jestli je v pokoji jeden host, nebo dva a více; skupiny mají jednu cenu za osobu a noc. Skupina bez vlastního ceníku použije první ceník v seznamu.</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
 }
 
 /* ---------- export knihy hostů ---------- */
