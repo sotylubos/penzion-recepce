@@ -335,6 +335,80 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
  .acc .inp[data-q]{flex:1 1 100%!important;min-width:0!important}
  .acc .row.wrap>.pill{flex:1 1 auto;justify-content:center;padding:0 10px}
 }
+
+/* ===== mobil: menu pod třemi čárkami, sbalitelné části, kalendář na jednu obrazovku ===== */
+.burger,.navbd{display:none}
+.navs{display:contents}
+.dsk{display:inline}
+.fold{background:#F7F3FF;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 2px #E3D8FF}
+.fhd{display:flex;align-items:center;gap:10px;width:100%;min-height:54px;padding:6px 16px;background:transparent;color:#1F2340;text-align:left}
+.fhd .ft{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.fhd .ft b{font-size:18px;font-weight:900}
+.fhd .ft small{font-size:14px;font-weight:700;color:#5B5F85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fhd .pm{color:var(--fc,#6C3CE9)}
+.fbd{padding:2px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.calnav{gap:8px;flex-wrap:nowrap}
+.calnav .mname{flex:1;text-align:center;font-size:26px;font-weight:900}
+@media (max-width:700px),(max-height:520px) and (max-width:1000px){
+ .dsk{display:none}
+ .app{flex-direction:column}
+ .side{position:relative;z-index:30;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;justify-content:space-between;overflow:visible!important;padding:6px 10px!important;gap:8px}
+ .side>*{flex:none!important}
+ .logo{display:flex!important;padding:0;gap:10px}
+ .logo i{width:40px;height:40px;font-size:28px;border-radius:12px}
+ .logo b{font-size:18px}.logo span{display:none}
+ .burger{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 16px;border-radius:14px;background:#fff;color:#2B1B6B;font-size:18px;font-weight:900}
+ .burger .bl{display:flex;flex-direction:column;gap:5px}
+ .burger .bl i{display:block;width:24px;height:3.5px;border-radius:3px;background:#2B1B6B}
+ .navs{display:none}
+ .side.open .navs{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:absolute;top:100%;left:0;right:0;padding:10px;background:#2B1B6B;box-shadow:0 14px 24px rgba(31,35,64,.35);border-radius:0 0 22px 22px}
+ .side.open .navs .nav{width:100%;min-height:56px;font-size:17px;justify-content:flex-start;padding:4px 10px;text-align:left;background:#3F2A92}
+ .side.open .navs .nav.act{background:#fff}
+ .side.open .navs .nav i{display:flex;width:32px;height:32px;font-size:16px}
+ .navbd{display:block;position:fixed;inset:0;z-index:20;background:rgba(31,35,64,.45)}
+ .top{padding:8px 12px 2px;gap:8px}
+ .top h1{font-size:23px}
+ .top small{font-size:13px}
+ .badge{font-size:12px;padding:6px 10px}
+ .scroll{padding:4px 8px 22px}
+ .card{padding:12px;border-radius:20px;gap:10px}
+ .fhd{min-height:50px;padding:4px 12px}
+ .fhd .ft b{font-size:17px}
+ .fbd{padding:2px 12px 12px}
+ /* kalendář */
+ .calsw .pill{min-height:46px;font-size:16px;padding:0 14px}
+ .calsw .btn{min-height:46px;font-size:16px;padding:0 14px}
+ .calnav .rb{width:46px;height:46px;font-size:26px}
+ .calnav .mname{font-size:21px}
+ .calnav .btn{min-height:46px;font-size:16px;padding:0 14px}
+ .cal{gap:4px}
+ .cal .h{font-size:13px}
+ .day{min-height:62px;padding:3px 6px;gap:2px;border-width:3px;border-radius:10px}
+ .dn{font-size:14px}
+ .bar{font-size:0!important;line-height:0;min-height:14px;height:14px;padding:0!important;border-radius:0}
+ .more{font-size:10px}
+ .calcard>.caldet{order:20}
+ .calcard>.fold{order:21}
+ .caldet b{font-size:20px!important}
+ /* skupiny: seznam skupin ve dvou sloupcích */
+ .glist{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important}
+ .glist>button{min-height:56px!important;padding:8px 12px!important}
+ .glist>button b{font-size:17px!important}
+ .glist>button span{font-size:13px!important}
+ .glist>button[data-a=newGroupToggle],.glist>.card{grid-column:1/-1}
+ .gs{gap:10px}
+ /* EET */
+ .eetg>.col{order:-1}
+ .eetban{padding:14px!important;border-radius:20px!important}
+ .eetban b{font-size:26px!important}
+ .eetr{gap:6px 10px!important}
+ .eetr>span:first-child{flex:1 1 100%!important;min-width:0!important}
+ .eetr>.btn{flex:1 1 100%}
+}
+@media (min-width:701px) and (max-width:900px){.navs .nav{flex:1 1 30%}}
+@media (max-width:360px){
+ .burger b{display:none}
+}
 </style>
 </head>
 <body>
@@ -457,6 +531,9 @@ function presentEntries(){
 }
 function isOpen(k,def){return S.open[k]===undefined?def:S.open[k];}
 function tg(k,def){return 'data-a="tog" data-p="'+esc(k)+'" data-d="'+(def?1:0)+'"';}
+function mob(){try{return window.matchMedia('(max-width:700px),(max-height:520px) and (max-width:1000px)').matches;}catch(e){return false;}}
+/* sbalitelná část: nadpis (+ krátké shrnutí) a obsah jen po rozkliknutí */
+function fold(k,title,sub,body,def,color){var o=isOpen(k,!!def);return '<div class="fold"'+(color?' style="--fc:'+color+'"':'')+'><button class="fhd" aria-expanded="'+(o?'true':'false')+'" '+tg(k,!!def)+'><span class="ft"><b>'+title+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?'<div class="fbd">'+body+'</div>':'')+'</div>';}
 function guestSub(g){
  var p=[];var st=g.grp==='indiv'?stayOfGuest(g):null;
  if(st)p.push(rangeTxt(st.from,st.to));
@@ -520,7 +597,7 @@ function guestCard(g){
  return '<div class="gcard'+(o?' open':'')+'"><div class="grow"><button class="gtoggle" '+tg('g:'+g.id,false)+'><span class="av" style="background:'+(past?'#B8B5C8':col)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b></span>'+(!g.here&&!o?'<span class="tag g">nepřijede</span>':'')+'<span class="pm">'+(o?'–':'+')+'</span></button></div>'+det+'</div>';
 }
 /* ---------- obrazovky ---------- */
-function calSwitch(){return '<div class="row wrap">'+chip('Kalendář','calView','cal',S.calView!=='list','#6C3CE9')+chip('Seznam rezervací','calView','list',S.calView==='list','#6C3CE9')+'</div>';}
+function calSwitch(extra){return '<div class="row wrap calsw">'+chip('Kalendář','calView','cal',S.calView!=='list','#6C3CE9')+chip('Seznam<span class="dsk"> rezervací</span>','calView','list',S.calView==='list','#6C3CE9')+(extra||'')+'</div>';}
 function vRes(){
  var f=S.resF||'up',q=(S.query||'').toLowerCase();
  var l=S.stays.filter(function(s){return f==='all'||(f==='up'?s.to>=TODAY:s.to<TODAY);}).sort(function(a,b){return f==='past'?(a.from<b.from?1:-1):(a.from<b.from?-1:1);});
@@ -553,7 +630,7 @@ function vKal(){
   var np=stayPersons(sel),note='';
   if(sel.grp==='indiv')note=G(sel.guestId).note||'';
   else{var ms=S.guests.filter(function(x){return x.grp===sel.grp&&x.here;});var only=ms.filter(function(x){return x.only;}).reduce(function(a,x){return a+x.persons;},0);var fo=ms.filter(function(x){return x.foreign;}).length;note=(np-only)+' ubytováno, '+only+' jen na stravu'+(fo?' · '+fo+' cizinec':'')+' · platba na konci pobytu.';}
-  detail='<div class="panel" style="background:'+bg+'"><div class="row wrap"><b style="font-size:24px;font-weight:900">'+esc(stayName(sel))+'</b><span class="tag" style="background:#fff;font-size:16px;padding:5px 14px">'+(sel.grp==='indiv'?'individuál':'skupina')+'</span><span class="sp"></span><button class="rb" style="background:#fff" aria-label="Zavřít" data-a="selStay" data-p="">×</button></div>'+
+  detail='<div class="panel caldet" id="caldet" style="background:'+bg+'"><div class="row wrap"><b style="font-size:24px;font-weight:900">'+esc(stayName(sel))+'</b><span class="tag" style="background:#fff;font-size:16px;padding:5px 14px">'+(sel.grp==='indiv'?'individuál':'skupina')+'</span><span class="sp"></span><button class="rb" style="background:#fff" aria-label="Zavřít" data-a="selStay" data-p="">×</button></div>'+
    '<div style="font-size:19px;font-weight:800">'+rangeTxt(sel.from,sel.to)+(sel.to<TODAY?' (proběhlo)':'')+' · '+persTxt(np)+'</div><div style="font-size:17px;font-weight:700;line-height:1.45">'+esc(note)+'</div>'+
    '<div class="row wrap"><button class="btn dark big" data-a="openStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Otevřít hosta':'Otevřít skupinu')+'</button><button class="btn yellow big" data-a="payStay" data-p="'+sel.id+'">Účtovat</button></div>'+stayEdit(sel)+'</div>';
  }
@@ -575,9 +652,9 @@ function vKal(){
  var legend='<span class="small b" style="color:#1F2340">▶ příjezd (pravá půlka dne) · ◀ odjezd (levá půlka)</span>'+
   S.groupDefs.map(function(d){return '<span class="small b" style="color:#1F2340"><i class="dot" style="background:'+d.color+'"></i>'+esc(d.name)+'</span>';}).join('')+
   '<span class="small b" style="color:#1F2340"><i class="dot" style="background:#C2410C"></i>Individuálové</span><span class="small b" style="color:#1F2340"><i class="dot" style="background:#B8B5C8"></i>proběhlo</span>';
- return '<div class="card">'+calSwitch()+'<div class="row wrap"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí měsíc" data-a="calGo" data-p="-1">‹</button><b style="font-size:26px;font-weight:900;min-width:190px;text-align:center">'+MN[base.getMonth()]+' '+base.getFullYear()+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další měsíc" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button><span class="sp"></span><button class="btn green big" data-a="calNew">+ Nová rezervace</button></div>'+
-  '<div class="row wrap" style="gap:14px">'+legend+'</div>'+form+detail+
-  '<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div></div>';
+ var legendBox=fold('legend','Co znamenají barvy',null,'<div class="row wrap" style="gap:10px 14px">'+legend+'</div>',!mob());
+ return '<div class="card calcard">'+calSwitch('<span class="sp"></span><button class="btn green" data-a="calNew">+ Nová<span class="dsk"> rezervace</span></button>')+'<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí měsíc" data-a="calGo" data-p="-1">‹</button><b class="mname">'+MN[base.getMonth()]+' '+base.getFullYear()+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další měsíc" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button></div>'+
+  legendBox+form+detail+'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div></div>';
 }
 
 function vGroups(isIndiv){
@@ -591,7 +668,7 @@ function vGroups(isIndiv){
  var st=isIndiv?null:curStay(key);
  var left='';
  if(!isIndiv){
-  left='<div class="col" style="gap:10px">'+S.groupDefs.map(function(d){
+  left='<div class="col glist" style="gap:10px">'+S.groupDefs.map(function(d){
    var a=S.grp===d.key,cs=curStay(d.key);
    return '<button style="display:flex;flex-direction:column;gap:2px;padding:14px 18px;border-radius:20px;min-height:64px;text-align:left;background:'+(a?d.color:'#fff')+';color:'+(a?'#fff':'#1F2340')+';box-shadow:0 5px 0 '+(a?'rgba(31,35,64,.3)':'#F0DFC0')+'" data-a="pickGroup" data-p="'+d.key+'"><b style="font-size:20px;font-weight:900">'+esc(d.name)+'</b><span style="font-size:15px;font-weight:700">'+(cs?rangeTxt(cs.from,cs.to):'zatím bez termínu')+'</span></button>';
   }).join('')+'<button style="min-height:56px;border:3px dashed #6C3CE9;background:#fff;color:#6C3CE9;border-radius:20px;font-weight:900;font-size:19px" data-a="newGroupToggle">+ Nová skupina</button>'+
@@ -614,7 +691,7 @@ function vGroups(isIndiv){
  }
  var list=members.length?'<div class="ggrid">'+members.map(guestCard).join('')+'</div>':'<div class="note p">Zatím tu nejsou žádní hosté. Přidejte je tlačítkem „+ Přidat hosta“.</div>';
  var tools='';
- if(!foc&&!isIndiv){var hp=allM.filter(function(x){return x.here;}).reduce(function(a,x){return a+x.persons;},0),nh=allM.filter(function(x){return x.here;}).length;tools='<div class="row wrap"><input class="inp t" style="flex:1;min-width:240px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat hosta ve skupině" aria-label="Hledat hosta">'+[['all','Všichni ('+allM.length+')'],['here','Přijede ('+nh+')'],['not','Nepřijede ('+(allM.length-nh)+')']].map(function(c){return chip(c[1],'grpF',c[0],S.grpF===c[0],def.color);}).join('')+'</div><div class="small b">Celkem '+persTxt(hp)+' · hosté jsou podle abecedy (příjmení). Klepnutím na jméno rozbalíte detail.</div>';}else if(isIndiv&&!foc)tools='<div class="small b">Hosté jsou podle abecedy (příjmení).</div>';
+ if(!foc&&!isIndiv){var hp=allM.filter(function(x){return x.here;}).reduce(function(a,x){return a+x.persons;},0),nh=allM.filter(function(x){return x.here;}).length;tools='<div class="row wrap"><input class="inp t" style="flex:1;min-width:240px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat hosta ve skupině" aria-label="Hledat hosta"></div>'+(function(){var gf=[['all','Všichni ('+allM.length+')'],['here','Přijede ('+nh+')'],['not','Nepřijede ('+(allM.length-nh)+')']],gs=gf.filter(function(c){return c[0]===S.grpF;})[0];return fold('grpf','Filtr hostů',esc(gs?gs[1]:gf[0][1]),'<div class="row wrap">'+gf.map(function(c){return chip(c[1],'grpF',c[0],S.grpF===c[0],def.color);}).join('')+'</div>',false,def.color);})()+'<div class="small b">Celkem '+persTxt(hp)+'<span class="dsk"> · hosté jsou podle abecedy (příjmení). Klepnutím na jméno rozbalíte detail.</span></div>';}else if(isIndiv&&!foc)tools='<div class="small b">Hosté jsou podle abecedy (příjmení).</div>';
  var card='<div class="card">'+head+info+gform+tools+list+'</div>';
  return '<div class="gs'+(isIndiv?' one':'')+'">'+left+card+'</div>';
 }
@@ -656,12 +733,13 @@ function entryHtml(e){
 }
 function vPay(){
  var ents=presentEntries();
- var top='<div class="small" style="font-size:16px">Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta.</div>',price='';
+ var top=fold('payinfo','Co tu je',null,'<div class="small" style="font-size:16px">Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta.</div>',!mob(),'#1D6FE0'),price='';
  var body=ents.length?ents.map(entryHtml).join(''):'<div class="note p">Teď není nikdo ubytovaný, takže tu není co účtovat.</div>';
  var shown=S.payments.filter(function(p){return p.date===TODAY&&(S.payFilter==='all'||p.method===S.payFilter);});
  var filters=[['all','Všechny','#2B1B6B'],['hotove','Hotově','#12805C'],['qr','QR (banka)','#1D6FE0'],['prevod','Převodem (banka)','#6C3CE9'],['predem','Předem','#C2410C']];
  var rows=shown.map(function(p){var m=METHODS[p.method];return '<div class="row wrap" style="border-radius:14px;padding:10px 14px;background:'+m[2]+'"><b style="flex:1;font-size:18px;min-width:140px">'+esc(p.name)+'</b><span class="tag" style="background:'+m[1]+';color:#fff;font-size:15px;padding:5px 14px">'+m[0]+'</span><b style="width:110px;text-align:right;font-size:18px">'+kc(p.sum)+'</b></div>';}).join('')||'<div class="note p">Dnes zatím nikdo nezaplatil.</div>';
- var paid='<div class="card"><div class="row wrap"><b style="font-size:19px">Přijaté platby dnes</b><span class="sp"></span>'+filters.map(function(f){return chip(f[1],'payFilter',f[0],S.payFilter===f[0],f[2]);}).join('')+'</div><span class="small">Jen dnešní platby, pro kontrolu s bankou.</span>'+rows+'<div class="row" style="justify-content:flex-end;font-weight:900;font-size:18px"><span>Součet ve filtru:</span><span>'+kc(shown.reduce(function(a,p){return a+p.sum;},0))+'</span></div></div>';
+ var pfs=filters.filter(function(f){return f[0]===S.payFilter;})[0];
+ var paid='<div class="card"><div class="row wrap"><b style="font-size:19px">Přijaté platby dnes</b></div>'+fold('payf','Filtr plateb',esc(pfs?pfs[1]:'Všechny'),'<div class="row wrap">'+filters.map(function(f){return chip(f[1],'payFilter',f[0],S.payFilter===f[0],f[2]);}).join('')+'</div><span class="small">Jen dnešní platby, pro kontrolu s bankou.</span>',false,'#1D6FE0')+rows+'<div class="row" style="justify-content:flex-end;font-weight:900;font-size:18px"><span>Součet ve filtru:</span><span>'+kc(shown.reduce(function(a,p){return a+p.sum;},0))+'</span></div></div>';
  return '<div class="col">'+top+price+body+paid+'</div>';
 }
 function isoFromHist(s){
@@ -713,10 +791,11 @@ function vBook(){
  if(npend)gch.push(['pending','Čeká na potvrzení ('+npend+')','#D62839']);
  var pch=[['all','Celé období'],['week','Tento týden'],['month','Tento měsíc'],['prev','Minulý měsíc'],['custom','Vlastní období']];
  var custom=S.bookPeriod==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="kd_from">Od</label><input class="inp" id="kd_from" type="date" data-kd="kFrom" value="'+esc(S.kFrom)+'"></div><div class="fld" style="width:190px"><label for="kd_to">Do</label><input class="inp" id="kd_to" type="date" data-kd="kTo" value="'+esc(S.kTo)+'"></div>'+(rg?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':'';
+ var gsel=gch.filter(function(f){return f[0]===S.bookFilter;})[0],psel=pch.filter(function(f){return f[0]===S.bookPeriod;})[0],fsum=(gsel?gsel[1]:'Všichni')+' · '+(psel?psel[1]:'Celé období');
  var pm=S.pickFor,pg=pm&&pm!=='indiv';
- var exp=pm?'':'<div class="panel" style="background:#EFE9FF"><div class="row wrap"><b style="font-size:19px;font-weight:900">Export do tabulky k tisku</b><span class="tag" style="background:#6C3CE9;color:#fff;font-size:15px">v seznamu: '+vis.length+'</span></div>'+
+ var exp=pm?'':fold('bkx','Export do tabulky k tisku','v seznamu: '+vis.length+' '+pl(vis.length,'host','hosté','hostů'),
   '<span class="small" style="font-size:15px">Do souboru půjdou všichni hosté zobrazení v seznamu a jen jejich pobyty ve zvoleném období. Skupinu a období nastavíte filtry výše.</span>'+
-  (DL?'<div class="row wrap"><button class="btn green big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="pdf">Stáhnout PDF</button></div>':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>')+'</div>';
+  (DL?'<div class="row wrap"><button class="btn green big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="pdf">Stáhnout PDF</button></div>':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>'),false,'#6C3CE9');
  var list=vis.map(function(b){
   var o=isOpen(b.id,false),pd=!!S.police[b.id],sh=staysIn(b,rg),sel=!!S.bookSel[b.id];
   var last=sh[0];
@@ -730,9 +809,9 @@ function vBook(){
  }).join('')||'<div class="note p" style="text-align:center">Nikdo takový tu zatím nebyl. Přidejte ho tlačítkem „+ Přidat do knihy“.</div>';
  var banner=pm?'<div class="panel" style="background:#FFF1D6"><div class="row wrap"><b style="flex:1;min-width:220px;font-size:19px;font-weight:900">'+(pg?'Vyberte hosta, kterého přidáte do skupiny '+esc(grpName(pm))+'.':'Vyberte hosta, kterého přidáte mezi individuály.')+'</b><button class="btn white" data-a="pickCancel">Zpět bez přidání</button></div></div>':'';
  return '<div class="col">'+banner+'<div class="card"><div class="row wrap"><input class="inp t" style="flex:1;min-width:260px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat jméno, e-mail nebo telefon" aria-label="Hledat hosta"><span class="small b" style="font-size:16px">'+vis.length+' '+pl(vis.length,'host','hosté','hostů')+'</span><button class="btn green big" data-a="bookFormToggle">+ Přidat do knihy</button></div>'+
-  '<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(f){return chip(esc(f[1]),'bookFilter',f[0],S.bookFilter===f[0],f[2]);}).join('')+'</div>'+
-  '<div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(f){return chip(f[1],'bookPeriod',f[0],S.bookPeriod===f[0],'#00857F');}).join('')+'</div>'+custom+
-  (vpend&&!pm?'<div class="row wrap"><button class="btn green big" data-a="bkConfirmAll">Potvrdit příjezd všem čekajícím ('+vpend+')</button><span class="small b" style="flex:1;min-width:200px">Hosté se v den příjezdu objeví v knize sami a čekají na potvrzení, že opravdu dorazili.</span></div>':'')+'<span class="small">Host, který u vás už byl, má v knize svůj profil. Rozbalte ho a jen přidejte nový příjezd a odjezd. V den příjezdu se host v knize objeví sám (kromě těch, kdo jen stravují) a vy potvrdíte, že dorazil. Chybějící adresu a doklad doplníte po rozkliknutí.</span></div>'+form+exp+list+'</div>';
+  fold('bkf','Filtry',esc(fsum),'<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(f){return chip(esc(f[1]),'bookFilter',f[0],S.bookFilter===f[0],f[2]);}).join('')+'</div>'+
+  '<div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(f){return chip(f[1],'bookPeriod',f[0],S.bookPeriod===f[0],'#00857F');}).join('')+'</div>'+custom,false,'#6C3CE9')+
+  (vpend&&!pm?'<div class="row wrap"><button class="btn green big" data-a="bkConfirmAll">Potvrdit příjezd všem čekajícím ('+vpend+')</button><span class="small b" style="flex:1;min-width:200px">Hosté se v den příjezdu objeví v knize sami a čekají na potvrzení, že opravdu dorazili.</span></div>':'')+''+fold('bki','Jak kniha hostů funguje',null,'<span class="small">Host, který u vás už byl, má v knize svůj profil. Rozbalte ho a jen přidejte nový příjezd a odjezd. V den příjezdu se host v knize objeví sám (kromě těch, kdo jen stravují) a vy potvrdíte, že dorazil. Chybějící adresu a doklad doplníte po rozkliknutí.</span>',!mob(),'#6C3CE9')+'</div>'+form+exp+list+'</div>';
 }
 
 /* ---------- ceník ---------- */
@@ -752,7 +831,7 @@ function vPrice(){
    '<div class="row"><button class="btn red" data-a="plDel" data-p="'+l.id+'">Smazat ceník</button></div></div>';
   return '<div class="acc"><button class="hd" style="background:#00857F;color:#fff" '+tg(k,false)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px" data-plname="'+l.id+'">'+esc(l.name)+'</b><span style="font-size:15px;font-weight:700" data-pldates="'+l.id+'">'+plDates(l)+'</span></span>'+tags+'<span class="pm" style="color:#fff">'+(o?'–':'+')+'</span></button>'+det+'</div>';
  }).join('')+bankCard()+bizCard()+accountCard();
- return '<div class="col"><div class="row wrap"><div class="small" style="flex:1;min-width:240px;font-size:16px">Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. U individuálů se cena ubytování liší podle toho, jestli je v pokoji jeden host, nebo dva a více; skupiny mají jednu cenu za osobu a noc. Skupina bez vlastního ceníku použije první ceník v seznamu.</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
+ return '<div class="col"><div class="row wrap"><div style="flex:1;min-width:200px">'+fold('plinfo','Jak ceník funguje',null,'<div class="small" style="font-size:16px">Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. U individuálů se cena ubytování liší podle toho, jestli je v pokoji jeden host, nebo dva a více; skupiny mají jednu cenu za osobu a noc. Skupina bez vlastního ceníku použije první ceník v seznamu.</div>',!mob(),'#00857F')+'</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
 }
 
 /* ---------- export knihy hostů ---------- */
@@ -875,13 +954,14 @@ function vEet(){
  var ST={wait:['Čeká na odeslání','#FFC21A','#1F2340'],ok:['Odesláno','#12805C','#fff'],err:['Chyba','#D62839','#fff']};
  var list=rows.map(function(p){
   var s=p.eet||'wait',st=ST[s],mt=p.method==='qr'?'QR kód na místě':'hotovost';
-  return '<div class="row wrap" style="background:'+(s==='err'?'#FFE3E6':(s==='ok'?'#E3F8EC':'#FFF6E5'))+';border-radius:16px;padding:10px 14px"><span style="flex:1;min-width:170px;display:flex;flex-direction:column"><b style="font-size:18px">'+esc(p.name)+'</b><span class="small">'+dmy(p.date)+' · '+mt+'</span>'+(s==='err'?'<span class="small" style="color:#B4232F">'+esc(p.err||'Odeslání se nezdařilo.')+'</span>':'')+'</span><b style="font-size:18px">'+kc(p.sum)+'</b><span class="tag" style="background:'+st[1]+';color:'+st[2]+';font-size:14px;padding:7px 14px">'+st[0]+'</span>'+(s==='ok'?'':'<button class="btn" style="background:'+(s==='err'?'#8A1020':'#D62839')+'" data-a="eetSend" data-p="'+p.id+'">'+(s==='err'?'Zkusit znovu':'Odeslat do EET')+'</button>')+'</div>';
+  return '<div class="row wrap eetr" style="background:'+(s==='err'?'#FFE3E6':(s==='ok'?'#E3F8EC':'#FFF6E5'))+';border-radius:16px;padding:10px 14px"><span style="flex:1;min-width:170px;display:flex;flex-direction:column"><b style="font-size:18px">'+esc(p.name)+'</b><span class="small">'+dmy(p.date)+' · '+mt+'</span>'+(s==='err'?'<span class="small" style="color:#B4232F">'+esc(p.err||'Odeslání se nezdařilo.')+'</span>':'')+'</span><b style="font-size:18px">'+kc(p.sum)+'</b><span class="tag" style="background:'+st[1]+';color:'+st[2]+';font-size:14px;padding:7px 14px">'+st[0]+'</span>'+(s==='ok'?'':'<button class="btn" style="background:'+(s==='err'?'#8A1020':'#D62839')+'" data-a="eetSend" data-p="'+p.id+'">'+(s==='err'?'Zkusit znovu':'Odeslat do EET')+'</button>')+'</div>';
  }).join('')||'<div class="note p">V tomto přehledu nic není.</div>';
- var io=isOpen('eetInfo',true);
+ var io=isOpen('eetInfo',!mob());
  var chips=[['all','Všechny ('+all.length+')','#2B1B6B'],['wait','Čeká ('+cnt.wait+')','#C28A00'],['err','Chyba ('+cnt.err+')','#D62839'],['ok','Odesláno ('+cnt.ok+')','#12805C']];
- return '<div class="grid2"><div class="card"><div class="row wrap"><b style="font-size:19px">Platby, kterých se EET týká</b><span class="sp"></span>'+(cnt.wait?'<button class="btn green" data-a="eetAll">Odeslat všechny čekající</button>':'')+'</div><div class="row wrap">'+chips.map(function(c){return chip(c[1],'eetFilter',c[0],f===c[0],c[2]);}).join('')+'</div><span class="small">Jen hotovost a QR kód na místě. Převody a platby předem se sem nedostanou.</span>'+list+'</div><div class="col">'+
-  '<div style="background:#D62839;color:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 5px 0 #9E1B29"><span style="font-size:16px;font-weight:800">EET 2.0 · povinnost od</span><b style="font-size:30px;font-weight:900">1. 1. 2027</b><span style="font-size:16px;font-weight:700;line-height:1.4">Čeká na odeslání: '+cnt.wait+' · s chybou: '+cnt.err+' · odesláno: '+cnt.ok+'. Stav napojení: zatím nenapojeno. Tlačítka jen zaznamenávají stav, skutečné odesílání Finanční správě doplníme před 1. 1. 2027.</span></div>'+
-  '<div class="acc"><button class="hd" style="font-size:19px" '+tg('eetInfo',true)+'><span style="flex:1">Co se vlastně eviduje?</span><span class="pm">'+(io?'–':'+')+'</span></button>'+(io?'<div style="padding:0 18px 16px;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;gap:6px"><span>Hotovost a QR kód ukázaný přímo u hosta.</span><span>Převod na účet předem nebo platba z e-mailu se neeviduje. Platby kartou se u vás nedělají.</span><span>Když se odeslání nepovede, platba zůstane v přehledu s chybou a jde ji odeslat znovu.</span><span>Před ostrým provozem je potřeba s účetní ověřit, na které platby se povinnost přesně vztahuje.</span></div>':'')+'</div></div></div>';
+ var fsel=chips.filter(function(c){return c[0]===f;})[0];
+ return '<div class="grid2 eetg"><div class="card"><div class="row wrap"><b style="font-size:19px">Platby, kterých se EET týká</b><span class="sp"></span>'+(cnt.wait?'<button class="btn green" data-a="eetAll">Odeslat všechny čekající</button>':'')+'</div>'+fold('eetf','Filtr',esc(fsel?fsel[1]:'Všechny'),'<div class="row wrap">'+chips.map(function(c){return chip(c[1],'eetFilter',c[0],f===c[0],c[2]);}).join('')+'</div><span class="small">Jen hotovost a QR kód na místě. Převody a platby předem se sem nedostanou.</span>',false,'#D62839')+list+'</div><div class="col">'+
+  '<div class="eetban" style="background:#D62839;color:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 5px 0 #9E1B29"><span style="font-size:16px;font-weight:800">EET 2.0 · povinnost od</span><b style="font-size:30px;font-weight:900">1. 1. 2027</b><span style="font-size:16px;font-weight:700;line-height:1.4">Čeká na odeslání: '+cnt.wait+' · s chybou: '+cnt.err+' · odesláno: '+cnt.ok+'.</span><span style="font-size:15px;font-weight:800">Zatím nenapojeno, tlačítka jen zaznamenávají stav.</span></div>'+
+  '<div class="acc"><button class="hd" style="font-size:19px" '+tg('eetInfo',true)+'><span style="flex:1">Co se vlastně eviduje?</span><span class="pm">'+(io?'–':'+')+'</span></button>'+(io?'<div style="padding:0 18px 16px;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;gap:6px"><span>Hotovost a QR kód ukázaný přímo u hosta.</span><span>Zatím nenapojeno na Finanční správu: tlačítka jen zaznamenávají stav, skutečné odesílání doplníme před 1. 1. 2027.</span><span>Převod na účet předem nebo platba z e-mailu se neeviduje. Platby kartou se u vás nedělají.</span><span>Když se odeslání nepovede, platba zůstane v přehledu s chybou a jde ji odeslat znovu.</span><span>Před ostrým provozem je potřeba s účetní ověřit, na které platby se povinnost přesně vztahuje.</span></div>':'')+'</div></div></div>';
 }
 
 /* ---------- celkové vykreslení ---------- */
@@ -893,8 +973,9 @@ function render(){
  var ae=document.activeElement,fid=ae&&ae.id,ss=null;try{if(fid)ss=ae.selectionStart;}catch(e){}
  var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,eet:vEet}[S.screen]();
  var nav=NAV.map(function(n,i){return '<button class="nav'+(S.screen===n[0]?' act':'')+'" data-a="nav" data-p="'+n[0]+'"><i style="background:'+n[2]+'">'+(i+1)+'</i><span>'+n[1]+'</span></button>';}).join('');
- app.innerHTML='<div class="app"><nav class="side"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+nav+
-  '</nav>'+
+ app.innerHTML='<div class="app"><nav class="side'+(S.navOpen?' open':'')+'"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+
+  '<button class="burger" data-a="menu" aria-label="Hlavní menu" aria-expanded="'+(S.navOpen?'true':'false')+'"><span class="bl"><i></i><i></i><i></i></span><b>Menu</b></button>'+
+  '<div class="navs">'+nav+'</div></nav>'+(S.navOpen?'<div class="navbd" data-a="menu"></div>':'')+
   '<div class="main"><div class="top"><div><h1>'+TITLES[S.screen]+'</h1><small>'+DN[parse(TODAY).getDay()].toLowerCase()+' '+dmy(TODAY)+'</small></div>'+syncChip()+'</div><div class="scroll">'+body+'</div></div></div>';
  var sc=app.querySelector('.scroll');if(sc)sc.scrollTop=S.scrollTop?0:st;S.scrollTop=false;
  if(S.scrollToId){var se=document.getElementById(S.scrollToId);if(se)se.scrollIntoView({block:'start'});S.scrollToId=null;}
@@ -935,8 +1016,8 @@ function qrBlock(g){
   '<span class="qrt">Host naskenuje kód v mobilní bance, částka <b>'+kc(sum)+'</b> se vyplní sama.<br><span class="small">Účet '+esc(ibanTxt(ibanOf(S.bank.acc)))+'.'+(g.paid?'':' <b>Tímhle se platba ještě nezapsala</b> – až host zaplatí, potvrďte to velkým tlačítkem níže.')+'</span></span></div>';
 }
 function bizCard(){
- var b=S.biz,miss=!b.name||!b.ico,o=isOpen('biz',miss);
- var h='<div class="acc"><button class="hd" style="background:#C2410C;color:#fff" '+tg('biz',miss)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Údaje podnikatele (na potvrzení platby)</b><span style="font-size:15px;font-weight:700">'+(miss?'Zatím nevyplněno':esc(b.name)+' · IČO '+esc(b.ico))+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
+ var b=S.biz,miss=!b.name||!b.ico,dm=miss&&!mob(),o=isOpen('biz',dm);
+ var h='<div class="acc"><button class="hd" style="background:#C2410C;color:#fff" '+tg('biz',dm)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Údaje podnikatele (na potvrzení platby)</b><span style="font-size:15px;font-weight:700">'+(miss?'Zatím nevyplněno':esc(b.name)+' · IČO '+esc(b.ico))+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
  if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg">'+[['name','Jméno a příjmení podnikatele / firma','např. Zdeňka Zichová'],['addr','Sídlo (adresa)','ulice, číslo, PSČ, obec'],['ico','IČO',''],['dic','DIČ','např. CZ…'],['phone','Telefon','']].map(function(f){return '<div class="fld"><label for="bz_'+f[0]+'">'+f[1]+'</label><input class="inp w" id="bz_'+f[0]+'" data-biz="'+f[0]+'" value="'+esc(b[f[0]]||'')+'" placeholder="'+esc(f[2])+'"></div>';}).join('')+'</div><div class="row wrap">'+chip(b.vat?'Plátce DPH ✓':'Neplátce DPH','bizVat','',!!b.vat,'#C2410C')+'<span class="small">Tyto údaje se tisknou do e-mailu s potvrzením platby. Po vyplnění jména a DIČ se z něj stane zjednodušený daňový doklad s rozpisem DPH (ubytování, jídla a pes 12 %, káva 21 %, místní poplatek mimo DPH).</span></div></div>';
  return h+'</div>';
 }
@@ -950,7 +1031,7 @@ function receiptData(g){
 }
 function bankState(){var b=S.bank||{};if(!b.acc)return 'Číslo účtu zatím chybí, QR platba nejde.';var ib=ibanOf(b.acc);return ib?'Účet '+ibanTxt(ib)+' ✓':'Číslo účtu nevypadá správně, zkontrolujte ho.';}
 function bankCard(){
- var b=S.bank,def=!ibanOf(b.acc),o=isOpen('bank',def);
+ var b=S.bank,def=!ibanOf(b.acc)&&!mob(),o=isOpen('bank',def);
  var h='<div class="acc"><button class="hd" style="background:#1D6FE0;color:#fff" '+tg('bank',def)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">Platební údaje pro QR kód</b><span style="font-size:15px;font-weight:700" data-bankst>'+esc(bankState())+'</span></span><span class="pm">'+(o?'–':'+')+'</span></button>';
  if(o)h+='<div style="padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px"><div class="fg"><div class="fld"><label for="bk_acc">Číslo účtu</label><input class="inp w" id="bk_acc" data-bank="acc" value="'+esc(b.acc)+'" placeholder="např. 19-2000145399/0800"></div><div class="fld"><label for="bk_name">Jméno příjemce (host ho uvidí v bance)</label><input class="inp w" id="bk_name" data-bank="name" value="'+esc(b.name)+'" placeholder="např. Penzion U Lípy"></div></div><span class="small">Stačí obyčejné číslo účtu s kódem banky, nebo IBAN. Aplikace ho zkontroluje a u hosta z něj vytvoří QR kód na přesnou částku.</span></div>';
  return h+'</div>';
@@ -1096,7 +1177,8 @@ function renderLoading(){
  document.getElementById('app').innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px"><div class="card" style="max-width:520px;text-align:center;align-items:center;gap:14px;padding:28px"><div style="width:72px;height:72px;border-radius:22px;background:linear-gradient(145deg,#34D17A,#0E9F4F);display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:900;color:#fff;box-shadow:0 5px 0 #087338">9</div><b style="font-size:26px;font-weight:900">Penzion Na Devítce</b><span style="font-size:18px;font-weight:700;line-height:1.5">'+esc(msg)+'</span>'+(LOADMSG==='login'?loginHtml():'')+(LOADMSG==='noaccess'?'<button class="btn red big" onclick="window.__logout()">Odhlásit se</button>':'')+'</div></div>';
 }
 
-A.nav=function(p){S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
+A.menu=function(){S.navOpen=!S.navOpen;};
+A.nav=function(p){S.navOpen=false;S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
 A.tog=function(p,el){var d=el.dataset.d==='1';S.open[p]=!isOpen(p,d);};
 A.quickGuest=function(){S.screen='indiv';S.scrollTop=true;S.newGuestOpen=true;S.form={};};
 /* kalendář */
@@ -1108,7 +1190,7 @@ A.payGF=function(p){S.payGF=p;};
 A.backCal=function(){S.indivFocus=null;S.screen='kal';S.scrollTop=true;};
 A.closeGuest=function(p){var g=G(p);S.open['pu:'+p]=false;S.scrollToId='acc_'+g.grp;};
 A.calGo=function(p){S.calOff=p==='0'?0:S.calOff+Number(p);};
-A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;};
+A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;if(S.calSel&&mob())S.scrollToId='caldet';};
 A.calNew=function(){S.calNewOpen=!S.calNewOpen;S.calMsg='';S.calKind=null;S.calGrp=null;};
 A.calKind=function(p){S.calKind=p;S.calGrp=null;S.calMsg='';};
 A.calGrp=function(p){S.calGrp=p;};
