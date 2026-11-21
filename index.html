@@ -341,7 +341,7 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 .navs{display:contents}
 .dsk{display:inline}
 
-.resbar{flex-wrap:wrap}
+.resbar{flex-wrap:nowrap;align-items:center}.resbar .btn{flex:none;white-space:nowrap}
 .rcard{background:#fff;border-radius:18px;box-shadow:0 3px 0 #F0DFC0;border-left:12px solid #6C3CE9;overflow:hidden}
 .rhd{display:flex;align-items:center;gap:10px;width:100%;min-height:62px;padding:8px 14px;background:transparent;color:#1F2340;text-align:left}
 .rhd .rt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
@@ -349,7 +349,7 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 .rhd .rt small{font-size:16px;font-weight:700;color:#5B5F85}
 .rhd .pm{color:#6C3CE9}
 .rbd{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
-@media(max-width:700px){.resbar .btn{width:100%}.rhd{padding:8px 12px;gap:8px}.rhd .rt b{font-size:18px}.rhd .rt small{font-size:15px}.rhd .tag{font-size:12px;padding:4px 8px}}
+@media(max-width:700px){.resbar .inp{min-width:0}.rhd{padding:8px 12px;gap:8px}.rhd .rt b{font-size:18px}.rhd .rt small{font-size:15px}.rhd .tag{font-size:12px;padding:4px 8px}}
 .infw{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 .ibtn{width:34px;height:34px;min-height:34px;padding:0;border-radius:50%;border:3px solid var(--ic,#6C3CE9);background:#fff;color:var(--ic,#6C3CE9);font:italic 900 20px/1 Georgia,serif;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #E3D8FF}
 .ibtn[aria-expanded=true]{background:var(--ic,#6C3CE9);color:#fff}
@@ -647,7 +647,7 @@ function vRes(){
   return '<div class="rcard'+(o?' open':'')+'" style="border-left-color:'+stayColor(s)+'"><button class="rhd" aria-expanded="'+(o?'true':'false')+'" '+tg('rs:'+s.id,false)+'><span class="rt"><b>'+esc(stayName(s))+'</b><small>'+dmy(s.from)+' – '+dmy(s.to)+'</small></span><span class="tag" style="background:'+st[1]+';color:'+st[2]+'">'+st[0]+'</span><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?'<div class="rbd"><span class="small" style="font-size:16px">'+n+' '+pl(n,'noc','noci','nocí')+' · '+persTxt(stayPersons(s))+'</span><div class="row wrap"><button class="btn dark" data-a="openStay" data-p="'+s.id+'">Otevřít</button>'+(cur?'<button class="btn yellow" data-a="payStay" data-p="'+s.id+'">Účtovat</button>':'')+'</div></div>':'')+'</div>';
  }).join('')||'<div class="note p">Žádné rezervace.</div>';
  var fl=[['up','Nadcházející a probíhající'],['past','Proběhlé'],['all','Všechny']],fn=fl.filter(function(c){return c[0]===f;})[0][1];
- return '<div class="card">'+calSwitch()+'<div class="row resbar"><input class="inp t" style="flex:1;min-width:0;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat skupinu nebo hosta" aria-label="Hledat rezervaci"><button class="btn green big" data-a="calNewGo">+ Nová rezervace</button></div>'+fold('resf','Zobrazit',esc(fn)+' · '+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací'),'<div class="row wrap">'+fl.map(function(c){return chip(c[1],'resF',c[0],f===c[0],'#00857F');}).join('')+'</div>',false,'#00857F')+rows+'</div>';
+ return '<div class="card">'+calSwitch()+'<div class="row resbar"><input class="inp t" style="flex:1;min-width:0;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="'+(mob()?'Hledat…':'Hledat skupinu nebo hosta')+'" aria-label="Hledat rezervaci"><button class="btn green big" data-a="calNewGo">+ Nová<span class="dsk"> rezervace</span></button></div>'+fold('resf','Zobrazit',esc(fn)+' · '+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací'),'<div class="row wrap">'+fl.map(function(c){return chip(c[1],'resF',c[0],f===c[0],'#00857F');}).join('')+'</div>',false,'#00857F')+rows+'</div>';
 }
 function vKal(){
  if(S.calView==='list')return vRes();
