@@ -472,7 +472,7 @@ var DEFP={ub1:530,ub2:530,di:0,st:530,sn:120,ob:150,ve:100,ka:20,pp:15,pes:100};
 function seed(){
  return {guests:[],stays:[],payments:[],groupDefs:[],
   priceLists:[{id:'pl1',name:'Běžný ceník',from:'',to:'',groups:['indiv'],p:Object.assign({},DEFP)}],
-  manual:[],rebook:{},police:{},mailed:{},bank:{acc:'',name:''},biz:{name:'',addr:'',ico:'',dic:'',vat:false,phone:''},seq:100};
+  manual:[],rebook:{},police:{},uby:{cfg:{idub:'',mark:'',name:'',purp:'99'},sent:{}},mailed:{},bank:{acc:'',name:''},biz:{name:'',addr:'',ico:'',dic:'',vat:false,phone:''},seq:100};
 }
 function nightsOfStay(stays,x){var s=stays.filter(function(t){return t.guestId===x.id;})[0];return s?Math.max(1,diffDays(s.from,s.to)):1;}
 function grpNights(k){var s=curStay(k);return s?Math.max(1,diffDays(s.from,s.to)):1;}
@@ -510,7 +510,7 @@ function membersOf(s){return s?S.guests.filter(function(x){return inStay(x,s);})
 function groupMembers(k,s){return s?membersOf(s):S.guests.filter(function(x){return x.grp===k;});}
 function pinGuests(k){S.guests.forEach(function(x){if(x.grp!=='indiv'&&!x.sid&&(!k||x.grp===k)){var h=homeStay(x.grp);if(h)x.sid=h.id;}});}
 function prevStayWithMembers(s){var l=staysOf(s.grp).filter(function(t){return t.id!==s.id&&membersOf(t).length;}).sort(function(a,b){return a.from<b.from?1:-1;});return l.filter(function(t){return t.from<s.from;})[0]||l[0]||null;}
-function cloneFor(x,s){var g={id:'gs'+uid(),grp:s.grp,sid:s.id,name:x.name,persons:x.persons||1,email:x.email||'',phone:x.phone||'',only:!!x.only,foreign:!!x.foreign,nat:x.nat||'CZ',addr:x.addr||'',doc:x.doc||'',here:true,inBook:false,note:'',paid:null};if(x.born)g.born=x.born;g.bill=defBill(g,null,Math.max(1,diffDays(s.from,s.to)));return g;}
+function cloneFor(x,s){var g={id:'gs'+uid(),grp:s.grp,sid:s.id,name:x.name,persons:x.persons||1,email:x.email||'',phone:x.phone||'',only:!!x.only,foreign:!!x.foreign,nat:x.nat||'',addr:x.addr||'',doc:x.doc||'',here:true,inBook:false,note:'',paid:null};if(x.born)g.born=x.born;g.bill=defBill(g,null,Math.max(1,diffDays(s.from,s.to)));return g;}
 function stayName(s){return s.grp==='indiv'?G(s.guestId).name:grpName(s.grp);}
 function stayColor(s){return s.to<TODAY?'#B8B5C8':grpColor(s.grp);}
 function stayPersons(s){
@@ -628,7 +628,7 @@ function guestCard(g,page){
    '<div class="row wrap"><b style="font-size:17px">'+(g.grp!=='indiv'&&stayOf(g)?'Na termín '+rangeTxt(stayOf(g).from,stayOf(g).to)+':':'Na tento pobyt:')+'</b><div class="seg"><button class="'+(g.here?'y':'')+'" data-a="setHere" data-p="'+g.id+'|1">Přijede</button><button class="'+(!g.here?'n':'')+'" data-a="setHere" data-p="'+g.id+'|0">Nepřijede</button></div><span class="sp"></span><button class="btn '+(inBookNow(g)?'lgreen':'blue')+'" data-a="book" data-p="'+g.id+'">'+(inBookNow(g)?'V knize hostů ✓':'Zapsat do knihy hostů')+'</button></div>'+
    '<div class="row wrap"><input class="inp" style="flex:1;min-width:200px;width:auto" data-bind="'+g.id+'|email" value="'+esc(g.email)+'" placeholder="E-mail" aria-label="E-mail hosta"><input class="inp" style="flex:1;min-width:160px;width:auto" data-bind="'+g.id+'|phone" value="'+esc(g.phone)+'" placeholder="Telefon" aria-label="Telefon hosta"><span class="tag '+(g.email?'ok':'bad')+'" data-mail>'+(g.email?'e-mail ✓':'chybí e-mail')+'</span></div>'+
    '<div class="fg"><div class="fld"><label for="ga_'+g.id+'">Adresa bydliště</label><input class="inp w" id="ga_'+g.id+'" data-bind="'+g.id+'|addr" value="'+esc(g.addr)+'" placeholder="ulice, číslo, město, PSČ" autocomplete="off"></div><div class="fld"><label for="gd_'+g.id+'">'+(g.foreign?'Číslo pasu nebo dokladu':'Číslo občanky nebo pasu')+'</label><input class="inp w" id="gd_'+g.id+'" data-bind="'+g.id+'|doc" value="'+esc(g.doc)+'" placeholder="např. 123456789" autocomplete="off"></div><div class="fld"><label for="gb_'+g.id+'">Datum narození</label><input type="date" class="inp w" id="gb_'+g.id+'" data-bind="'+g.id+'|born" value="'+esc(g.born||'')+'"></div></div>'+
-   '<div class="row wrap" style="align-items:flex-end"><button class="btn '+(g.foreign?'yellow':'white')+'" style="'+(g.foreign?'':'color:#6C3CE9;')+'" data-a="setForeign" data-p="'+g.id+'">'+(g.foreign?'Cizinec ✓':'Je to cizinec?')+'</button>'+(g.foreign?'<div class="fld" style="flex:1;min-width:200px"><label for="gn_'+g.id+'">Státní příslušnost</label><input class="inp w" id="gn_'+g.id+'" data-bind="'+g.id+'|nat" value="'+esc(g.nat==='CZ'?'':g.nat)+'" placeholder="např. Slovensko, Německo" autocomplete="off"></div><span class="small" style="flex:1;min-width:200px">V knize hostů dostane štítek cizinec a čeká na nahlášení cizinecké policii.</span>':'')+'</div>'+
+   '<div class="row wrap" style="align-items:flex-end">'+natPick('g|'+g.id)+(g.foreign?'<span class="small" style="flex:1;min-width:200px">Host se hlásí cizinecké policii (stránka Ubyport).</span>':'')+'</div>'+
    billBlock(g)+(g.grp==='indiv'?(stayed(g)?'<span class="small">Host má potvrzený příjezd nebo zaplatil, zůstává v knize hostů.</span>':forgetBtn('forgetGuest',g.id,'Zrušit rezervaci a smazat hosta')):removeBtns(g))+'</div>';
  }
  if(page)return '<div class="gcard open"><div class="row" style="gap:12px;padding:8px 14px"><span class="av" style="background:'+col+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b style="font-size:24px;font-weight:900">'+esc(dn(g.name))+'</b>'+(stayOf(g)?'<small>termín '+rangeTxt(stayOf(g).from,stayOf(g).to)+'</small>':'')+'</span></div>'+det+'</div>';
@@ -747,7 +747,7 @@ function vGroups(isIndiv){
  if(S.newGuestOpen){
   gform='<div class="panel" style="background:#FFF1D6"><div class="row wrap"><b style="flex:1;font-size:18px;font-weight:900">Nový host '+(isIndiv?'(individuál)':'do skupiny '+esc(def.name))+'</b><button class="btn white" style="color:#00857F" data-a="goHist">Už tu byl? Najít v knize hostů</button></div>'+
    '<div class="fg">'+fi('nName','Jméno a příjmení','např. Alena Procházková','text','w')+fi('nMail','E-mail (pro účtenku)','jmeno@email.cz','email','w')+(isIndiv?fi('nFrom','Příjezd','','date','w')+fi('nTo','Odjezd','','date','w'):'')+fi('nTel','Telefon','+420 …','tel','w')+fi('nPers','Počet osob','1','number','w')+'</div>'+
-   '<div class="row wrap">'+(isIndiv?'':chip('Ubytování + strava','nType','ub',!S.form.only,'#6C3CE9')+chip('Jen stravování','nType','jen',!!S.form.only,'#6C3CE9'))+chip(S.form.foreign?'Cizinec ✓':'Cizinec?','nForeign','',!!S.form.foreign,'#C28A00')+'</div>'+
+   '<div class="row wrap">'+(isIndiv?'':chip('Ubytování + strava','nType','ub',!S.form.only,'#6C3CE9')+chip('Jen stravování','nType','jen',!!S.form.only,'#6C3CE9'))+'</div>'+'<div class="row wrap">'+natPick('f|nNat')+'</div>'+
    '<div class="row"><button class="btn green big" data-a="saveGuest">Uložit hosta</button><button class="btn white big" data-a="guestFormToggle">Zrušit</button></div></div>';
  }
  var copyBox='';
@@ -856,8 +856,8 @@ function vBook(){
  var nsel=Object.keys(S.bookSel).filter(function(k){return S.bookSel[k];}).length;
  var form='';
  if(S.bookFormOpen){
-  form='<div class="panel" style="background:#FFF1D6"><b style="font-size:18px">Zapsat hosta, kterého v systému nemáme</b><div class="fg">'+fi('bName','Jméno a příjmení','','text','w')+fi('bAddr','Adresa','','text','w')+fi('bDoc','Číslo dokladu','','text','w')+fi('bBorn','Datum narození','','date','w')+fi('bNat','Státní příslušnost','CZ','text','w')+fi('bFrom','Příjezd','','date','w')+fi('bTo','Odjezd','','date','w')+fi('bMail','E-mail','jmeno@email.cz','email','w')+fi('bTel','Telefon','+420 …','tel','w')+'</div>'+
-   '<div class="row wrap">'+chip(S.form.bForeign?'Cizinec ✓':'Cizinec?','bForeign','',!!S.form.bForeign,'#C28A00')+'<span class="sp"></span><button class="btn white big" data-a="bookFormToggle">Zrušit</button><button class="btn green big" data-a="saveBook">Zapsat do knihy</button></div></div>';
+  form='<div class="panel" style="background:#FFF1D6"><b style="font-size:18px">Zapsat hosta, kterého v systému nemáme</b><div class="fg">'+fi('bName','Jméno a příjmení','','text','w')+fi('bAddr','Adresa','','text','w')+fi('bDoc','Číslo dokladu','','text','w')+fi('bBorn','Datum narození','','date','w')+fi('bFrom','Příjezd','','date','w')+fi('bTo','Odjezd','','date','w')+fi('bMail','E-mail','jmeno@email.cz','email','w')+fi('bTel','Telefon','+420 …','tel','w')+'</div>'+
+   '<div class="row wrap">'+natPick('f|bNat')+'<span class="sp"></span><button class="btn white big" data-a="bookFormToggle">Zrušit</button><button class="btn green big" data-a="saveBook">Zapsat do knihy</button></div></div>';
  }
  var gch=[['all','Všichni','#6C3CE9']].concat(S.groupDefs.map(function(d){return [d.key,d.name,d.color];})).concat([['indiv','Individuálové','#C2410C'],['foreign','Cizinci','#C28A00']]);
  var npend=bookRows().filter(function(r){return r.pending;}).length,vpend=vis.filter(function(r){return r.pending;}).length;
@@ -875,7 +875,7 @@ function vBook(){
   var det='';
   var act=pg?'<div class="row wrap"><button class="btn green big" data-a="addToGroup" data-p="'+b.id+'">Přidat ke skupině '+esc(grpName(pm))+'</button></div><span class="small">Termín pobytu zadáte až v Kalendáři, až ho budete znát.</span>':'<div class="row wrap" style="align-items:flex-end"><div style="width:170px">'+fi('hf_'+b.id,'Nový příjezd','','date','t')+'</div><div style="width:170px">'+fi('ht_'+b.id,'Nový odjezd','','date','t')+'</div><button class="btn teal big" data-a="rebook" data-p="'+b.id+'">Přidat nový pobyt</button></div><span class="small">Pobyt se zapíše do kalendáře. Profil hosta se nezakládá znovu.</span>';
   if(o)det='<div style="padding:0 16px 14px;display:flex;flex-direction:column;gap:12px">'+(b.gid&&G(b.gid)&&G(b.gid).arrived&&!G(b.gid).inBook?'<div class="row"><button class="btn white" style="color:#D62839" data-a="bkUndo" data-p="'+b.gid+'">↩ Vrátit potvrzení příjezdu</button></div>':'')+'<div style="display:flex;flex-direction:column;gap:6px"><span class="small b">Pobyty</span><span class="row wrap">'+b.stays.map(function(x){return '<span class="tag" style="background:#fff;font-size:15px;padding:6px 14px">'+dmy(x.from)+' – '+dmy(x.to)+'</span>';}).join('')+'</span></div>'+
-   (b.gid?'<div class="fg">'+[['addr','Adresa'],['doc','Číslo dokladu'],['born','Datum narození'],['nat','Státní příslušnost'],['email','E-mail'],['phone','Telefon']].map(function(f){return '<div class="fld"><label for="bi_'+b.gid+f[0]+'">'+f[1]+'</label><input '+(f[0]==='born'?'type="date" ':'')+'class="inp w" id="bi_'+b.gid+f[0]+'" data-bind="'+b.gid+'|'+f[0]+'" value="'+esc(b[f[0]]||'')+'"></div>';}).join('')+'</div>':'<span style="font-size:16px;font-weight:700;line-height:1.5">Narozen(a): '+(b.born?dmy(b.born):'[doplní se]')+' · Adresa: '+esc(b.addr||'[doplní se]')+' · Doklad: '+esc(b.doc||'[doplní se]')+' · Státní příslušnost: '+esc(b.nat)+' · E-mail: '+esc(b.email||'[doplní se]')+' · Telefon: '+esc(b.phone||'[doplní se]')+'</span>')+
+   (b.gid?'<div class="fg">'+[['addr','Adresa'],['doc','Číslo dokladu'],['born','Datum narození'],['email','E-mail'],['phone','Telefon']].map(function(f){return '<div class="fld"><label for="bi_'+b.gid+f[0]+'">'+f[1]+'</label><input '+(f[0]==='born'?'type="date" ':'')+'class="inp w" id="bi_'+b.gid+f[0]+'" data-bind="'+b.gid+'|'+f[0]+'" value="'+esc(b[f[0]]||'')+'"></div>';}).join('')+'</div><div class="row wrap">'+natPick('g|'+b.gid)+'</div>':'<span style="font-size:16px;font-weight:700;line-height:1.5">Narozen(a): '+(b.born?dmy(b.born):'[doplní se]')+' · Adresa: '+esc(b.addr||'[doplní se]')+' · Doklad: '+esc(b.doc||'[doplní se]')+' · Země: '+esc((natInfo(b.nat)||{name:b.nat||'[doplní se]'}).name)+' · E-mail: '+esc(b.email||'[doplní se]')+' · Telefon: '+esc(b.phone||'[doplní se]')+'</span>')+
    (b.foreign?'<span class="row wrap"><b style="font-size:16px">Hlášení cizinecké policii:</b><button class="btn" style="background:'+(pd?'#12805C':'#D62839')+'" data-a="police" data-p="'+b.id+'">'+(pd?'Nahlášeno ✓':'Čeká na nahlášení')+'</button></span>':'')+
    act+(pm?'':(bookDelIds(b).length?forgetBtn('forgetBook',b.id,'Smazat z knihy (příjezd nepotvrzen)')+'<span class="small">Smažou se jen pobyty bez potvrzeného příjezdu a bez platby. Potvrzené pobyty v knize zůstanou.</span>':'<span class="small">Host má potvrzený příjezd, záznam v knize hostů zůstává.</span>'))+'</div>';
   return '<div class="gcard" style="background:'+(o?'#F1EBFF':'#fff')+';box-shadow:0 3px 0 #F0DFC0"><div class="krow">'+'<'+(page?'div':'button')+' class="ktg" '+(page?'':'data-a="bookOpen" data-p="'+b.id+'"')+'><span class="kn"><b>'+esc(b.name)+'</b><span class="small">'+(last?'naposledy '+dmy(last.from)+' – '+dmy(last.to):'')+'</span></span><span class="tag" style="background:'+bGrpColor(b.grp)+';color:#fff">'+esc(bGrpName(b.grp))+'</span><span class="tag '+(b.foreign?'y':'g')+'">'+(b.foreign?'cizinec':'tuzemec')+'</span>'+(b.pending?'<span class="tag" style="background:#FFC21A;color:#1F2340">čeká na potvrzení</span>':'')+(b.gid&&(!b.addr||!b.doc||!b.born)?'<span class="tag bad">doplnit údaje</span>':'')+'<span class="tag" style="background:#EEE9FF;font-size:14px">'+sh.length+' '+pl(sh.length,'pobyt','pobyty','pobytů')+'</span><span class="pm">'+(page?'':'›')+'</span></'+(page?'div':'button')+'>'+(b.pending&&!pm?'<button class="btn green" data-a="bkConfirm" data-p="'+b.gid+'">Potvrdit příjezd</button>':'')+'</div>'+det+'</div>';
@@ -1043,13 +1043,13 @@ function vEet(){
 }
 
 /* ---------- celkové vykreslení ---------- */
-var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['eet','EET','#FF8A8A']];
-var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',eet:'EET'};
+var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['eet','EET','#FF8A8A'],['uby','Ubyport','#FF9F43']];
+var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',eet:'EET',uby:'Ubyport – hlášení cizinců'};
 function render(){
  if(!LOADED){renderLoading();return;}
  var app=document.getElementById('app'),old=app.querySelector('.scroll'),st=old?old.scrollTop:0;
  var ae=document.activeElement,fid=ae&&ae.id,ss=null;try{if(fid)ss=ae.selectionStart;}catch(e){}
- var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,eet:vEet}[S.screen]();
+ var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,eet:vEet,uby:vUby}[S.screen]();
  var nav=NAV.map(function(n,i){return '<button class="nav'+(S.screen===n[0]?' act':'')+'" data-a="nav" data-p="'+n[0]+'"><i style="background:'+n[2]+'">'+(i+1)+'</i><span>'+n[1]+'</span></button>';}).join('');
  app.innerHTML='<div class="app"><nav class="side'+(S.navOpen?' open':'')+'"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+
   '<button class="burger" data-a="menu" aria-label="Hlavní menu" aria-expanded="'+(S.navOpen?'true':'false')+'"><span class="bl"><i></i><i></i><i></i></span><b>Menu</b></button>'+
@@ -1182,7 +1182,7 @@ A.delStay=function(p){
 
 /* ---------- ukládání do úložiště (sdílená databáze aplikace) ---------- */
 var DB=null,LAST={},LOADED=false,SYNC='load',SAVE_T=null,SAVING=false,AGAIN=false,RO=false,LOADMSG='',DEFER=false,GOT={};
-var COLS=['guests','stays','payments'],CFGK=['groupDefs','priceLists','manual','rebook','police','mailed','bank','biz'];
+var COLS=['guests','stays','payments'],CFGK=['groupDefs','priceLists','manual','rebook','police','uby','mailed','bank','biz'];
 function cj(o){
  if(o===null||typeof o!=='object')return (o===undefined||(typeof o==='number'&&!isFinite(o)))?'null':JSON.stringify(o);
  if(Array.isArray(o))return '['+o.map(cj).join(',')+']';
@@ -1307,7 +1307,7 @@ A.calSave=function(){
  if(kind==='indiv'){
   if(!(f.cName||'').trim()){S.calOk=false;S.calMsg='Doplňte jméno hosta.';return;}
   var gid='gi'+uid();id='s'+uid();
-  var g={id:gid,grp:'indiv',name:f.cName.trim(),persons:Math.max(1,parseInt(f.cPers,10)||1),email:'',phone:'',only:false,foreign:false,nat:'CZ',addr:'',doc:'',here:true,inBook:false,note:'Nová rezervace.',paid:null};
+  var g={id:gid,grp:'indiv',name:f.cName.trim(),persons:Math.max(1,parseInt(f.cPers,10)||1),email:'',phone:'',only:false,foreign:false,nat:'',addr:'',doc:'',here:true,inBook:false,note:'Nová rezervace.',paid:null};
   g.bill=defBill(g,null,Math.max(1,diffDays(f.cFrom,f.cTo)));S.guests.push(g);
   S.stays.push({id:id,grp:'indiv',guestId:gid,from:f.cFrom,to:f.cTo});
  }else{
@@ -1361,7 +1361,7 @@ A.saveGuest=function(){
  var f=S.form,isIndiv=S.screen==='indiv';
  if(!(f.nName||'').trim()){toast('Doplňte jméno hosta.');return;}
  var key=isIndiv?'indiv':S.grp,gid='gn'+uid();
- var g={id:gid,grp:key,name:f.nName.trim(),persons:Math.max(1,parseInt(f.nPers,10)||1),email:(f.nMail||'').trim(),phone:(f.nTel||'').trim(),only:!!f.only&&!isIndiv,foreign:!!f.foreign,nat:f.foreign?'zahraničí':'CZ',addr:'',doc:'',here:true,inBook:false,note:'',paid:null};
+ var g={id:gid,grp:key,name:f.nName.trim(),persons:Math.max(1,parseInt(f.nPers,10)||1),email:(f.nMail||'').trim(),phone:(f.nTel||'').trim(),only:!!f.only&&!isIndiv,foreign:isForeignNat(f.nNat),nat:f.nNat||'',addr:'',doc:'',here:true,inBook:false,note:'',paid:null};
  if(isIndiv){
   if(!f.nFrom||!f.nTo||f.nTo<f.nFrom){toast('Vyberte příjezd a odjezd.');return;}
   S.stays.push({id:'s'+uid(),grp:'indiv',guestId:gid,from:f.nFrom,to:f.nTo});
@@ -1493,7 +1493,7 @@ A.bForeign=function(){S.form.bForeign=!S.form.bForeign;};
 A.saveBook=function(){
  var f=S.form;if(!(f.bName||'').trim()){toast('Doplňte jméno hosta.');return;}
  var bf=f.bFrom||TODAY,bt=(f.bTo&&f.bTo>=bf)?f.bTo:bf;
- S.manual.push({id:'bm'+uid(),name:f.bName.trim(),addr:f.bAddr||'',doc:f.bDoc||'',born:f.bBorn||'',nat:f.bNat||(f.bForeign?'zahraničí':'CZ'),foreign:!!f.bForeign,from:bf,to:bt,email:f.bMail||'',phone:f.bTel||''});
+ S.manual.push({id:'bm'+uid(),name:f.bName.trim(),addr:f.bAddr||'',doc:f.bDoc||'',born:f.bBorn||'',nat:f.bNat||'',foreign:isForeignNat(f.bNat),from:bf,to:bt,email:f.bMail||'',phone:f.bTel||''});
  S.bookFormOpen=false;S.form={};toast('Host zapsán do knihy.');
 };
 A.police=function(p){S.police[p]=!S.police[p];};
@@ -1511,6 +1511,106 @@ A.rebook=function(p){
  toast('Pobyt přidán do kalendáře.');
 };
 
+/* ---------- země (státní příslušnost) a Ubyport ---------- */
+var COUNTRIES=[["Afghánistán","AFG"],["Albánie","ALB"],["Alžírsko","DZA"],["Americká Samoa","ASM"],["Americké Panenské ostrovy","VIR"],["Andorra","AND"],["Angola","AGO"],["Anguilla","AIA"],["Antarktida","ATA"],["Antigua a Barbuda","ATG"],["Argentina","ARG"],["Arménie","ARM"],["Aruba","ABW"],["Austrálie","AUS"],["Bahamy","BHS"],["Bahrajn","BHR"],["Bangladéš","BGD"],["Barbados","BRB"],["Belgie","BEL"],["Belize","BLZ"],["Benin","BEN"],["Bermudy","BMU"],["Bhútán","BTN"],["Bolívie","BOL"],["Bosna a Hercegovina","BIH"],["Botswana","BWA"],["Bouvetův ostrov","BVT"],["Brazílie","BRA"],["Britské indickooceánské území","IOT"],["Britské Panenské ostrovy","VGB"],["Brunej","BRN"],["Bulharsko","BGR"],["Burkina Faso","BFA"],["Burundi","BDI"],["Bělorusko","BLR"],["Chile","CHL"],["Chorvatsko","HRV"],["Cookovy ostrovy","COK"],["Curaçao","CUW"],["Čad","TCD"],["Černá Hora","MNE"],["Česko","CZE"],["Čína","CHN"],["Dominika","DMA"],["Dominikánská republika","DOM"],["Džibutsko","DJI"],["Dánsko","DNK"],["Egypt","EGY"],["Ekvádor","ECU"],["Eritrea","ERI"],["Estonsko","EST"],["Eswatini","SWZ"],["Etiopie","ETH"],["Faerské ostrovy","FRO"],["Falklandské ostrovy","FLK"],["Fidži","FJI"],["Filipíny","PHL"],["Finsko","FIN"],["Francie","FRA"],["Francouzská Guyana","GUF"],["Francouzská jižní území","ATF"],["Francouzská Polynésie","PYF"],["Gabon","GAB"],["Gambie","GMB"],["Ghana","GHA"],["Gibraltar","GIB"],["Grenada","GRD"],["Gruzie","GEO"],["Grónsko","GRL"],["Guadeloupe","GLP"],["Guam","GUM"],["Guatemala","GTM"],["Guernsey","GGY"],["Guinea","GIN"],["Guinea-Bissau","GNB"],["Guyana","GUY"],["Haiti","HTI"],["Heardův ostrov a McDonaldovy ostrovy","HMD"],["Honduras","HND"],["Hongkong – ZAO Číny","HKG"],["Indie","IND"],["Indonésie","IDN"],["Irsko","IRL"],["Irák","IRQ"],["Island","ISL"],["Itálie","ITA"],["Izrael","ISR"],["Jamajka","JAM"],["Japonsko","JPN"],["Jemen","YEM"],["Jersey","JEY"],["Jihoafrická republika","ZAF"],["Jižní Georgie a Jižní Sandwichovy ostrovy","SGS"],["Jižní Korea","KOR"],["Jižní Súdán","SSD"],["Jordánsko","JOR"],["Kajmanské ostrovy","CYM"],["Kambodža","KHM"],["Kamerun","CMR"],["Kanada","CAN"],["Kapverdy","CPV"],["Karibské Nizozemsko","BES"],["Katar","QAT"],["Kazachstán","KAZ"],["Keňa","KEN"],["Kiribati","KIR"],["Kokosové ostrovy","CCK"],["Kolumbie","COL"],["Komory","COM"],["Kongo – Brazzaville","COG"],["Kongo – Kinshasa","COD"],["Kosovo","XKX"],["Kostarika","CRI"],["Kuba","CUB"],["Kuvajt","KWT"],["Kypr","CYP"],["Kyrgyzstán","KGZ"],["Laos","LAO"],["Lesotho","LSO"],["Libanon","LBN"],["Libye","LBY"],["Libérie","LBR"],["Lichtenštejnsko","LIE"],["Litva","LTU"],["Lotyšsko","LVA"],["Lucembursko","LUX"],["Macao – ZAO Číny","MAC"],["Madagaskar","MDG"],["Malajsie","MYS"],["Malawi","MWI"],["Maledivy","MDV"],["Mali","MLI"],["Malta","MLT"],["Maroko","MAR"],["Marshallovy ostrovy","MHL"],["Martinik","MTQ"],["Mauricius","MUS"],["Mauritánie","MRT"],["Mayotte","MYT"],["Maďarsko","HUN"],["Menší odlehlé ostrovy USA","UMI"],["Mexiko","MEX"],["Mikronésie","FSM"],["Moldavsko","MDA"],["Monako","MCO"],["Mongolsko","MNG"],["Montserrat","MSR"],["Mosambik","MOZ"],["Myanmar (Barma)","MMR"],["Namibie","NAM"],["Nauru","NRU"],["Nepál","NPL"],["Niger","NER"],["Nigérie","NGA"],["Nikaragua","NIC"],["Niue","NIU"],["Nizozemsko","NLD"],["Norfolk","NFK"],["Norsko","NOR"],["Nová Kaledonie","NCL"],["Nový Zéland","NZL"],["Německo","DEU"],["Omán","OMN"],["Ostrov Man","IMN"],["Palau","PLW"],["Palestinská území","PSE"],["Panama","PAN"],["Papua-Nová Guinea","PNG"],["Paraguay","PRY"],["Peru","PER"],["Pitcairnovy ostrovy","PCN"],["Pobřeží slonoviny","CIV"],["Polsko","POL"],["Portoriko","PRI"],["Portugalsko","PRT"],["Pákistán","PAK"],["Rakousko","AUT"],["Rovníková Guinea","GNQ"],["Rumunsko","ROU"],["Rusko","RUS"],["Rwanda","RWA"],["Řecko","GRC"],["Réunion","REU"],["Saint-Pierre a Miquelon","SPM"],["Salvador","SLV"],["Samoa","WSM"],["San Marino","SMR"],["Saúdská Arábie","SAU"],["Senegal","SEN"],["Severní Korea","PRK"],["Severní Makedonie","MKD"],["Severní Mariany","MNP"],["Seychely","SYC"],["Sierra Leone","SLE"],["Singapur","SGP"],["Slovensko","SVK"],["Slovinsko","SVN"],["Somálsko","SOM"],["Spojené arabské emiráty","ARE"],["Spojené království","GBR"],["Spojené státy","USA"],["Srbsko","SRB"],["Srí Lanka","LKA"],["Středoafrická republika","CAF"],["Surinam","SUR"],["Svatá Helena","SHN"],["Svatá Lucie","LCA"],["Svatý Bartoloměj","BLM"],["Svatý Kryštof a Nevis","KNA"],["Svatý Martin (Francie)","MAF"],["Svatý Martin (Nizozemsko)","SXM"],["Svatý Tomáš a Princův ostrov","STP"],["Svatý Vincenc a Grenadiny","VCT"],["Šalamounovy ostrovy","SLB"],["Španělsko","ESP"],["Špicberky a Jan Mayen","SJM"],["Švédsko","SWE"],["Švýcarsko","CHE"],["Súdán","SDN"],["Sýrie","SYR"],["Tanzanie","TZA"],["Tchaj-wan","TWN"],["Thajsko","THA"],["Togo","TGO"],["Tokelau","TKL"],["Tonga","TON"],["Trinidad a Tobago","TTO"],["Tunisko","TUN"],["Turecko","TUR"],["Turkmenistán","TKM"],["Turks a Caicos","TCA"],["Tuvalu","TUV"],["Tádžikistán","TJK"],["Uganda","UGA"],["Ukrajina","UKR"],["Uruguay","URY"],["Uzbekistán","UZB"],["Vanuatu","VUT"],["Vatikán","VAT"],["Venezuela","VEN"],["Vietnam","VNM"],["Vánoční ostrov","CXR"],["Východní Timor","TLS"],["Wallis a Futuna","WLF"],["Zambie","ZMB"],["Zimbabwe","ZWE"],["Západní Sahara","ESH"],["Ázerbájdžán","AZE"],["Ålandy","ALA"],["Írán","IRN"]];
+var FREQ=['Slovensko','Německo','Ukrajina','Polsko'];
+function natInfo(v){
+ if(!v)return null;
+ if(v==='CZ'||v==='CZE')return {name:'Česko',code:'CZE'};
+ var k=nk(String(v)),u=String(v).toUpperCase();
+ for(var i=0;i<COUNTRIES.length;i++){if(nk(COUNTRIES[i][0])===k||COUNTRIES[i][1]===u)return {name:COUNTRIES[i][0],code:COUNTRIES[i][1]};}
+ return null;
+}
+function natStore(n){return n==='Česko'?'CZ':n;}
+function isForeignNat(v){return !!v&&v!=='CZ'&&v!=='CZE';}
+function natGet(t){var a=t.split('|');if(a[0]==='g'){var g=G(a[1]);return g?(g.nat||''):'';}return S.form[a[1]]||'';}
+function natSet(t,v){
+ var a=t.split('|');
+ if(a[0]==='g'){var g=G(a[1]);if(!g)return;g.nat=v;g.foreign=isForeignNat(v);var k=nk(g.name);S.guests.forEach(function(x){if(x!==g&&nk(x.name)===k&&guestDates(x).to>=TODAY){x.nat=v;x.foreign=g.foreign;}});}
+ else S.form[a[1]]=v;
+}
+function natPick(t){
+ var cur=natGet(t),info=natInfo(cur),open=S.natOpen===t;
+ var lab=cur?(info?info.name:cur+' (upřesněte zemi)'):'';
+ var h='<div class="fld" style="flex:1;min-width:240px"><label>Země (státní příslušnost)</label><button type="button" class="inp w" style="text-align:left;cursor:pointer;font-weight:800" data-a="natOpen" data-p="'+esc(t)+'" aria-expanded="'+(open?'true':'false')+'">'+(lab?esc(lab):'<span style="opacity:.55">Ťukněte a vyberte zemi</span>')+'<span style="float:right">'+(open?'▴':'▾')+'</span></button>';
+ if(open){
+  var q=nk(S.natQ||''),top=['Česko'].concat(FREQ);
+  h+='<div class="panel" style="background:#FFF1D6;margin-top:6px"><div class="row wrap">'+top.map(function(n){var v=natStore(n),on=cur===v;return '<button type="button" class="pill'+(on?' on':'')+'" style="'+(on?'background:#6C3CE9;':'')+'" data-a="natPick" data-p="'+esc(t+'|'+v)+'">'+esc(n)+'</button>';}).join('')+'</div>'+
+   '<input class="inp w" id="natq" data-natq="1" placeholder="Hledat jinou zemi…" value="'+esc(S.natQ||'')+'" autocomplete="off">'+
+   '<div style="max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:6px">'+COUNTRIES.filter(function(c){return !q||nk(c[0]).indexOf(q)>=0;}).map(function(c){var on=cur===c[0];return '<button type="button" class="btn '+(on?'yellow':'white')+'" style="justify-content:flex-start;text-align:left" data-a="natPick" data-p="'+esc(t+'|'+natStore(c[0]))+'">'+esc(c[0])+'</button>';}).join('')+'</div></div>';
+ }
+ return h+'</div>';
+}
+A.natOpen=function(t){if(S.natOpen===t){S.natOpen=null;return;}S.natOpen=t;S.natQ='';if(!natGet(t))natSet(t,'CZ');};
+A.natPick=function(p){var i=p.lastIndexOf('|');natSet(p.slice(0,i),p.slice(i+1));S.natOpen=null;};
+
+/* ---------- Ubyport: hlášení cizinců policii (soubor UNL) ---------- */
+function ubyS(){var u=S.uby=S.uby||{};u.cfg=u.cfg||{idub:'',mark:'',name:'',purp:'99'};u.sent=u.sent||{};return u;}
+function ubyAscii(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[|\r\n]/g,' ');}
+function ubyNm(s){return ubyAscii(s).replace(/[^A-Za-z' -]/g,'').replace(/\s+/g,' ').trim().toUpperCase();}
+function ubySplit(n){var p=String(n||'').trim().split(/\s+/);var f=p.shift()||'';return {first:ubyNm(f),last:ubyNm(p.join(' '))};}
+function ubyDp(i){return i.slice(8,10)+'.'+i.slice(5,7)+'.'+i.slice(0,4);}
+function ubyDeadline(from){var d=parse(from),n=0;while(n<3){d.setDate(d.getDate()+1);var w=d.getDay();if(w!==0&&w!==6)n++;}return toIso(d);}
+function ubyItems(){
+ var cut=toIso(new Date(Date.now()-45*864e5)),sent=ubyS().sent,list=[],noNat=[],wait=0;
+ bookRows().forEach(function(r){
+  if(r.pending){wait++;return;}
+  r.stays.forEach(function(s){
+   if(!s.from||!s.to||s.from>TODAY||s.from<cut||s.to<=s.from)return;
+   var hb=s.addr!=null,nat=hb?s.nat:r.nat,addr=(hb?s.addr:r.addr)||'',doc=(hb?s.doc:r.doc)||'',born=(hb?s.born:r.born)||'';
+   if(!nat){noNat.push(r.name);return;}
+   if(!isForeignNat(nat))return;
+   var info=natInfo(nat),nm=ubySplit(r.name),dc=ubyAscii(doc).replace(/[^A-Za-z0-9]/g,'').toUpperCase(),is=[];
+   if(!info)is.push('upřesněte zemi');
+   if(!nm.first||!nm.last)is.push('chybí jméno nebo příjmení');
+   if(!born)is.push('chybí datum narození');
+   if(dc.length<4)is.push('chybí číslo dokladu');
+   var key=r.id+'|'+s.from+'|'+s.to;
+   list.push({key:key,name:r.name,first:nm.first,last:nm.last,from:s.from,to:s.to,nat:info?info.name:nat,code:info?info.code:'',addr:ubyAscii(addr).replace(/[^A-Za-z0-9 ,.\/-]/g,'').replace(/\s+/g,' ').trim(),doc:dc,born:born,issues:is,done:!!sent[key],dl:ubyDeadline(s.from)});
+  });
+ });
+ list.sort(function(a,b){return a.from<b.from?-1:(a.from>b.from?1:(a.last<b.last?-1:1));});
+ return {list:list,noNat:noNat,wait:wait};
+}
+function ubyUnl(items){
+ var c=ubyS().cfg,n=new Date(),p=function(x){return (x<10?'0':'')+x;};
+ var ts=n.getFullYear()+'.'+p(n.getMonth()+1)+'.'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());
+ var L=['A|'+items.length+'|'+ubyAscii(c.idub).trim()+'|'+ubyAscii(c.mark).trim().toUpperCase()+'|'+ubyAscii(c.name).trim()+'|||||||||'+ts+'||'];
+ items.forEach(function(x){L.push(['U',ubyDp(x.from),ubyDp(x.to),x.last,x.first,'',ubyDp(x.born),'','',x.code,x.addr,x.doc,'',(c.purp||'99'),'',''].join('|')+'|');});
+ return {text:L.join('\r\n')+'\r\n',name:ubyAscii(c.idub).trim()+'_'+n.getFullYear()+'_'+p(n.getMonth()+1)+'_'+p(n.getDate())+'_'+p(n.getHours())+p(n.getMinutes())+'_recepce.unl'};
+}
+function vUby(){
+ var u=ubyS(),c=u.cfg,it=ubyItems(),todo=it.list.filter(function(x){return !x.done;}),ok=todo.filter(function(x){return !x.issues.length;}),done=it.list.filter(function(x){return x.done;});
+ var cfgOk=!!(c.idub&&c.mark),o=isOpen('ubycfg',!cfgOk);
+ var h='<div style="display:flex;flex-direction:column;gap:14px">';
+ h+='<div class="panel" style="background:#FFF1D6"><b style="font-size:20px">Hlášení cizinců cizinecké policii</b><span style="font-size:17px;line-height:1.5">Do tří pracovních dnů po příjezdu se hlásí každý host, který není z Česka. Appka sestaví soubor, nahrajete ho do Ubyportu a tady ho označíte jako nahlášený.</span></div>';
+ h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn '+(cfgOk?'lgreen':'orange')+'" style="justify-content:space-between" '+tg('ubycfg',!cfgOk)+'>Údaje o ubytovacím zařízení '+(cfgOk?'✓':'– vyplňte')+'<span>'+(o?'▴':'▾')+'</span></button>';
+ if(o)h+='<div class="fg">'+[['idub','IDUB (číslo ubytovacího zařízení)','např. 100100000001'],['mark','Zkratka (5 písmen)','např. AAAAA'],['name','Název zařízení','Penzion Na Devítce'],['purp','Kód účelu pobytu','99']].map(function(f){return '<div class="fld"><label for="uc_'+f[0]+'">'+f[1]+'</label><input class="inp w" id="uc_'+f[0]+'" data-ubycfg="'+f[0]+'" value="'+esc(c[f[0]]||'')+'" placeholder="'+esc(f[2])+'" autocomplete="off"></div>';}).join('')+'</div><span class="small">IDUB a zkratku najdete v Ubyportu po přihlášení u ubytovacího zařízení.</span>';
+ h+='</div>';
+ if(it.wait)h+='<div class="panel" style="background:#E8F0FF"><span style="font-size:17px">'+it.wait+' hostů ještě nemá potvrzený příjezd v Knize hostů. Hlásí se až po potvrzení.</span></div>';
+ if(it.noNat.length)h+='<div class="panel" style="background:#FFE4E4"><b>Chybí země u hostů:</b><span style="font-size:17px;line-height:1.5">'+it.noNat.map(esc).join(', ')+'</span><span class="small">Bez země nepoznám, jestli jde o cizince. Doplňte ji v kartě hosta nebo v Knize hostů.</span></div>';
+ h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><b style="font-size:19px">K nahlášení ('+todo.length+')</b>';
+ if(!todo.length)h+='<span style="font-size:17px">Žádný cizinec nečeká na nahlášení. ✓</span>';
+ h+=todo.map(function(x){var late=x.dl<TODAY;return '<div class="gcard" style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;background:'+(x.issues.length?'#FFF1D6':'#F1EBFF')+'"><div class="row wrap"><b style="font-size:18px">'+esc(x.name)+'</b><span class="tag">'+esc(x.nat)+'</span><span class="sp"></span><span class="tag '+(late?'bad':'ok')+'">do '+dmy(x.dl)+(late?' (po lhůtě)':'')+'</span></div><span style="font-size:16px">'+dmy(x.from)+' – '+dmy(x.to)+(x.born?' · nar. '+dmy(x.born):'')+(x.doc?' · doklad '+esc(x.doc):'')+'</span>'+(x.issues.length?'<span style="font-size:16px;font-weight:800;color:#D62839">Chybí: '+x.issues.join(', ')+'</span>':'<span class="small">Příjmení: '+esc(x.last)+' · Jméno: '+esc(x.first)+' · Kód země: '+esc(x.code)+'</span>')+'</div>';}).join('');
+ h+='<div class="row wrap"><button class="btn green big" data-a="ubyDl"'+(ok.length&&cfgOk?'':' style="opacity:.5"')+'>Stáhnout soubor pro Ubyport ('+Math.min(ok.length,99)+')</button></div>';
+ if(ok.length&&!cfgOk)h+='<span class="small">Nejdřív vyplňte IDUB a zkratku výše.</span>';
+ if(todo.length>ok.length)h+='<span class="small">Hosté s chybějícími údaji se do souboru nedostanou, dokud je nedoplníte.</span>';
+ if(S.ubyLast&&S.ubyLast.length)h+='<div class="panel" style="background:#E3F8EC"><span style="font-size:17px;line-height:1.5">Soubor je stažený ('+S.ubyLast.length+' hostů). V Ubyportu zvolte „Import dat (UNL soubor)“, nahrajte ho a stáhněte doručenku. Pak ťukněte sem:</span><button class="btn green big" data-a="ubyMark">Doručenku mám, označit jako nahlášené</button></div>';
+ h+='</div>';
+ if(done.length)h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn lgreen" style="justify-content:space-between" '+tg('ubydone',false)+'>Už nahlášení ('+done.length+')<span>'+(isOpen('ubydone',false)?'▴':'▾')+'</span></button>'+(isOpen('ubydone',false)?done.map(function(x){return '<div class="row wrap"><b>'+esc(x.name)+'</b><span class="small">'+dmy(x.from)+' – '+dmy(x.to)+' · '+esc(x.nat)+'</span><span class="sp"></span><button class="btn white" style="color:#D62839" data-a="ubyUndo" data-p="'+esc(x.key)+'">Vrátit</button></div>';}).join(''):'')+'</div>';
+ return h+'</div>';
+}
+A.ubyDl=function(){
+ var c=ubyS().cfg;if(!c.idub||!c.mark){toast('Nejdřív vyplňte IDUB a zkratku.');S.open.ubycfg=true;return;}
+ var ok=ubyItems().list.filter(function(x){return !x.done&&!x.issues.length;}).slice(0,99);
+ if(!ok.length){toast('Není co stáhnout.');return;}
+ var f=ubyUnl(ok),b=new Blob([f.text],{type:'text/plain'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(b);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
+ S.ubyLast=ok.map(function(x){return x.key;});toast('Soubor '+f.name+' je stažený.');
+};
+A.ubyMark=function(){var s=ubyS().sent;(S.ubyLast||[]).forEach(function(k){s[k]=TODAY;});S.ubyLast=null;toast('Označeno jako nahlášené.');};
+A.ubyUndo=function(k){delete ubyS().sent[k];};
+
 /* ---------- události ---------- */
 document.addEventListener('click',function(e){
  var el=e.target.closest('[data-a]');if(!el)return;
@@ -1524,6 +1624,8 @@ document.addEventListener('visibilitychange',function(){if(document.visibilitySt
 window.addEventListener('pagehide',function(){flush();});
 document.addEventListener('input',function(e){
  var t=e.target,a,g,v;
+ if(t.dataset.natq!==undefined){S.natQ=t.value;render();return;}
+ if(t.dataset.ubycfg){ubyS().cfg[t.dataset.ubycfg]=t.value;return;}
  if(t.dataset.f!==undefined){S.form[t.dataset.f]=t.value;return;}
  if(t.dataset.biz){S.biz[t.dataset.biz]=t.value;return;}
  if(t.dataset.bank){S.bank[t.dataset.bank]=t.value;var bs=document.querySelector('[data-bankst]');if(bs)bs.textContent=bankState();return;}
