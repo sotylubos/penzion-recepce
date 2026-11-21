@@ -340,6 +340,10 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 .burger,.navbd{display:none}
 .navs{display:contents}
 .dsk{display:inline}
+.infw{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.ibtn{width:34px;height:34px;min-height:34px;padding:0;border-radius:50%;border:3px solid var(--ic,#6C3CE9);background:#fff;color:var(--ic,#6C3CE9);font:italic 900 20px/1 Georgia,serif;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #E3D8FF}
+.ibtn[aria-expanded=true]{background:var(--ic,#6C3CE9);color:#fff}
+.ibub{background:#F7F3FF;border-radius:16px;padding:12px 16px;font-size:16px;font-weight:700;line-height:1.5;color:#1F2340;box-shadow:inset 0 0 0 2px var(--ic,#E3D8FF);max-width:640px}
 .fold{background:#F7F3FF;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 2px #E3D8FF}
 .fhd{display:flex;align-items:center;gap:10px;width:100%;min-height:54px;padding:6px 16px;background:transparent;color:#1F2340;text-align:left}
 .fhd .ft{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
@@ -550,6 +554,7 @@ function isOpen(k,def){return S.open[k]===undefined?def:S.open[k];}
 function tg(k,def){return 'data-a="tog" data-p="'+esc(k)+'" data-d="'+(def?1:0)+'"';}
 function mob(){try{return window.matchMedia('(max-width:700px),(max-height:520px) and (max-width:1000px)').matches;}catch(e){return false;}}
 /* sbalitelná část: nadpis (+ krátké shrnutí) a obsah jen po rozkliknutí */
+function infoI(k,body,color){var o=isOpen(k,false);return '<div class="infw"><button class="ibtn" type="button" aria-label="Informace" aria-expanded="'+(o?'true':'false')+'" '+tg(k,false)+(color?' style="--ic:'+color+'"':'')+'>i</button>'+(o?'<div class="ibub"'+(color?' style="--ic:'+color+'"':'')+'>'+body+'</div>':'')+'</div>';}
 function fold(k,title,sub,body,def,color){var o=isOpen(k,!!def);return '<div class="fold"'+(color?' style="--fc:'+color+'"':'')+'><button class="fhd" aria-expanded="'+(o?'true':'false')+'" '+tg(k,!!def)+'><span class="ft"><b>'+title+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?'<div class="fbd">'+body+'</div>':'')+'</div>';}
 function guestSub(g){
  var p=[];var st=stayOf(g);
@@ -675,7 +680,7 @@ function vKal(){
  var legend='<span class="small b" style="color:#1F2340">▶ příjezd (pravá půlka dne) · ◀ odjezd (levá půlka)</span>'+
   S.groupDefs.map(function(d){return '<span class="small b" style="color:#1F2340"><i class="dot" style="background:'+d.color+'"></i>'+esc(d.name)+'</span>';}).join('')+
   '<span class="small b" style="color:#1F2340"><i class="dot" style="background:#C2410C"></i>Individuálové</span><span class="small b" style="color:#1F2340"><i class="dot" style="background:#B8B5C8"></i>proběhlo</span>';
- var legendBox=fold('legend','Co znamenají barvy',null,'<div class="row wrap" style="gap:10px 14px">'+legend+'</div>',!mob());
+ var legendBox=infoI('legend','<div class="row wrap" style="gap:10px 14px">'+legend+'</div>','#6C3CE9');
  return '<div class="card calcard">'+calSwitch('<span class="sp"></span><button class="btn green" data-a="calNew">+ Nová<span class="dsk"> rezervace</span></button>')+'<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí měsíc" data-a="calGo" data-p="-1">‹</button><b class="mname">'+MN[base.getMonth()]+' '+base.getFullYear()+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další měsíc" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button></div>'+
   legendBox+form+detail+'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div></div>';
 }
@@ -789,7 +794,7 @@ function entryHtml(e){
 function vPay(){
  var ents=presentEntries();
  if(S.payOpen){var pg0=G(S.payOpen);if(pg0&&pg0.here)return payPage(pg0);S.payOpen=null;}
- var top=fold('payinfo','Co tu je',null,'<div class="small" style="font-size:16px">Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta, otevře se mu samostatná stránka s účtem a platbou.</div>',!mob(),'#1D6FE0'),price='';
+ var top=infoI('payinfo','Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta, otevře se mu samostatná stránka s účtem a platbou.','#1D6FE0'),price='';
  var body=ents.length?ents.map(entryHtml).join(''):'<div class="note p">Teď není nikdo ubytovaný, takže tu není co účtovat.</div>';
  var shown=S.payments.filter(function(p){return p.date===TODAY&&(S.payFilter==='all'||p.method===S.payFilter);});
  var filters=[['all','Všechny','#2B1B6B'],['hotove','Hotově','#12805C'],['qr','QR (banka)','#1D6FE0'],['prevod','Převodem (banka)','#6C3CE9'],['predem','Předem','#C2410C']];
@@ -872,7 +877,7 @@ function vBook(){
   '<div class="row bkbtns"><button class="btn green" data-a="bookFormToggle">+ Přidat do knihy</button>'+(vpend&&!pm&&S.delArm!=='bkAll'?'<button class="btn yellow" data-a="bkConfirmAll">✓ Potvrdit příjezd všem ('+vpend+')</button>':'')+'</div>'+(vpend&&!pm&&S.delArm==='bkAll'?'<div class="panel" style="background:#FFF1D6"><b style="font-size:18px;font-weight:900">Opravdu potvrdit příjezd všem čekajícím ('+vpend+')?</b><span class="small">Potvrdíte, že všichni v seznamu opravdu dorazili.</span><div class="row bkbtns"><button class="btn green" data-a="bkConfirmAll">Ano, potvrdit</button><button class="btn white" style="color:#6C3CE9" data-a="disarmQ" data-p="">Zrušit</button></div></div>':'')+
   fold('bkf','Filtry',esc(fsum)+' · '+vis.length+' '+pl(vis.length,'host','hosté','hostů'),'<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(f){return chip(esc(f[1]),'bookFilter',f[0],S.bookFilter===f[0],f[2]);}).join('')+'</div>'+
   '<div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(f){return chip(f[1],'bookPeriod',f[0],S.bookPeriod===f[0],'#00857F');}).join('')+'</div>'+custom,false,'#6C3CE9')+
-  fold('bki','Jak kniha hostů funguje',null,'<span class="small">Host, který u vás už byl, má v knize svůj profil. Rozbalte ho a jen přidejte nový příjezd a odjezd. V den příjezdu se host v knize objeví sám (kromě těch, kdo jen stravují) a vy potvrdíte, že dorazil. Chybějící adresu a doklad doplníte po rozkliknutí.</span>',!mob(),'#6C3CE9')+'</div>'+form+exp+list+'</div>';
+  infoI('bki','Host, který u vás už byl, má v knize svůj profil. Rozbalte ho a jen přidejte nový příjezd a odjezd. V den příjezdu se host v knize objeví sám (kromě těch, kdo jen stravují) a vy potvrdíte, že dorazil. Chybějící adresu a doklad doplníte po rozkliknutí.','#6C3CE9')+'</div>'+form+exp+list+'</div>';
 }
 
 /* ---------- ceník ---------- */
@@ -892,7 +897,7 @@ function vPrice(){
    '<div class="row"><button class="btn red" data-a="plDel" data-p="'+l.id+'">Smazat ceník</button></div></div>';
   return '<div class="acc"><button class="hd" style="background:#00857F;color:#fff" '+tg(k,false)+'><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px" data-plname="'+l.id+'">'+esc(l.name)+'</b><span style="font-size:15px;font-weight:700" data-pldates="'+l.id+'">'+plDates(l)+'</span></span>'+tags+'<span class="pm" style="color:#fff">'+(o?'–':'+')+'</span></button>'+det+'</div>';
  }).join('')+bankCard()+bizCard()+accountCard();
- return '<div class="col"><div class="row wrap"><div style="flex:1;min-width:200px">'+fold('plinfo','Jak ceník funguje',null,'<div class="small" style="font-size:16px">Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. U individuálů se cena ubytování liší podle toho, jestli je v pokoji jeden host, nebo dva a více; skupiny mají jednu cenu za osobu a noc. Skupina bez vlastního ceníku použije první ceník v seznamu.</div>',!mob(),'#00857F')+'</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
+ return '<div class="col"><div class="row wrap"><div style="flex:1;min-width:200px">'+infoI('plinfo','Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. U individuálů se cena ubytování liší podle toho, jestli je v pokoji jeden host, nebo dva a více; skupiny mají jednu cenu za osobu a noc. Skupina bez vlastního ceníku použije první ceník v seznamu.','#00857F')+'</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
 }
 
 /* ---------- export knihy hostů ---------- */
