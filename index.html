@@ -430,6 +430,25 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 @media (max-width:360px){
  .burger b{display:none}
 }
+
+/* tablet a počítač: menu jako jeden úzký pruh nahoře */
+@media (min-width:701px) and (min-height:521px),(min-width:1001px){
+ .app{flex-direction:column}
+ .side{width:100%!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;overflow:visible!important;padding:6px 10px!important;gap:6px!important;flex:none!important}
+ .side>*{flex:none}
+ .logo{display:flex!important;padding:0 6px 0 2px!important;gap:8px}
+ .logo i{width:42px;height:42px;font-size:28px;border-radius:12px}
+ .logo div{display:none}
+ .navs{display:flex!important;flex:1 1 auto!important;gap:6px;min-width:0}
+ .navs .nav{flex:1 1 0!important;width:auto!important;min-width:0;min-height:54px!important;padding:4px 6px!important;gap:6px;font-size:16px!important;line-height:1.1;justify-content:center;text-align:center;border-radius:14px}
+ .navs .nav i{display:flex!important;width:26px!important;height:26px!important;font-size:14px!important;border-radius:8px}
+ .navs .nav span{overflow-wrap:normal;word-break:normal;hyphens:none}
+ .burger,.navbd{display:none!important}
+ .top{padding:10px 20px 4px}.top h1{font-size:28px}.top small{font-size:15px}
+ .scroll{padding:4px 20px 30px}
+}
+@media (min-width:701px) and (max-width:1099px){.navs .nav{flex:1 1 auto!important;font-size:16px!important;padding:4px 8px!important}.navs .nav i{display:none!important}}
+@media (min-width:1200px){.logo div{display:flex}.navs .nav{font-size:18px!important}.navs .nav i{width:30px!important;height:30px!important;font-size:16px!important}}
 </style>
 </head>
 <body>
@@ -572,7 +591,7 @@ function guestSub(g){
  if(st)p.push(rangeTxt(st.from,st.to));
  p.push(persTxt(g.persons));
  p.push(g.only?'jen stravování':'ubytování + strava');
- if(g.foreign)p.push('cizinec ('+g.nat+')');
+ if(g.foreign)p.push(natLabel(g.nat));
  return p.join(' · ');
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -671,7 +690,7 @@ function vKal(){
   var bg=sel.to<TODAY?'#ECEAF3':(sel.grp==='gestalt'?'#EFE9FF':(sel.grp==='vip5'?'#DDF5F2':(sel.grp==='indiv'?'#FFE9D6':'#FCE4EE')));
   var np=stayPersons(sel),note='';
   if(sel.grp==='indiv')note=G(sel.guestId).note||'';
-  else{var ms=membersOf(sel).filter(function(x){return x.here;});var only=ms.filter(function(x){return x.only;}).reduce(function(a,x){return a+x.persons;},0);var fo=ms.filter(function(x){return x.foreign;}).length;note=(np-only)+' ubytováno, '+only+' jen na stravu'+(fo?' · '+fo+' cizinec':'')+' · platba na konci pobytu.';}
+  else{var ms=membersOf(sel).filter(function(x){return x.here;});var only=ms.filter(function(x){return x.only;}).reduce(function(a,x){return a+x.persons;},0);var fo=ms.filter(function(x){return x.foreign;}).length;note=(np-only)+' ubytováno, '+only+' jen na stravu'+(fo?' · '+fo+' ze zahraničí':'')+' · platba na konci pobytu.';}
   detail='<div class="panel caldet" id="caldet" style="background:'+bg+'"><div class="row wrap"><b style="font-size:24px;font-weight:900">'+esc(stayName(sel))+'</b><span class="tag" style="background:#fff;font-size:16px;padding:5px 14px">'+(sel.grp==='indiv'?'individuál':'skupina')+'</span><span class="sp"></span><button class="rb" style="background:#fff" aria-label="Zavřít" data-a="selStay" data-p="">×</button></div>'+
    '<div style="font-size:19px;font-weight:800">'+rangeTxt(sel.from,sel.to)+(sel.to<TODAY?' (proběhlo)':'')+' · '+persTxt(np)+'</div><div style="font-size:17px;font-weight:700;line-height:1.45">'+esc(note)+'</div>'+
    '<div class="row wrap"><button class="btn dark big" data-a="openStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Otevřít hosta':'Otevřít skupinu')+'</button><button class="btn yellow big" data-a="payStay" data-p="'+sel.id+'">Účtovat</button></div>'+stayEdit(sel)+'</div>';
@@ -861,7 +880,7 @@ function vBook(){
   form='<div class="panel" style="background:#FFF1D6"><b style="font-size:18px">Zapsat hosta, kterého v systému nemáme</b><div class="fg">'+fi('bFirst','Jméno','','text','w')+fi('bLast','Příjmení','','text','w')+fi('bAddr','Adresa','','text','w')+fi('bDoc','Číslo dokladu','','text','w')+fi('bBorn','Datum narození','','date','w')+fi('bFrom','Příjezd','','date','w')+fi('bTo','Odjezd','','date','w')+fi('bMail','E-mail','jmeno@email.cz','email','w')+fi('bTel','Telefon','+420 …','tel','w')+'</div>'+
    '<div class="row wrap">'+natPick('f|bNat')+'<span class="sp"></span><button class="btn white big" data-a="bookFormToggle">Zrušit</button><button class="btn green big" data-a="saveBook">Zapsat do knihy</button></div></div>';
  }
- var gch=[['all','Všichni','#6C3CE9']].concat(S.groupDefs.map(function(d){return [d.key,d.name,d.color];})).concat([['indiv','Individuálové','#C2410C'],['foreign','Cizinci','#C28A00']]);
+ var gch=[['all','Všichni','#6C3CE9']].concat(S.groupDefs.map(function(d){return [d.key,d.name,d.color];})).concat([['indiv','Individuálové','#C2410C'],['foreign','Ze zahraničí','#C28A00']]);
  var npend=bookRows().filter(function(r){return r.pending;}).length,vpend=vis.filter(function(r){return r.pending;}).length;
  if(npend)gch.push(['pending','Čeká na potvrzení ('+npend+')','#D62839']);
  var pch=[['all','Celé období'],['week','Tento týden'],['month','Tento měsíc'],['prev','Minulý měsíc'],['custom','Vlastní období']];
@@ -880,7 +899,7 @@ function vBook(){
    (b.gid&&G(b.gid)?nameFields(G(b.gid))+'<div class="fg">'+[['addr','Adresa'],['doc','Číslo dokladu'],['born','Datum narození'],['email','E-mail'],['phone','Telefon']].map(function(f){return '<div class="fld"><label for="bi_'+b.gid+f[0]+'">'+f[1]+'</label><input '+(f[0]==='born'?'type="date" ':'')+'class="inp w" id="bi_'+b.gid+f[0]+'" data-bind="'+b.gid+'|'+f[0]+'" value="'+esc(b[f[0]]||'')+'"></div>';}).join('')+'</div><div class="row wrap">'+natPick('g|'+b.gid)+'</div>':'<span style="font-size:16px;font-weight:700;line-height:1.5">Narozen(a): '+(b.born?dmy(b.born):'[doplní se]')+' · Adresa: '+esc(b.addr||'[doplní se]')+' · Doklad: '+esc(b.doc||'[doplní se]')+' · Země: '+esc((natInfo(b.nat)||{name:b.nat||'[doplní se]'}).name)+' · E-mail: '+esc(b.email||'[doplní se]')+' · Telefon: '+esc(b.phone||'[doplní se]')+'</span>')+
    (b.foreign?'<span class="row wrap"><b style="font-size:16px">Hlášení cizinecké policii:</b><button class="btn" style="background:'+(pd?'#12805C':'#D62839')+'" data-a="police" data-p="'+b.id+'">'+(pd?'Nahlášeno ✓':'Čeká na nahlášení')+'</button><button class="btn teal" data-a="sigBook" data-p="'+b.id+'">✍ Podepsat na tabletu</button><button class="btn white" style="color:#6C3CE9" data-a="ubyPrintBook" data-p="'+b.id+'">🖨 Formulář k podpisu</button></span>':'')+
    act+(pm?'':(bookDelIds(b).length?forgetBtn('forgetBook',b.id,'Smazat z knihy (příjezd nepotvrzen)')+'<span class="small">Smažou se jen pobyty bez potvrzeného příjezdu a bez platby. Potvrzené pobyty v knize zůstanou.</span>':'<span class="small">Host má potvrzený příjezd, záznam v knize hostů zůstává.</span>'))+'</div>';
-  return '<div class="gcard" style="background:'+(o?'#F1EBFF':'#fff')+';box-shadow:0 3px 0 #F0DFC0"><div class="krow">'+'<'+(page?'div':'button')+' class="ktg" '+(page?'':'data-a="bookOpen" data-p="'+b.id+'"')+'><span class="kn"><b>'+esc(b.name)+'</b><span class="small">'+(last?'naposledy '+dmy(last.from)+' – '+dmy(last.to):'')+'</span></span><span class="tag" style="background:'+bGrpColor(b.grp)+';color:#fff">'+esc(bGrpName(b.grp))+'</span><span class="tag '+(b.foreign?'y':'g')+'">'+(b.foreign?'cizinec':'tuzemec')+'</span>'+(b.pending?'<span class="tag" style="background:#FFC21A;color:#1F2340">čeká na potvrzení</span>':'')+(b.gid&&(!b.addr||!b.doc||!b.born)?'<span class="tag bad">doplnit údaje</span>':'')+'<span class="tag" style="background:#EEE9FF;font-size:14px">'+sh.length+' '+pl(sh.length,'pobyt','pobyty','pobytů')+'</span><span class="pm">'+(page?'':'›')+'</span></'+(page?'div':'button')+'>'+(b.pending&&!pm?'<button class="btn green" data-a="bkConfirm" data-p="'+b.gid+'">Potvrdit příjezd</button>':'')+'</div>'+det+'</div>';
+  return '<div class="gcard" style="background:'+(o?'#F1EBFF':'#fff')+';box-shadow:0 3px 0 #F0DFC0"><div class="krow">'+'<'+(page?'div':'button')+' class="ktg" '+(page?'':'data-a="bookOpen" data-p="'+b.id+'"')+'><span class="kn"><b>'+esc(b.name)+'</b><span class="small">'+(last?'naposledy '+dmy(last.from)+' – '+dmy(last.to):'')+'</span></span><span class="tag" style="background:'+bGrpColor(b.grp)+';color:#fff">'+esc(bGrpName(b.grp))+'</span>'+(b.foreign?'<span class="tag y">'+esc(natLabel(b.nat))+'</span>':'')+''+(b.pending?'<span class="tag" style="background:#FFC21A;color:#1F2340">čeká na potvrzení</span>':'')+(b.gid&&(!b.addr||!b.doc||!b.born)?'<span class="tag bad">doplnit údaje</span>':'')+'<span class="tag" style="background:#EEE9FF;font-size:14px">'+sh.length+' '+pl(sh.length,'pobyt','pobyty','pobytů')+'</span><span class="pm">'+(page?'':'›')+'</span></'+(page?'div':'button')+'>'+(b.pending&&!pm?'<button class="btn green" data-a="bkConfirm" data-p="'+b.gid+'">Potvrdit příjezd</button>':'')+'</div>'+det+'</div>';
  };
  var list=vis.map(function(b){return rowOf(b);}).join('')||'<div class="note p" style="text-align:center">Nikdo takový tu zatím nebyl. Přidejte ho tlačítkem „+ Přidat do knihy“.</div>';
  if(S.bookGuest){var b0=bookRows().filter(function(r){return r.id===S.bookGuest;})[0];
@@ -919,11 +938,11 @@ function exportData(){
  var rg=periodRange(),lines=[],n=0;
  bookView().vis.forEach(function(r){
   staysIn(r,rg).slice().sort(function(a,b){return a.from<b.from?-1:1;}).forEach(function(s){
-   var hb=s.addr!=null,bo=hb?s.born:r.born,na=hb?s.nat:r.nat,fo=hb?s.foreign:r.foreign;lines.push([r.name,bo?dmy(bo):'',bGrpName(r.grp),dmy(s.from),dmy(s.to),String(Math.max(1,diffDays(s.from,s.to))),(na||'')+(fo?' (cizinec)':''),(hb?s.addr:r.addr)||'',(hb?s.doc:r.doc)||'',fo?'ano':'ne']);
+   var hb=s.addr!=null,bo=hb?s.born:r.born,na=hb?s.nat:r.nat,fo=hb?s.foreign:r.foreign;lines.push([r.name,bo?dmy(bo):'',bGrpName(r.grp),dmy(s.from),dmy(s.to),String(Math.max(1,diffDays(s.from,s.to))),natLabel(na),(hb?s.addr:r.addr)||'',(hb?s.doc:r.doc)||'']);
   });
  });
  var sub=rg?'Období: '+dmy(rg[0])+' – '+dmy(rg[1]):'Všechny pobyty';
- return {title:'Kniha hostů – Penzion',sub:sub+' · vytištěno '+dmy(TODAY),head:['Jméno a příjmení','Datum narození','Skupina','Příjezd','Odjezd','Nocí','Státní příslušnost','Adresa','Číslo dokladu','Cizinec'],w:[.15,.09,.09,.09,.09,.04,.11,.15,.12,.07],rows:lines};
+ return {title:'Kniha hostů – Penzion',sub:sub+' · vytištěno '+dmy(TODAY),head:['Jméno a příjmení','Datum narození','Skupina','Příjezd','Odjezd','Nocí','Země','Adresa','Číslo dokladu'],w:[.16,.09,.09,.09,.09,.04,.11,.20,.13],rows:lines};
 }
 function xe(s){return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 var CRC=(function(){var t=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
@@ -1548,6 +1567,7 @@ function natInfo(v){
  for(var i=0;i<COUNTRIES.length;i++){if(nk(COUNTRIES[i][0])===k||COUNTRIES[i][1]===u)return {name:COUNTRIES[i][0],code:COUNTRIES[i][1]};}
  return null;
 }
+function natLabel(v){if(!v)return '';var i=natInfo(v);return i?i.name:v;}
 function natStore(n){return n==='Česko'?'CZ':n;}
 function isForeignNat(v){return !!v&&v!=='CZ'&&v!=='CZE';}
 function natGet(t){var a=t.split('|');if(a[0]==='g'){var g=G(a[1]);return g?(g.nat||''):'';}return S.form[a[1]]||'';}
