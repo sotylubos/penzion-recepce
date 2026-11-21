@@ -722,8 +722,11 @@ function billSummary(g){
   (g.paid?'':'<button class="btn white sedit" data-a="tog" data-p="'+kb+'" data-d="0">'+(ob?'▲ Skrýt úpravy účtu':'✏ Upravit účet (počty, ceny, data)')+'</button>')+'</div>'+((ob&&!g.paid)?billBlock(g):'');
 }
 function guestPayRow(g){
- var k='pu:'+g.id,o=isOpen(k,false);
- return '<div class="gcard'+(o?' open':'')+'"><div class="grow"><button class="gtoggle" '+tg(k,false)+'><span class="av" style="background:'+grpColor(g.grp)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b>'+(g.grp==='indiv'&&stayOfGuest(g)?'<small>'+rangeTxt(stayOfGuest(g).from,stayOfGuest(g).to)+' · '+persTxt(g.persons)+'</small>':'')+'</span>'+(g.paid?'<span class="tag" style="background:'+METHODS[g.paid][2]+';color:#1F2340">✓ '+METHODS[g.paid][0]+'</span>':'')+'<span class="pm">'+(o?'–':'+')+'</span></button></div>'+(o?'<div class="gdet" style="padding:0 14px 14px;gap:12px">'+billSummary(g)+payPanel(g)+'<button class="btn big '+(g.paid?'green':'white')+'" style="width:100%;'+(g.paid?'':'color:#6C3CE9;')+'" data-a="closeGuest" data-p="'+g.id+'">‹ Zpět na seznam hostů</button></div>':'')+'</div>';
+ return '<div class="gcard"><div class="grow"><button class="gtoggle" data-a="payOpen" data-p="'+g.id+'"><span class="av" style="background:'+grpColor(g.grp)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b>'+(g.grp==='indiv'&&stayOfGuest(g)?'<small>'+rangeTxt(stayOfGuest(g).from,stayOfGuest(g).to)+' · '+persTxt(g.persons)+'</small>':'')+'</span>'+(g.paid?'<span class="tag" style="background:'+METHODS[g.paid][2]+';color:#1F2340">✓ '+METHODS[g.paid][0]+'</span>':'')+'<span class="pm">›</span></button></div></div>';
+}
+function payPage(g){
+ var back='<button class="btn yellow big payback" style="width:100%" data-a="payBack">‹ Zpět na seznam hostů</button>';
+ return '<div class="col">'+back+'<div class="card" style="gap:14px"><div class="row" style="gap:12px"><span class="av" style="background:'+grpColor(g.grp)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b style="font-size:24px">'+esc(dn(g.name))+'</b><small>'+esc(grpName(g.grp))+(g.grp==='indiv'&&stayOfGuest(g)?' · '+rangeTxt(stayOfGuest(g).from,stayOfGuest(g).to)+' · '+persTxt(g.persons):'')+'</small></span>'+(g.paid?'<span class="tag" style="background:'+METHODS[g.paid][2]+';color:#1F2340">✓ '+METHODS[g.paid][0]+'</span>':'')+'</div>'+billSummary(g)+payPanel(g)+'</div>'+back+'</div>';
 }
 function entryHtml(e){
  var k='pg:'+e.key,o=isOpen(k,false),paid=e.guests.filter(function(x){return x.paid;}).length;
@@ -733,7 +736,8 @@ function entryHtml(e){
 }
 function vPay(){
  var ents=presentEntries();
- var top=fold('payinfo','Co tu je',null,'<div class="small" style="font-size:16px">Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta.</div>',!mob(),'#1D6FE0'),price='';
+ if(S.payOpen){var pg0=G(S.payOpen);if(pg0&&pg0.here)return payPage(pg0);S.payOpen=null;}
+ var top=fold('payinfo','Co tu je',null,'<div class="small" style="font-size:16px">Tady jsou jen hosté, kteří jsou právě ubytovaní. Rozklikněte skupinu a pak hosta, otevře se mu samostatná stránka s účtem a platbou.</div>',!mob(),'#1D6FE0'),price='';
  var body=ents.length?ents.map(entryHtml).join(''):'<div class="note p">Teď není nikdo ubytovaný, takže tu není co účtovat.</div>';
  var shown=S.payments.filter(function(p){return p.date===TODAY&&(S.payFilter==='all'||p.method===S.payFilter);});
  var filters=[['all','Všechny','#2B1B6B'],['hotove','Hotově','#12805C'],['qr','QR (banka)','#1D6FE0'],['prevod','Převodem (banka)','#6C3CE9'],['predem','Předem','#C2410C']];
@@ -1047,7 +1051,7 @@ function dropGuest(id){
  S.payments=S.payments.filter(function(x){return x.gid!==id;});
  S.stays=S.stays.filter(function(x){return x.guestId!==id;});
  delete S.mailed[id];delete S.payM[id];delete S.open['g:'+id];delete S.open['pu:'+id];
- if(S.payGuest===id)S.payGuest='';if(S.indivFocus===id)S.indivFocus=null;
+ if(S.payGuest===id)S.payGuest='';if(S.payOpen===id)S.payOpen=null;if(S.indivFocus===id)S.indivFocus=null;
 }
 function arm(k,t){if(S.delArm!==k){S.delArm=k;toast(t);return true;}S.delArm=null;return false;}
 function forgetBtn(act,id,label){
@@ -1178,7 +1182,7 @@ function renderLoading(){
 }
 
 A.menu=function(){S.navOpen=!S.navOpen;};
-A.nav=function(p){S.navOpen=false;S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
+A.nav=function(p){S.navOpen=false;S.payOpen=null;S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
 A.tog=function(p,el){var d=el.dataset.d==='1';S.open[p]=!isOpen(p,d);};
 A.quickGuest=function(){S.screen='indiv';S.scrollTop=true;S.newGuestOpen=true;S.form={};};
 /* kalendář */
@@ -1188,6 +1192,8 @@ A.calNewGo=function(){S.calView='cal';S.calNewOpen=true;S.calMsg='';S.calKind=nu
 A.grpF=function(p){S.grpF=p;};
 A.payGF=function(p){S.payGF=p;};
 A.backCal=function(){S.indivFocus=null;S.screen='kal';S.scrollTop=true;};
+A.payOpen=function(p){S.payOpen=p;S.scrollTop=true;};
+A.payBack=function(){var g=G(S.payOpen);S.payOpen=null;S.scrollTop=true;if(g)S.scrollToId='acc_'+(g.grp==='indiv'?'indiv':g.grp);};
 A.closeGuest=function(p){var g=G(p);S.open['pu:'+p]=false;S.scrollToId='acc_'+g.grp;};
 A.calGo=function(p){S.calOff=p==='0'?0:S.calOff+Number(p);};
 A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;if(S.calSel&&mob())S.scrollToId='caldet';};
@@ -1224,6 +1230,7 @@ A.payStay=function(p){
  S.screen='platba';S.scrollTop=true;S.payGroup=s.grp;
  var gs=s.grp==='indiv'?[G(s.guestId)]:S.guests.filter(function(x){return x.grp===s.grp;});
  S.payGuest=gs.length?gs[0].id:'';
+ if(s.grp==='indiv'&&gs.length&&gs[0])S.payOpen=gs[0].id;else S.open['pg:'+s.grp]=true;
 };
 /* skupiny */
 A.pickGroup=function(p){S.grp=p;S.menuMsg='';S.newGuestOpen=false;S.form={};};
@@ -1257,7 +1264,7 @@ A.saveGuest=function(){
 };
 A.here=function(p){var g=G(p);g.here=!g.here;};
 A.book=function(p){var g=G(p);if(!g.inBook&&inBookNow(g)){toast('Host je v knize hostů automaticky od příjezdu.');return;}g.inBook=!g.inBook;toast(g.inBook?'Zapsáno do knihy hostů.':'Odebráno z knihy hostů.');};
-A.goPay=function(p){var g=G(p);S.screen='platba';S.scrollTop=true;S.payGroup=g.grp;S.payGuest=g.id;};
+A.goPay=function(p){var g=G(p);S.screen='platba';S.scrollTop=true;S.payGroup=g.grp;S.payGuest=g.id;S.payOpen=g.id;};
 A.bill=function(p){var a=p.split('|'),g=G(a[0]);g.bill[a[1]]=Math.max(0,(g.bill[a[1]]||0)+Number(a[2]));syncPay(g);};
 A.setHere=function(p){var a=p.split('|');G(a[0]).here=a[1]==='1';};
 A.resetPrice=function(p){var a=p.split('|'),g=G(a[0]);if(g.price)delete g.price[a[1]];syncPay(g);};
