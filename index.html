@@ -582,8 +582,8 @@ function billBlock(g){
  var add='<div class="row"><button class="btn big blue" data-a="xadd" data-p="'+g.id+'">+ Přidat položku</button></div>';
  return '<div class="bill"><div class="row wrap"><b class="bt">Pobyt a konzumace</b><span class="sp"></span>'+personsRow(g)+'</div><div class="row wrap"><div class="fld" style="width:190px"><label for="gdf_'+g.id+'">Příjezd</label><input class="inp" id="gdf_'+g.id+'" type="date" data-gd="'+g.id+'|from" value="'+esc(guestDates(g).from)+'"></div><div class="fld" style="width:190px"><label for="gdt_'+g.id+'">Odjezd</label><input class="inp" id="gdt_'+g.id+'" type="date" data-gd="'+g.id+'|to" value="'+esc(guestDates(g).to)+'"></div><span class="small" style="flex:1;min-width:200px">Změna data přepočítá počet nocí a poplatek.'+(g.grp==='indiv'?'':' Platí jen pro tohoto hosta.')+'</span></div><div class="small">Ceník: <b>'+esc(listFor(g).name)+'</b>. Počty i ceny jdou u tohoto hosta přepsat. Ubytování a strava se násobí počtem osob, poplatek a další položky ne.</div>'+lines+'<div class="small">Místní poplatek se neplatí za děti do 18 let a osoby nad 70 let: snižte počet.</div>'+ex+add+'<div class="tot"><span>Celkem</span><b data-total="'+g.id+'">'+kc(total(g))+'</b></div></div>';
 }
-function guestCard(g){
- var o=isOpen('g:'+g.id,false),col=grpColor(g.grp);
+function guestCard(g,page){
+ var o=page||isOpen('g:'+g.id,false),col=grpColor(g.grp);
  var past=g.grp==='indiv'&&stayOfGuest(g)&&stayOfGuest(g).to<TODAY;
  var det='';
  if(o){
@@ -594,6 +594,7 @@ function guestCard(g){
    '<div class="row wrap" style="align-items:flex-end"><button class="btn '+(g.foreign?'yellow':'white')+'" style="'+(g.foreign?'':'color:#6C3CE9;')+'" data-a="setForeign" data-p="'+g.id+'">'+(g.foreign?'Cizinec ✓':'Je to cizinec?')+'</button>'+(g.foreign?'<div class="fld" style="flex:1;min-width:200px"><label for="gn_'+g.id+'">Státní příslušnost</label><input class="inp w" id="gn_'+g.id+'" data-bind="'+g.id+'|nat" value="'+esc(g.nat==='CZ'?'':g.nat)+'" placeholder="např. Slovensko, Německo" autocomplete="off"></div><span class="small" style="flex:1;min-width:200px">V knize hostů dostane štítek cizinec a čeká na nahlášení cizinecké policii.</span>':'')+'</div>'+
    billBlock(g)+forgetBtn('forgetGuest',g.id,'Smazat hosta navždy')+'</div>';
  }
+ if(page)return '<div class="gcard open"><div class="row" style="gap:12px;padding:8px 14px"><span class="av" style="background:'+col+'">'+esc(initials(g.name))+'</span><b style="font-size:24px;font-weight:900">'+esc(dn(g.name))+'</b></div>'+det+'</div>';
  return '<div class="gcard'+(o?' open':'')+'"><div class="grow"><button class="gtoggle" '+tg('g:'+g.id,false)+'><span class="av" style="background:'+(past?'#B8B5C8':col)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b></span>'+(!g.here&&!o?'<span class="tag g">nepřijede</span>':'')+'<span class="pm">'+(o?'–':'+')+'</span></button></div>'+det+'</div>';
 }
 /* ---------- obrazovky ---------- */
@@ -657,23 +658,33 @@ function vKal(){
   legendBox+form+detail+'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div></div>';
 }
 
+function guestRow(g){
+ return '<div class="gcard"><div class="grow"><button class="gtoggle" data-a="grpGuest" data-p="'+g.id+'"><span class="av" style="background:'+grpColor(g.grp)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b></span>'+(!g.here?'<span class="tag g">nepřijede</span>':'')+'<span class="pm">›</span></button></div></div>';
+}
+function groupListHtml(){
+ var cards=S.groupDefs.map(function(d){var cs=curStay(d.key),n=S.guests.filter(function(x){return x.grp===d.key;}).length;
+  return '<div class="acc"><button class="hd" style="background:'+d.color+';color:#fff" data-a="pickGroup" data-p="'+d.key+'"><span style="flex:1;display:flex;flex-direction:column;min-width:0"><b style="font-size:22px">'+esc(d.name)+'</b><span style="font-size:15px;font-weight:700">'+(cs?rangeTxt(cs.from,cs.to):'zatím bez termínu')+'</span></span><span class="tag" style="background:rgba(255,255,255,.25);color:#fff;font-size:15px">'+n+' '+pl(n,'host','hosté','hostů')+'</span><span class="pm" style="color:#fff">›</span></button></div>';}).join('');
+ return '<div class="col">'+cards+'<button style="min-height:56px;border:3px dashed #6C3CE9;background:#fff;color:#6C3CE9;border-radius:20px;font-weight:900;font-size:19px" data-a="newGroupToggle">+ Nová skupina</button>'+
+  (S.newGroupOpen?'<div class="card" style="padding:14px;box-shadow:0 5px 0 #E3D8FF">'+fi('ngName','Název skupiny','např. Jóga Brno')+'<button class="btn big" data-a="newGroup">Založit</button></div>':'')+'</div>';
+}
+function guestPageHtml(g,def){
+ var back='<button class="btn yellow big" style="width:100%" data-a="grpGuestBack">‹ Zpět do skupiny '+esc(def.name)+'</button>';
+ return '<div class="col">'+back+'<div class="card" style="padding:12px">'+guestCard(g,true)+'</div>'+back+'</div>';
+}
 function vGroups(isIndiv){
  var key=isIndiv?'indiv':S.grp;
  if(!isIndiv&&!S.groupDefs.length)return '<div class="col" style="max-width:560px"><div class="note p" style="font-size:17px">Zatím tu není žádná skupina. Založte ji tlačítkem níže, termín jí pak zadáte v Kalendáři.</div><button style="min-height:56px;border:3px dashed #6C3CE9;background:#fff;color:#6C3CE9;border-radius:20px;font-weight:900;font-size:19px" data-a="newGroupToggle">+ Nová skupina</button>'+(S.newGroupOpen?'<div class="card" style="padding:14px">'+fi('ngName','Název skupiny','např. Jóga Brno')+'<button class="btn big" data-a="newGroup">Založit</button></div>':'')+'</div>';
  if(!isIndiv&&!grpDef(key))key=S.grp=S.groupDefs[0].key;
  var def=isIndiv?{name:'Individuálové',color:'#C2410C'}:grpDef(key);
+ if(!isIndiv){
+  if(S.grpGuest){var gg=G(S.grpGuest);if(gg&&gg.grp===key)return guestPageHtml(gg,def);S.grpGuest=null;}
+  if(!S.grpOpen)return groupListHtml();
+ }
  var foc=isIndiv&&S.indivFocus?G(S.indivFocus):null;
  var allM=guestsSorted(S.guests.filter(function(x){return x.grp===key;})),members=foc?[foc]:allM;
  if(!isIndiv){var gq=(S.query||'').toLowerCase();members=allM.filter(function(x){return (!gq||(x.name+' '+x.email).toLowerCase().indexOf(gq)>=0)&&(S.grpF==='all'||(S.grpF==='here'?x.here:!x.here));});}
  var st=isIndiv?null:curStay(key);
  var left='';
- if(!isIndiv){
-  left='<div class="col glist" style="gap:10px">'+S.groupDefs.map(function(d){
-   var a=S.grp===d.key,cs=curStay(d.key);
-   return '<button style="display:flex;flex-direction:column;gap:2px;padding:14px 18px;border-radius:20px;min-height:64px;text-align:left;background:'+(a?d.color:'#fff')+';color:'+(a?'#fff':'#1F2340')+';box-shadow:0 5px 0 '+(a?'rgba(31,35,64,.3)':'#F0DFC0')+'" data-a="pickGroup" data-p="'+d.key+'"><b style="font-size:20px;font-weight:900">'+esc(d.name)+'</b><span style="font-size:15px;font-weight:700">'+(cs?rangeTxt(cs.from,cs.to):'zatím bez termínu')+'</span></button>';
-  }).join('')+'<button style="min-height:56px;border:3px dashed #6C3CE9;background:#fff;color:#6C3CE9;border-radius:20px;font-weight:900;font-size:19px" data-a="newGroupToggle">+ Nová skupina</button>'+
-  (S.newGroupOpen?'<div class="card" style="padding:14px;box-shadow:0 5px 0 #E3D8FF">'+fi('ngName','Název skupiny','např. Jóga Brno')+'<button class="btn big" data-a="newGroup">Založit</button></div>':'')+'</div>';
- }
  var stayChips='';
  if(!isIndiv){var ls=staysOf(key);if(ls.length>1)stayChips='<div class="row wrap"><span class="small b">Pobyt:</span>'+ls.map(function(s){return chip(rangeTxt(s.from,s.to)+(s.to<TODAY?' (proběhl)':''),'pickStay',key+'|'+s.id,st&&st.id===s.id,def.color);}).join('')+'</div>';}
  var note=isIndiv?'Hosté mimo skupiny, kteří přijíždějí zvlášť. Nový termín zadáte v Kalendáři nebo tlačítkem „+ Přidat hosta“.':(st?'Pobyt '+rangeTxt(st.from,st.to)+' · '+persTxt(stayPersons(st)):'Skupina zatím nemá žádný termín. Nový termín zadejte v Kalendáři.');
@@ -689,11 +700,12 @@ function vGroups(isIndiv){
    '<div class="row wrap">'+(isIndiv?'':chip('Ubytování + strava','nType','ub',!S.form.only,'#6C3CE9')+chip('Jen stravování','nType','jen',!!S.form.only,'#6C3CE9'))+chip(S.form.foreign?'Cizinec ✓':'Cizinec?','nForeign','',!!S.form.foreign,'#C28A00')+'</div>'+
    '<div class="row"><button class="btn green big" data-a="saveGuest">Uložit hosta</button><button class="btn white big" data-a="guestFormToggle">Zrušit</button></div></div>';
  }
- var list=members.length?'<div class="ggrid">'+members.map(guestCard).join('')+'</div>':'<div class="note p">Zatím tu nejsou žádní hosté. Přidejte je tlačítkem „+ Přidat hosta“.</div>';
+ var list=members.length?'<div class="ggrid">'+members.map(function(m){return isIndiv?guestCard(m):guestRow(m);}).join('')+'</div>':'<div class="note p">Zatím tu nejsou žádní hosté. Přidejte je tlačítkem „+ Přidat hosta“.</div>';
  var tools='';
  if(!foc&&!isIndiv){var hp=allM.filter(function(x){return x.here;}).reduce(function(a,x){return a+x.persons;},0),nh=allM.filter(function(x){return x.here;}).length;tools='<div class="row wrap"><input class="inp t" style="flex:1;min-width:240px;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat hosta ve skupině" aria-label="Hledat hosta"></div>'+(function(){var gf=[['all','Všichni ('+allM.length+')'],['here','Přijede ('+nh+')'],['not','Nepřijede ('+(allM.length-nh)+')']],gs=gf.filter(function(c){return c[0]===S.grpF;})[0];return fold('grpf','Filtr hostů',esc(gs?gs[1]:gf[0][1]),'<div class="row wrap">'+gf.map(function(c){return chip(c[1],'grpF',c[0],S.grpF===c[0],def.color);}).join('')+'</div>',false,def.color);})()+'<div class="small b">Celkem '+persTxt(hp)+'<span class="dsk"> · hosté jsou podle abecedy (příjmení). Klepnutím na jméno rozbalíte detail.</span></div>';}else if(isIndiv&&!foc)tools='<div class="small b">Hosté jsou podle abecedy (příjmení).</div>';
  var card='<div class="card">'+head+info+gform+tools+list+'</div>';
- return '<div class="gs'+(isIndiv?' one':'')+'">'+left+card+'</div>';
+ if(!isIndiv){var gback='<button class="btn yellow big" style="width:100%" data-a="grpBack">‹ Zpět na seznam skupin</button>';return '<div class="col">'+gback+card+gback+'</div>';}
+ return '<div class="gs one">'+left+card+'</div>';
 }
 
 function payPanel(g){
@@ -1051,7 +1063,7 @@ function dropGuest(id){
  S.payments=S.payments.filter(function(x){return x.gid!==id;});
  S.stays=S.stays.filter(function(x){return x.guestId!==id;});
  delete S.mailed[id];delete S.payM[id];delete S.open['g:'+id];delete S.open['pu:'+id];
- if(S.payGuest===id)S.payGuest='';if(S.payOpen===id)S.payOpen=null;if(S.indivFocus===id)S.indivFocus=null;
+ if(S.payGuest===id)S.payGuest='';if(S.payOpen===id)S.payOpen=null;if(S.grpGuest===id)S.grpGuest=null;if(S.indivFocus===id)S.indivFocus=null;
 }
 function arm(k,t){if(S.delArm!==k){S.delArm=k;toast(t);return true;}S.delArm=null;return false;}
 function forgetBtn(act,id,label){
@@ -1182,7 +1194,7 @@ function renderLoading(){
 }
 
 A.menu=function(){S.navOpen=!S.navOpen;};
-A.nav=function(p){S.navOpen=false;S.payOpen=null;S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
+A.nav=function(p){S.navOpen=false;S.payOpen=null;S.grpOpen=false;S.grpGuest=null;S.delArm=null;S.pickFor=null;S.indivFocus=null;S.query='';S.screen=p;S.scrollTop=true;S.newGuestOpen=false;S.menuMsg='';};
 A.tog=function(p,el){var d=el.dataset.d==='1';S.open[p]=!isOpen(p,d);};
 A.quickGuest=function(){S.screen='indiv';S.scrollTop=true;S.newGuestOpen=true;S.form={};};
 /* kalendář */
@@ -1222,7 +1234,7 @@ A.calSave=function(){
 };
 A.openStay=function(p){
  var s=S.stays.filter(function(x){return x.id===p;})[0];
- if(s.grp==='indiv'){S.screen='indiv';S.indivFocus=s.guestId;S.open['g:'+s.guestId]=true;}else{S.screen='skupiny';S.grp=s.grp;S.stayPick[s.grp]=s.id;}
+ if(s.grp==='indiv'){S.screen='indiv';S.indivFocus=s.guestId;S.open['g:'+s.guestId]=true;}else{S.screen='skupiny';S.grp=s.grp;S.grpOpen=true;S.grpGuest=null;S.stayPick[s.grp]=s.id;}
  S.scrollTop=true;
 };
 A.payStay=function(p){
@@ -1233,7 +1245,10 @@ A.payStay=function(p){
  if(s.grp==='indiv'&&gs.length&&gs[0])S.payOpen=gs[0].id;else S.open['pg:'+s.grp]=true;
 };
 /* skupiny */
-A.pickGroup=function(p){S.grp=p;S.menuMsg='';S.newGuestOpen=false;S.form={};};
+A.pickGroup=function(p){S.grp=p;S.grpOpen=true;S.grpGuest=null;S.query='';S.scrollTop=true;S.menuMsg='';S.newGuestOpen=false;S.form={};};
+A.grpBack=function(){S.grpOpen=false;S.grpGuest=null;S.query='';S.newGuestOpen=false;S.scrollTop=true;};
+A.grpGuest=function(p){S.grpGuest=p;S.scrollTop=true;};
+A.grpGuestBack=function(){S.grpGuest=null;S.scrollTop=true;};
 A.pickStay=function(p){var a=p.split('|');S.stayPick[a[0]]=a[1];S.menuMsg='';};
 A.newGroupToggle=function(){S.newGroupOpen=!S.newGroupOpen;};
 A.newGroup=function(){
@@ -1241,7 +1256,7 @@ A.newGroup=function(){
  var cols=['#E0357A','#1D6FE0','#B7791F','#7B3FA0','#6C3CE9','#00857F'],k='x'+uid();
  S.groupDefs.push({key:k,name:n,color:cols[S.groupDefs.length%cols.length]});
  S.priceLists.forEach(function(l){if(l.groups.indexOf('indiv')<0&&l.groups.length&&l.groups.indexOf(k)<0&&!l.from)l.groups.push(k);});
- S.grp=k;S.newGroupOpen=false;S.form.ngName='';toast('Skupina „'+n+'“ založena. Termín jí zadejte v Kalendáři.');
+ S.grp=k;S.grpOpen=true;S.grpGuest=null;S.newGroupOpen=false;S.form.ngName='';toast('Skupina „'+n+'“ založena. Termín jí zadejte v Kalendáři.');
 };
 A.importToggle=function(){S.importOpen=!S.importOpen;};
 A.sendLinks=function(){S.linksSent[S.grp]=true;};
@@ -1259,7 +1274,7 @@ A.saveGuest=function(){
   S.stays.push({id:'s'+uid(),grp:'indiv',guestId:gid,from:f.nFrom,to:f.nTo});
   g.bill=defBill(g,null,Math.max(1,diffDays(f.nFrom,f.nTo)));
  }else g.bill=defBill(g,null,grpNights(key));
- S.guests.push(g);S.newGuestOpen=false;S.form={};S.open['g:'+gid]=true;
+ S.guests.push(g);S.newGuestOpen=false;S.form={};S.open['g:'+gid]=true;if(!isIndiv)S.grpGuest=gid;
  toast(isIndiv?'Host uložen a zapsán do kalendáře.':'Host přidán do skupiny.');
 };
 A.here=function(p){var g=G(p);g.here=!g.here;};
@@ -1291,7 +1306,7 @@ A.addToGroup=function(p){
  var gid='gn'+uid();
  var g={id:gid,grp:k,name:h.name,persons:1,email:h.email,phone:h.phone,only:false,foreign:h.foreign,nat:h.nat,addr:h.addr,doc:h.doc,here:true,inBook:true,note:'',paid:null};
  g.bill=defBill(g,null,grpNights(k));
- S.guests.push(g);S.open['g:'+gid]=true;S.pickFor=null;S.screen='skupiny';S.grp=k;S.scrollTop=true;
+ S.guests.push(g);S.open['g:'+gid]=true;S.pickFor=null;S.screen='skupiny';S.grp=k;S.grpOpen=true;S.grpGuest=gid;S.scrollTop=true;
  toast(h.name+' přidán(a) do skupiny '+grpName(k)+'.');
 };
 A.eetFilter=function(p){S.eetFilter=p;};
