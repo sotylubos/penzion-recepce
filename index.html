@@ -1598,12 +1598,25 @@ function ubyNm(s){return ubyAscii(s).replace(/[^A-Za-z' -]/g,'').replace(/\s+/g,
 function ubySplit(n){var p=String(n||'').trim().split(/\s+/);var f=p.shift()||'';return {first:ubyNm(f),last:ubyNm(p.join(' '))};}
 function ubyDp(i){return i.slice(8,10)+'.'+i.slice(5,7)+'.'+i.slice(0,4);}
 function ubyDeadline(from){var d=parse(from),n=0;while(n<3){d.setDate(d.getDate()+1);var w=d.getDay();if(w!==0&&w!==6)n++;}return toIso(d);}
+function ubyF(){return S.ubyF=S.ubyF||{p:'45',from:'',to:'',off:{}};}
+function ubyRange(){
+ var f=ubyF(),d=parse(TODAY),y=d.getFullYear(),m=d.getMonth(),back=function(n){return toIso(new Date(y,m,d.getDate()-n));};
+ if(f.p==='today')return [TODAY,TODAY];
+ if(f.p==='yest')return [back(1),back(1)];
+ if(f.p==='week')return [back(6),TODAY];
+ if(f.p==='month')return [toIso(new Date(y,m,1)),TODAY];
+ if(f.p==='prev')return [toIso(new Date(y,m-1,1)),toIso(new Date(y,m,0))];
+ if(f.p==='all')return ['2000-01-01',TODAY];
+ if(f.p==='own')return [f.from||'2000-01-01',f.to||TODAY];
+ return [back(45),TODAY];
+}
+function ubySel(x){return !x.done&&!x.issues.length&&!ubyF().off[x.key];}
 function ubyItems(){
- var cut=toIso(new Date(Date.now()-45*864e5)),sent=ubyS().sent,list=[],noNat=[],wait=0;
+ var rg=ubyRange(),sent=ubyS().sent,list=[],noNat=[],wait=0;
  bookRows().forEach(function(r){
   if(r.pending){wait++;return;}
   r.stays.forEach(function(s){
-   if(!s.from||!s.to||s.from>TODAY||s.from<cut||s.to<=s.from)return;
+   if(!s.from||!s.to||s.from>TODAY||s.from<rg[0]||s.from>rg[1]||s.to<=s.from)return;
    var hb=s.addr!=null,nat=hb?s.nat:r.nat,addr=(hb?s.addr:r.addr)||'',doc=(hb?s.doc:r.doc)||'',born=(hb?s.born:r.born)||'';
    if(!nat){noNat.push(r.name);return;}
    if(!isForeignNat(nat))return;
@@ -1627,21 +1640,28 @@ function ubyUnl(items){
  return {text:L.join('\r\n')+'\r\n',name:ubyAscii(c.idub).trim()+'_'+n.getFullYear()+'_'+p(n.getMonth()+1)+'_'+p(n.getDate())+'_'+p(n.getHours())+p(n.getMinutes())+'_recepce.unl'};
 }
 function vUby(){
- var u=ubyS(),c=u.cfg,it=ubyItems(),todo=it.list.filter(function(x){return !x.done;}),ok=todo.filter(function(x){return !x.issues.length;}),done=it.list.filter(function(x){return x.done;});
+ var u=ubyS(),c=u.cfg,it=ubyItems(),todo=it.list.filter(function(x){return !x.done;}),ok=todo.filter(ubySel),done=it.list.filter(function(x){return x.done;});
  var cfgOk=!!(c.idub&&c.mark),o=isOpen('ubycfg',!cfgOk);
  var h='<div style="display:flex;flex-direction:column;gap:14px">';
  h+='<div class="panel" style="background:#FFF1D6"><b style="font-size:20px">Hlášení cizinců cizinecké policii</b><span style="font-size:17px;line-height:1.5">Do tří pracovních dnů po příjezdu se hlásí každý host, který není z Česka. Appka sestaví soubor, nahrajete ho do Ubyportu a tady ho označíte jako nahlášený.</span></div>';
  h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn '+(cfgOk?'lgreen':'orange')+'" style="justify-content:space-between" '+tg('ubycfg',!cfgOk)+'>Údaje o ubytovacím zařízení '+(cfgOk?'✓':'– vyplňte')+'<span>'+(o?'▴':'▾')+'</span></button>';
  if(o)h+='<div class="fg">'+[['idub','IDUB (číslo ubytovacího zařízení)','např. 100100000001'],['mark','Zkratka (5 písmen)','např. AAAAA'],['name','Název zařízení','Penzion Na Devítce'],['purp','Kód účelu pobytu','99']].map(function(f){return '<div class="fld"><label for="uc_'+f[0]+'">'+f[1]+'</label><input class="inp w" id="uc_'+f[0]+'" data-ubycfg="'+f[0]+'" value="'+esc(c[f[0]]||'')+'" placeholder="'+esc(f[2])+'" autocomplete="off"></div>';}).join('')+'</div><span class="small">IDUB a zkratku najdete v Ubyportu po přihlášení u ubytovacího zařízení.</span>';
  h+='</div>';
+
+ var F=ubyF(),rg=ubyRange(),fo=isOpen('ubyflt',false),PS=[['today','Dnes'],['yest','Včera'],['week','Posledních 7 dní'],['month','Tento měsíc'],['prev','Minulý měsíc'],['45','Posledních 45 dní'],['all','Vše'],['own','Vlastní období']];
+ h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn white" style="justify-content:space-between;color:#1F2340;background:#F4F0FF" '+tg('ubyflt',false)+'><span style="text-align:left"><b style="display:block;font-size:18px">Filtr: příjezd</b><span class="small">'+(PS.filter(function(q){return q[0]===F.p;})[0]||PS[5])[1]+' · '+dmy(rg[0]==='2000-01-01'?(it.list.length?it.list[0].from:TODAY):rg[0])+' – '+dmy(rg[1])+'</span></span><span>'+(fo?'▴':'▾')+'</span></button>';
+ if(fo){h+='<div class="row wrap">'+PS.map(function(q){return chip(q[1],'ubyPer',q[0],F.p===q[0],'#6C3CE9');}).join('')+'</div>';
+  if(F.p==='own')h+='<div class="fg"><div class="fld"><label for="ubf_from">Příjezd od</label><input type="date" class="inp w" id="ubf_from" data-ubyf="from" value="'+esc(F.from)+'"></div><div class="fld"><label for="ubf_to">Příjezd do</label><input type="date" class="inp w" id="ubf_to" data-ubyf="to" value="'+esc(F.to)+'"></div></div>';}
+ h+='</div>';
  if(it.wait)h+='<div class="panel" style="background:#E8F0FF"><span style="font-size:17px">'+it.wait+' hostů ještě nemá potvrzený příjezd v Knize hostů. Hlásí se až po potvrzení.</span></div>';
  if(it.noNat.length)h+='<div class="panel" style="background:#FFE4E4"><b>Chybí země u hostů:</b><span style="font-size:17px;line-height:1.5">'+it.noNat.map(esc).join(', ')+'</span><span class="small">Bez země nepoznám, jestli jde o cizince. Doplňte ji v kartě hosta nebo v Knize hostů.</span></div>';
- h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><b style="font-size:19px">K nahlášení ('+todo.length+')</b>';
+ h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><div class="row wrap"><b style="font-size:19px">K nahlášení ('+todo.length+')</b><span class="sp"></span>'+(todo.some(function(x){return !x.issues.length;})?chip('Vybrat všechny','ubySelAll','1',false,'#12805C')+chip('Zrušit výběr','ubySelAll','0',false,'#D62839'):'')+'</div>';
  if(!todo.length)h+='<span style="font-size:17px">Žádný cizinec nečeká na nahlášení. ✓</span>';
- h+=todo.map(function(x){var late=x.dl<TODAY;return '<div class="gcard" style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;background:'+(x.issues.length?'#FFF1D6':'#F1EBFF')+'"><div class="row wrap"><b style="font-size:18px">'+esc(x.name)+'</b><span class="tag">'+esc(x.nat)+'</span><span class="sp"></span><span class="tag '+(late?'bad':'ok')+'">do '+dmy(x.dl)+(late?' (po lhůtě)':'')+'</span></div><span style="font-size:16px">'+dmy(x.from)+' – '+dmy(x.to)+(x.born?' · nar. '+dmy(x.born):'')+(x.doc?' · doklad '+esc(x.doc):'')+'</span>'+(x.issues.length?'<span style="font-size:16px;font-weight:800;color:#D62839">Chybí: '+x.issues.join(', ')+'</span>':'<span class="small">Příjmení: '+esc(x.last)+' · Jméno: '+esc(x.first)+' · Kód země: '+esc(x.code)+'</span>')+'<div class="row wrap"><button class="btn '+(x.signed?'lgreen':'teal')+'" data-a="sigOpen" data-p="'+esc(x.key)+'">'+(x.signed?'✍ Podepsáno – zobrazit':'✍ Podepsat na tabletu')+'</button><button class="btn white" style="color:#6C3CE9" data-a="ubyPrint" data-p="'+esc(x.key)+'">🖨 '+(x.signed?'Stáhnout podepsaný formulář':'Vytisknout formulář k podpisu')+'</button></div></div>';}).join('');
- h+='<div class="row wrap">'+(todo.length>1?'<button class="btn white big" style="color:#6C3CE9" data-a="ubyPrintAll">🖨 Vytisknout formuláře všem ('+todo.length+')</button>':'')+'<button class="btn green big" data-a="ubyDl"'+(ok.length&&cfgOk?'':' style="opacity:.5"')+'>Stáhnout soubor pro Ubyport ('+Math.min(ok.length,99)+')</button></div>';
+ h+=todo.map(function(x){var late=x.dl<TODAY;return '<div class="gcard" style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;background:'+(x.issues.length?'#FFF1D6':'#F1EBFF')+'"><div class="row wrap"><b style="font-size:18px">'+esc(x.name)+'</b><span class="tag">'+esc(x.nat)+'</span><span class="sp"></span><span class="tag '+(late?'bad':'ok')+'">do '+dmy(x.dl)+(late?' (po lhůtě)':'')+'</span></div><span style="font-size:16px">'+dmy(x.from)+' – '+dmy(x.to)+(x.born?' · nar. '+dmy(x.born):'')+(x.doc?' · doklad '+esc(x.doc):'')+'</span>'+(x.issues.length?'<span style="font-size:16px;font-weight:800;color:#D62839">Chybí: '+x.issues.join(', ')+'</span>':'<span class="small">Příjmení: '+esc(x.last)+' · Jméno: '+esc(x.first)+' · Kód země: '+esc(x.code)+'</span>')+'<div class="row wrap">'+(x.issues.length?'':'<button class="btn '+(ubySel(x)?'green':'grey')+'" data-a="ubyTog" data-p="'+esc(x.key)+'">'+(ubySel(x)?'☑ Do souboru':'☐ Nezahrnout')+'</button>')+'<button class="btn '+(x.signed?'lgreen':'teal')+'" data-a="sigOpen" data-p="'+esc(x.key)+'">'+(x.signed?'✍ Podepsáno – zobrazit':'✍ Podepsat na tabletu')+'</button><button class="btn white" style="color:#6C3CE9" data-a="ubyPrint" data-p="'+esc(x.key)+'">🖨 '+(x.signed?'Stáhnout podepsaný formulář':'Vytisknout formulář k podpisu')+'</button></div></div>';}).join('');
+ h+='<div class="row wrap">'+(todo.length>1?'<button class="btn white big" style="color:#6C3CE9" data-a="ubyPrintAll">🖨 Vytisknout formuláře všem v seznamu ('+todo.length+')</button>':'')+'<button class="btn green big" data-a="ubyDl"'+(ok.length&&cfgOk?'':' style="opacity:.5"')+'>Stáhnout soubor pro Ubyport ('+Math.min(ok.length,99)+')</button></div>';
  if(ok.length&&!cfgOk)h+='<span class="small">Nejdřív vyplňte IDUB a zkratku výše.</span>';
- if(todo.length>ok.length)h+='<span class="small">Hosté s chybějícími údaji se do souboru nedostanou, dokud je nedoplníte.</span>';
+ if(todo.some(function(x){return x.issues.length;}))h+='<span class="small">Hosté s chybějícími údaji se do souboru nedostanou, dokud je nedoplníte.</span>';
+ h+='<span class="small">Už nahlášené hosty soubor znovu neobsahuje (Ubyport by je bral jako chybné duplicity).</span>';
  if(S.ubyLast&&S.ubyLast.length)h+='<div class="panel" style="background:#E3F8EC"><span style="font-size:17px;line-height:1.5">Soubor je stažený ('+S.ubyLast.length+' hostů). V Ubyportu zvolte „Import dat (UNL soubor)“, nahrajte ho a stáhněte doručenku. Pak ťukněte sem:</span><button class="btn green big" data-a="ubyMark">Doručenku mám, označit jako nahlášené</button></div>';
  h+='</div>';
  if(done.length)h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn lgreen" style="justify-content:space-between" '+tg('ubydone',false)+'>Už nahlášení ('+done.length+')<span>'+(isOpen('ubydone',false)?'▴':'▾')+'</span></button>'+(isOpen('ubydone',false)?done.map(function(x){return '<div class="row wrap"><b>'+esc(x.name)+'</b><span class="small">'+dmy(x.from)+' – '+dmy(x.to)+' · '+esc(x.nat)+'</span><span class="sp"></span><button class="btn white" style="color:#D62839" data-a="ubyUndo" data-p="'+esc(x.key)+'">Vrátit</button></div>';}).join(''):'')+'</div>';
@@ -1649,13 +1669,16 @@ function vUby(){
 }
 A.ubyDl=function(){
  var c=ubyS().cfg;if(!c.idub||!c.mark){toast('Nejdřív vyplňte IDUB a zkratku.');S.open.ubycfg=true;return;}
- var ok=ubyItems().list.filter(function(x){return !x.done&&!x.issues.length;}).slice(0,99);
+ var ok=ubyItems().list.filter(ubySel).slice(0,99);
  if(!ok.length){toast('Není co stáhnout.');return;}
  var f=ubyUnl(ok),b=new Blob([f.text],{type:'text/plain'}),a=document.createElement('a');
  a.href=URL.createObjectURL(b);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
  S.ubyLast=ok.map(function(x){return x.key;});toast('Soubor '+f.name+' je stažený.');
 };
 A.ubyMark=function(){var s=ubyS().sent;(S.ubyLast||[]).forEach(function(k){s[k]=TODAY;});S.ubyLast=null;toast('Označeno jako nahlášené.');};
+A.ubyPer=function(p){ubyF().p=p;};
+A.ubyTog=function(k){var o=ubyF().off;if(o[k])delete o[k];else o[k]=1;};
+A.ubySelAll=function(v){var F=ubyF();ubyItems().list.forEach(function(x){if(v==='1')delete F.off[x.key];else F.off[x.key]=1;});};
 A.ubyUndo=function(k){delete ubyS().sent[k];};
 
 /* ---------- přihlašovací tiskopis k podpisu cizince (PDF, A4 na výšku) ---------- */
@@ -1818,6 +1841,7 @@ window.addEventListener('pagehide',function(){flush();});
 document.addEventListener('input',function(e){
  var t=e.target,a,g,v;
  if(t.dataset.natq!==undefined){S.natQ=t.value;render();return;}
+ if(t.dataset.ubyf){ubyF()[t.dataset.ubyf]=t.value;if(t.value)setTimeout(render,0);return;}
  if(t.dataset.ubycfg){ubyS().cfg[t.dataset.ubycfg]=t.value;return;}
  if(t.dataset.f!==undefined){S.form[t.dataset.f]=t.value;return;}
  if(t.dataset.biz){S.biz[t.dataset.biz]=t.value;return;}
