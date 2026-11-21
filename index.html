@@ -347,6 +347,11 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 .fhd .ft small{font-size:14px;font-weight:700;color:#5B5F85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fhd .pm{color:var(--fc,#6C3CE9)}
 .fbd{padding:2px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.bubs{gap:8px}
+.bub{min-height:50px;padding:0 16px;font-size:17px}
+.bq{margin-left:8px;background:#12805C;color:#fff;border-radius:999px;padding:1px 10px;font-size:15px}
+.pill.on .bq{background:#fff;color:#6C3CE9}
+.bub.add{background:#E3F8EC;color:#0B5A40;box-shadow:none}
 .bkbtns{gap:8px;flex-wrap:nowrap}
 .bkbtns .btn{flex:1 1 0;min-width:0;padding:0 10px;font-size:16px;min-height:54px;white-space:normal;line-height:1.15}
 .calnav{gap:8px;flex-wrap:nowrap}
@@ -567,8 +572,12 @@ function chip(label,act,p,on,color){
 function personsRow(g){
  return '<span class="row" style="flex:none;gap:8px"><span class="small b">Osob</span><button class="rb minus" aria-label="Méně osob" data-a="persons" data-p="'+g.id+'|-1">−</button><b style="width:24px;text-align:center;font-size:20px">'+g.persons+'</b><button class="rb plus" aria-label="Více osob" data-a="persons" data-p="'+g.id+'|1">+</button></span>';
 }
+function billBubbles(g){
+ var cur=(S.billItem||{})[g.id];
+ return '<div class="row wrap bubs">'+['di','st','sn','ob','ve','ka','pes'].map(function(k){var q=g.bill[k]||0,on=cur===k;return '<button class="pill bub'+(on?' on':'')+'" style="'+(on?'background:#6C3CE9;':'')+'" data-a="billItem" data-p="'+g.id+'|'+k+'">'+PL[k][0]+(q?'<span class="bq">'+q+'</span>':'')+'</button>';}).join('')+'<button class="pill bub add" data-a="xadd" data-p="'+g.id+'">+ Přidat položku</button></div>';
+}
 function billBlock(g){
- var lines=Object.keys(PL).map(function(k){
+ var lineOf=function(k){
   var q=g.bill[k]||0,ov=g.price&&g.price[k]!=null&&g.price[k]!==basePrice(g,k);
   var nm=PL[k][0],ln;
   if(k==='pes')ln='<span class="ln">'+nm+'<small>počet = psi × noci</small></span>';
@@ -577,11 +586,12 @@ function billBlock(g){
   else if(k==='ub')ln='<span class="ln">'+nm+'<small>'+(g.persons>=2?'cena za osobu (ve dvou a více)':'cena za osobu (sám v pokoji)')+'</small></span>';
   else ln='<span class="ln">'+nm+'</span>';
   return '<div class="line">'+ln+'<span class="pw pc"><input class="inp pi'+(ov?' chg':'')+'" inputmode="numeric" enterkeyhint="done" aria-label="Cena: '+nm+'" data-gprice="'+g.id+'|'+k+'" value="'+pr(g,k)+'"><span class="small">Kč / '+PL[k][1]+'</span><button class="rb rs'+(ov?'':' off')+'" aria-label="Vrátit cenu z ceníku" data-a="resetPrice" data-p="'+g.id+'|'+k+'">↺</button></span><span class="pw"><button class="rb minus" aria-label="Méně" data-a="bill" data-p="'+g.id+'|'+k+'|-1">−</button><span class="qn">'+q+'</span><button class="rb plus" aria-label="Více" data-a="bill" data-p="'+g.id+'|'+k+'|1">+</button></span><span class="ls" data-lsum="'+g.id+'|'+k+'">'+kc(lineSum(g,k))+'</span><span></span></div>';
- }).join('');
+ };
+ var curI=(S.billItem||{})[g.id],lines=lineOf('ub')+lineOf('pp')+billBubbles(g)+((curI&&PL[curI]&&curI!=='ub'&&curI!=='pp')?'<div id="bitem_'+g.id+'">'+lineOf(curI)+'</div>':'');
  var ex=(g.extra||[]).map(function(x){
   return '<div class="line xl"><input class="inp xn" id="xn_'+g.id+'_'+x.id+'" enterkeyhint="done" data-gx="'+g.id+'|'+x.id+'|name" value="'+esc(x.name)+'" placeholder="Název položky" aria-label="Název položky"><span class="pw pc"><input class="inp pi" inputmode="numeric" enterkeyhint="done" aria-label="Cena položky" placeholder="Cena" data-gx="'+g.id+'|'+x.id+'|price" value="'+(x.price?x.price:'')+'"><span class="small">Kč</span></span><span class="pw"><button class="rb minus" aria-label="Méně" data-a="xq" data-p="'+g.id+'|'+x.id+'|-1">−</button><span class="qn">'+x.qty+'</span><button class="rb plus" aria-label="Více" data-a="xq" data-p="'+g.id+'|'+x.id+'|1">+</button></span><span class="ls" data-xsum="'+g.id+'|'+x.id+'">'+kc(x.qty*x.price)+'</span><button class="rb rx" aria-label="Smazat položku" data-a="xdel" data-p="'+g.id+'|'+x.id+'">×</button></div>';
  }).join('');
- var add='<div class="row"><button class="btn big blue" data-a="xadd" data-p="'+g.id+'">+ Přidat položku</button></div>';
+ var add='';
  return '<div class="bill"><div class="row wrap"><b class="bt">Pobyt a konzumace</b><span class="sp"></span>'+personsRow(g)+'</div><div class="row wrap"><div class="fld" style="width:190px"><label for="gdf_'+g.id+'">Příjezd</label><input class="inp" id="gdf_'+g.id+'" type="date" data-gd="'+g.id+'|from" value="'+esc(guestDates(g).from)+'"></div><div class="fld" style="width:190px"><label for="gdt_'+g.id+'">Odjezd</label><input class="inp" id="gdt_'+g.id+'" type="date" data-gd="'+g.id+'|to" value="'+esc(guestDates(g).to)+'"></div><span class="small" style="flex:1;min-width:200px">Změna data přepočítá počet nocí a poplatek.'+(g.grp==='indiv'?'':' Platí jen pro tohoto hosta.')+'</span></div><div class="small">Ceník: <b>'+esc(listFor(g).name)+'</b>. Počty i ceny jdou u tohoto hosta přepsat. Ubytování a strava se násobí počtem osob, poplatek a další položky ne.</div>'+lines+'<div class="small">Místní poplatek se neplatí za děti do 18 let a osoby nad 70 let: snižte počet.</div>'+ex+add+'<div class="tot"><span>Celkem</span><b data-total="'+g.id+'">'+kc(total(g))+'</b></div></div>';
 }
 function guestCard(g,page){
@@ -733,7 +743,7 @@ function billSummary(g){
  var rows=Object.keys(PL).filter(function(k){return (g.bill[k]||0)>0&&lineSum(g,k)>0;}).map(function(k){return '<div class="srow"><span>'+PL[k][0]+'<small>'+g.bill[k]+' × '+pr(g,k)+' Kč</small></span><b>'+kc(lineSum(g,k))+'</b></div>';}).join('');
  var ex=(g.extra||[]).filter(function(x){return x.qty>0&&x.price>0;}).map(function(x){return '<div class="srow"><span>'+esc(x.name||'Další položka')+'<small>'+x.qty+' × '+x.price+' Kč</small></span><b>'+kc(x.qty*x.price)+'</b></div>';}).join('');
  return '<div class="psum"><div class="stit">Účet hosta</div>'+(rows+ex||'<div class="srow"><span>Zatím žádné položky</span></div>')+'<div class="stot"><span>Celkem</span><b data-total="'+g.id+'">'+kc(total(g))+'</b></div>'+
-  (g.paid?'':'<button class="btn white sedit" data-a="tog" data-p="'+kb+'" data-d="0">'+(ob?'▲ Skrýt úpravy účtu':'✏ Upravit účet (počty, ceny, data)')+'</button>')+'</div>'+((ob&&!g.paid)?billBlock(g):'');
+  (g.paid?'':(ob?'':billBubbles(g))+'<button class="btn white sedit" data-a="tog" data-p="'+kb+'" data-d="0">'+(ob?'▲ Skrýt úpravy účtu':'✏ Upravit účet (počty, ceny, data)')+'</button>')+'</div>'+((ob&&!g.paid)?billBlock(g):'');
 }
 function guestPayRow(g){
  return '<div class="gcard"><div class="grow"><button class="gtoggle" data-a="payOpen" data-p="'+g.id+'"><span class="av" style="background:'+grpColor(g.grp)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b>'+(g.grp==='indiv'&&stayOfGuest(g)?'<small>'+rangeTxt(stayOfGuest(g).from,stayOfGuest(g).to)+' · '+persTxt(g.persons)+'</small>':'')+'</span>'+(g.paid?'<span class="tag" style="background:'+METHODS[g.paid][2]+';color:#1F2340">✓ '+METHODS[g.paid][0]+'</span>':'')+'<span class="pm">›</span></button></div></div>';
@@ -1300,7 +1310,8 @@ A.xdel=function(p){var a=p.split('|'),g=G(a[0]);g.extra=(g.extra||[]).filter(fun
 A.xq=function(p){var a=p.split('|'),g=G(a[0]),x=(g.extra||[]).filter(function(e){return e.id===a[1];})[0];if(x)x.qty=Math.max(1,(x.qty||1)+Number(a[2]));syncPay(g);};
 /* platba */
 A.persons=function(p){var a=p.split('|'),g=G(a[0]),old=g.persons;g.persons=Math.max(1,old+Number(a[1]));var df=g.persons-old;if(df&&!g.only)g.bill.pp=Math.max(0,(g.bill.pp||0)+df*nightsOf(g));syncPay(g);};
-A.xadd=function(p){var g=G(p);g.extra=g.extra||[];var id='x'+uid();g.extra.push({id:id,name:'',price:0,qty:1});S.focusId='xn_'+g.id+'_'+id;syncPay(g);};
+A.billItem=function(p){var a=p.split('|');S.billItem=S.billItem||{};S.billItem[a[0]]=S.billItem[a[0]]===a[1]?null:a[1];S.open['pb:'+a[0]]=true;if(S.billItem[a[0]])S.scrollToId='bitem_'+a[0];};
+A.xadd=function(p){var g=G(p);S.open['pb:'+g.id]=true;g.extra=g.extra||[];var id='x'+uid();g.extra.push({id:id,name:'',price:0,qty:1});S.focusId='xn_'+g.id+'_'+id;syncPay(g);};
 A.plNew=function(){var id='pl'+uid();S.priceLists.push({id:id,name:'Nový ceník',from:'',to:'',groups:[],p:Object.assign({},DEFP,S.priceLists[0]?S.priceLists[0].p:{})});S.open['pl:'+id]=true;S.focusId='pn_'+id;};
 A.plDel=function(p){if(S.priceLists.length<2){toast('Aspoň jeden ceník musí zůstat.');return;}S.priceLists=S.priceLists.filter(function(l){return l.id!==p;});syncAll();};
 A.plGroup=function(p){var a=p.split('|'),l=PLg(a[0]),i=l.groups.indexOf(a[1]);if(i>=0)l.groups.splice(i,1);else l.groups.push(a[1]);syncAll();};
