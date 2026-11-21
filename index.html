@@ -701,7 +701,7 @@ function vKal(){
   form='<div class="panel" style="background:#E3F8EC"><div class="row wrap"><b style="font-size:17px;font-weight:900">Kdo přijíždí:</b>'+chip('Skupina','calKind','group',S.calKind==='group','#12805C')+chip('Jednotlivec','calKind','indiv',S.calKind==='indiv','#12805C')+'</div>';
   if(S.calKind==='group'){
    form+='<div class="row wrap"><b style="font-size:17px;font-weight:900">Vyberte skupinu:</b>'+S.groupDefs.map(function(d){return chip(esc(d.name),'calGrp',d.key,S.calGrp===d.key,d.color);}).join('')+'</div>';
-   if(S.calGrp)form+='<div style="font-size:16px;font-weight:700;color:#0B5A40">Hosté se zkopírují z posledního termínu ('+(function(){var l=staysOf(S.calGrp),p=l.length?l[l.length-1]:null;return p?membersOf(p).length:S.guests.filter(function(x){return x.grp===S.calGrp;}).length;})()+' hostů) jako samostatný seznam. Kdo nepřijede, označíte ve Skupinách jen u nového termínu, starší termíny se nezmění.</div>';
+   if(S.calGrp)form+='<div style="font-size:16px;font-weight:700;color:#0B5A40">Hosté se zkopírují z posledního termínu ('+(function(){var l=staysOf(S.calGrp),p=l.length?l[l.length-1]:null;var n=p?membersOf(p).length:S.guests.filter(function(x){return x.grp===S.calGrp;}).length;return n+' '+pl(n,'host','hosté','hostů');})()+') jako samostatný seznam. Kdo nepřijede, označíte ve Skupinách jen u nového termínu, starší termíny se nezmění.</div>';
   }
   if(ready){
    form+='<b style="font-size:18px;font-weight:900">'+(S.calKind==='group'?'Nová rezervace pro skupinu '+esc(grpName(S.calGrp)):'Nová rezervace pro jednotlivce')+'</b><div class="fg3 fg">'+
@@ -1178,7 +1178,7 @@ A.forgetAll=function(p){var g=G(p);if(!g)return;
  S.guests.filter(function(x){return nk(x.name)===k&&x.grp!=='indiv'&&!stayed(x);}).forEach(function(x){dropGuest(x.id);n++;});
  if(!G(p))S.grpGuest=null;S.scrollTop=true;toast('„'+dn(g.name)+'“ odebrán(a) z '+n+' '+pl(n,'termínu','termínů','termínů')+'. Kde má potvrzený příjezd, zůstává.');};
 A.copyMembers=function(p){var st=stayById(p);if(!st)return;pinGuests(st.grp);if(membersOf(st).length)return;var pv=prevStayWithMembers(st);if(!pv)return;
- var n=0;membersOf(pv).forEach(function(x){S.guests.push(cloneFor(x,st));n++;});toast('Převzato '+n+' hostů do termínu '+rangeTxt(st.from,st.to)+'.');};
+ var n=0;membersOf(pv).forEach(function(x){S.guests.push(cloneFor(x,st));n++;});toast(pl(n,'Převzat','Převzati','Převzato')+' '+n+' '+pl(n,'host','hosté','hostů')+' do termínu '+rangeTxt(st.from,st.to)+'.');};
 function bookDelIds(r){var k=nk(r.name);return S.guests.filter(function(x){return nk(x.name)===k&&inBookNow(x)&&!stayed(x);}).map(function(x){return x.id;});}
 A.forgetBook=function(p){var r0=bookRows().filter(function(x){return x.id===p;})[0];if(!r0)return;var ids=bookDelIds(r0);
  if(!ids.length){S.delArm=null;toast('Host má potvrzený příjezd, záznam v knize hostů zůstává.');return;}
@@ -1416,7 +1416,7 @@ A.bkSel=function(p){S.bookSel[p]=!S.bookSel[p];};
 A.bkUndo=function(p){var g=G(p);if(g){g.arrived=false;toast('Potvrzení příjezdu vráceno zpět.');}};
 A.bkConfirm=function(p){G(p).arrived=true;toast('Příjezd potvrzen.');};
 A.disarmQ=function(){S.delArm=null;};
-A.bkConfirmAll=function(){if(S.delArm!=='bkAll'){S.delArm='bkAll';return;}S.delArm=null;var n=0;bookView().vis.forEach(function(r){if(r.pending&&r.gid){G(r.gid).arrived=true;n++;}});toast('Příjezd potvrzen u '+n+' hostů.');};
+A.bkConfirmAll=function(){if(S.delArm!=='bkAll'){S.delArm='bkAll';return;}S.delArm=null;var n=0;bookView().vis.forEach(function(r){if(r.pending&&r.gid){G(r.gid).arrived=true;n++;}});toast('Příjezd potvrzen u '+n+' '+pl(n,'hosta','hostů','hostů')+'.');};
 A.bkAll=function(){bookView().vis.forEach(function(r){S.bookSel[r.id]=true;});};
 A.bkNone=function(){S.bookSel={};};
 A.exportX=function(p){doExport(p);};
@@ -1653,7 +1653,7 @@ function vUby(){
  if(fo){h+='<div class="row wrap">'+PS.map(function(q){return chip(q[1],'ubyPer',q[0],F.p===q[0],'#6C3CE9');}).join('')+'</div>';
   if(F.p==='own')h+='<div class="fg"><div class="fld"><label for="ubf_from">Příjezd od</label><input type="date" class="inp w" id="ubf_from" data-ubyf="from" value="'+esc(F.from)+'"></div><div class="fld"><label for="ubf_to">Příjezd do</label><input type="date" class="inp w" id="ubf_to" data-ubyf="to" value="'+esc(F.to)+'"></div></div>';}
  h+='</div>';
- if(it.wait)h+='<div class="panel" style="background:#E8F0FF"><span style="font-size:17px">'+it.wait+' hostů ještě nemá potvrzený příjezd v Knize hostů. Hlásí se až po potvrzení.</span></div>';
+ if(it.wait)h+='<div class="panel" style="background:#E8F0FF"><span style="font-size:17px">'+it.wait+' '+pl(it.wait,'host ještě nemá','hosté ještě nemají','hostů ještě nemá')+' potvrzený příjezd v Knize hostů. Hlásí se až po potvrzení.</span></div>';
  if(it.noNat.length)h+='<div class="panel" style="background:#FFE4E4"><b>Chybí země u hostů:</b><span style="font-size:17px;line-height:1.5">'+it.noNat.map(esc).join(', ')+'</span><span class="small">Bez země nepoznám, jestli jde o cizince. Doplňte ji v kartě hosta nebo v Knize hostů.</span></div>';
  h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><div class="row wrap"><b style="font-size:19px">K nahlášení ('+todo.length+')</b><span class="sp"></span>'+(todo.some(function(x){return !x.issues.length;})?chip('Vybrat všechny','ubySelAll','1',false,'#12805C')+chip('Zrušit výběr','ubySelAll','0',false,'#D62839'):'')+'</div>';
  if(!todo.length)h+='<span style="font-size:17px">Žádný cizinec nečeká na nahlášení. ✓</span>';
@@ -1662,7 +1662,7 @@ function vUby(){
  if(ok.length&&!cfgOk)h+='<span class="small">Nejdřív vyplňte IDUB a zkratku výše.</span>';
  if(todo.some(function(x){return x.issues.length;}))h+='<span class="small">Hosté s chybějícími údaji se do souboru nedostanou, dokud je nedoplníte.</span>';
  h+='<span class="small">Už nahlášené hosty soubor znovu neobsahuje (Ubyport by je bral jako chybné duplicity).</span>';
- if(S.ubyLast&&S.ubyLast.length)h+='<div class="panel" style="background:#E3F8EC"><span style="font-size:17px;line-height:1.5">Soubor je stažený ('+S.ubyLast.length+' hostů). V Ubyportu zvolte „Import dat (UNL soubor)“, nahrajte ho a stáhněte doručenku. Pak ťukněte sem:</span><button class="btn green big" data-a="ubyMark">Doručenku mám, označit jako nahlášené</button></div>';
+ if(S.ubyLast&&S.ubyLast.length)h+='<div class="panel" style="background:#E3F8EC"><span style="font-size:17px;line-height:1.5">Soubor je stažený ('+S.ubyLast.length+' '+pl(S.ubyLast.length,'host','hosté','hostů')+'). V Ubyportu zvolte „Import dat (UNL soubor)“, nahrajte ho a stáhněte doručenku. Pak ťukněte sem:</span><button class="btn green big" data-a="ubyMark">Doručenku mám, označit jako nahlášené</button></div>';
  h+='</div>';
  if(done.length)h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn lgreen" style="justify-content:space-between" '+tg('ubydone',false)+'>Už nahlášení ('+done.length+')<span>'+(isOpen('ubydone',false)?'▴':'▾')+'</span></button>'+(isOpen('ubydone',false)?done.map(function(x){return '<div class="row wrap"><b>'+esc(x.name)+'</b><span class="small">'+dmy(x.from)+' – '+dmy(x.to)+' · '+esc(x.nat)+'</span><span class="sp"></span><button class="btn white" style="color:#D62839" data-a="ubyUndo" data-p="'+esc(x.key)+'">Vrátit</button></div>';}).join(''):'')+'</div>';
  return h+'</div>';
