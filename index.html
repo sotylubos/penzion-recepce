@@ -740,7 +740,7 @@ function guestPayRow(g){
 }
 function noComeBtn(g){
  if(g.paid)return '';
- if(S.delArm==='noCome'+g.id)return '<div class="panel" style="background:#FFE3E6"><b style="font-size:18px;font-weight:900">Opravdu host „'+esc(dn(g.name))+'“ nepřijel?</b><span class="small">Zmizí ze seznamu odjezdů a plateb. Najdeš ho dole v části „Nepřijeli“ a půjde vrátit.</span><div class="row wrap"><button class="btn red big" data-a="noCome" data-p="'+g.id+'">Ano, nepřijel</button><button class="btn white big" style="color:#6C3CE9" data-a="disarmQ" data-p="">Ne</button></div></div>';
+ if(S.delArm==='noCome'+g.id)return '<div class="panel" style="background:#FFE3E6"><b style="font-size:18px;font-weight:900">Opravdu host „'+esc(dn(g.name))+'“ nepřijel?</b><span class="small">Zmizí ze seznamu odjezdů a plateb. Najdeš ho dole v části „Nepřijeli“ a půjde vrátit.</span><div class="row wrap"><button class="btn red big" data-a="noCome" data-p="'+g.id+'">Ano, nepřijel</button><button class="btn white big" style="color:#6C3CE9" data-a="disarmQ" data-p="">Zrušit</button></div></div>';
  return '<button class="btn white big" style="width:100%;color:#D62839" data-a="noCome" data-p="'+g.id+'">Host nepřijel</button>';
 }
 function payPage(g){
@@ -836,7 +836,7 @@ function vBook(){
   S.bookGuest=null;}
  var banner=pm?'<div class="panel" style="background:#FFF1D6"><div class="row wrap"><b style="flex:1;min-width:220px;font-size:19px;font-weight:900">'+(pg?'Vyberte hosta, kterého přidáte do skupiny '+esc(grpName(pm))+'.':'Vyberte hosta, kterého přidáte mezi individuály.')+'</b><button class="btn white" data-a="pickCancel">Zpět bez přidání</button></div></div>':'';
  return '<div class="col">'+banner+'<div class="card"><div class="row wrap"><input class="inp t" style="flex:1;min-width:0;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="Hledat jméno, e-mail nebo telefon" aria-label="Hledat hosta"></div>'+
-  '<div class="row bkbtns"><button class="btn green" data-a="bookFormToggle">+ Přidat do knihy</button>'+(vpend&&!pm&&S.delArm!=='bkAll'?'<button class="btn yellow" data-a="bkConfirmAll">✓ Potvrdit příjezd všem ('+vpend+')</button>':'')+'</div>'+(vpend&&!pm&&S.delArm==='bkAll'?'<div class="panel" style="background:#FFF1D6"><b style="font-size:18px;font-weight:900">Opravdu potvrdit příjezd všem čekajícím ('+vpend+')?</b><span class="small">Potvrdíte, že všichni v seznamu opravdu dorazili.</span><div class="row bkbtns"><button class="btn green" data-a="bkConfirmAll">Ano, potvrdit</button><button class="btn white" style="color:#6C3CE9" data-a="disarmQ" data-p="">Ne</button></div></div>':'')+
+  '<div class="row bkbtns"><button class="btn green" data-a="bookFormToggle">+ Přidat do knihy</button>'+(vpend&&!pm&&S.delArm!=='bkAll'?'<button class="btn yellow" data-a="bkConfirmAll">✓ Potvrdit příjezd všem ('+vpend+')</button>':'')+'</div>'+(vpend&&!pm&&S.delArm==='bkAll'?'<div class="panel" style="background:#FFF1D6"><b style="font-size:18px;font-weight:900">Opravdu potvrdit příjezd všem čekajícím ('+vpend+')?</b><span class="small">Potvrdíte, že všichni v seznamu opravdu dorazili.</span><div class="row bkbtns"><button class="btn green" data-a="bkConfirmAll">Ano, potvrdit</button><button class="btn white" style="color:#6C3CE9" data-a="disarmQ" data-p="">Zrušit</button></div></div>':'')+
   fold('bkf','Filtry',esc(fsum)+' · '+vis.length+' '+pl(vis.length,'host','hosté','hostů'),'<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(f){return chip(esc(f[1]),'bookFilter',f[0],S.bookFilter===f[0],f[2]);}).join('')+'</div>'+
   '<div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(f){return chip(f[1],'bookPeriod',f[0],S.bookPeriod===f[0],'#00857F');}).join('')+'</div>'+custom,false,'#6C3CE9')+
   fold('bki','Jak kniha hostů funguje',null,'<span class="small">Host, který u vás už byl, má v knize svůj profil. Rozbalte ho a jen přidejte nový příjezd a odjezd. V den příjezdu se host v knize objeví sám (kromě těch, kdo jen stravují) a vy potvrdíte, že dorazil. Chybějící adresu a doklad doplníte po rozkliknutí.</span>',!mob(),'#6C3CE9')+'</div>'+form+exp+list+'</div>';
@@ -1216,9 +1216,9 @@ A.calNewGo=function(){S.calView='cal';S.calNewOpen=true;S.calMsg='';S.calKind=nu
 A.grpF=function(p){S.grpF=p;};
 A.payGF=function(p){S.payGF=p;};
 A.backCal=function(){S.indivFocus=null;S.screen='kal';S.scrollTop=true;};
-A.payOpen=function(p){S.payOpen=p;S.scrollTop=true;};
+A.payOpen=function(p){S.delArm=null;S.payOpen=p;S.scrollTop=true;};
 A.noCome=function(p){var g=G(p);if(!g)return;if(S.delArm!=='noCome'+p){S.delArm='noCome'+p;return;}S.delArm=null;g.here=false;S.payOpen=null;S.scrollTop=true;toast('Host „'+dn(g.name)+'“ označen jako nepřijel.');};
-A.payBack=function(){var g=G(S.payOpen);S.payOpen=null;S.scrollTop=true;if(g)S.scrollToId='acc_'+(g.grp==='indiv'?'indiv':g.grp);};
+A.payBack=function(){S.delArm=null;var g=G(S.payOpen);S.payOpen=null;S.scrollTop=true;if(g)S.scrollToId='acc_'+(g.grp==='indiv'?'indiv':g.grp);};
 A.closeGuest=function(p){var g=G(p);S.open['pu:'+p]=false;S.scrollToId='acc_'+g.grp;};
 A.calGo=function(p){S.calOff=p==='0'?0:S.calOff+Number(p);};
 A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;if(S.calSel&&mob())S.scrollToId='caldet';};
@@ -1258,10 +1258,10 @@ A.payStay=function(p){
  if(s.grp==='indiv'&&gs.length&&gs[0])S.payOpen=gs[0].id;else S.open['pg:'+s.grp]=true;
 };
 /* skupiny */
-A.pickGroup=function(p){S.grp=p;S.grpOpen=true;S.grpGuest=null;S.query='';S.scrollTop=true;S.menuMsg='';S.newGuestOpen=false;S.form={};};
-A.grpBack=function(){S.grpOpen=false;S.grpGuest=null;S.query='';S.newGuestOpen=false;S.scrollTop=true;};
-A.grpGuest=function(p){S.grpGuest=p;S.scrollTop=true;};
-A.grpGuestBack=function(){S.grpGuest=null;S.scrollTop=true;};
+A.pickGroup=function(p){S.delArm=null;S.grp=p;S.grpOpen=true;S.grpGuest=null;S.query='';S.scrollTop=true;S.menuMsg='';S.newGuestOpen=false;S.form={};};
+A.grpBack=function(){S.delArm=null;S.grpOpen=false;S.grpGuest=null;S.query='';S.newGuestOpen=false;S.scrollTop=true;};
+A.grpGuest=function(p){S.delArm=null;S.grpGuest=p;S.scrollTop=true;};
+A.grpGuestBack=function(){S.delArm=null;S.grpGuest=null;S.scrollTop=true;};
 A.pickStay=function(p){var a=p.split('|');S.stayPick[a[0]]=a[1];S.menuMsg='';};
 A.newGroupToggle=function(){S.newGroupOpen=!S.newGroupOpen;};
 A.newGroup=function(){
@@ -1305,8 +1305,8 @@ A.plNew=function(){var id='pl'+uid();S.priceLists.push({id:id,name:'Nový ceník
 A.plDel=function(p){if(S.priceLists.length<2){toast('Aspoň jeden ceník musí zůstat.');return;}S.priceLists=S.priceLists.filter(function(l){return l.id!==p;});syncAll();};
 A.plGroup=function(p){var a=p.split('|'),l=PLg(a[0]),i=l.groups.indexOf(a[1]);if(i>=0)l.groups.splice(i,1);else l.groups.push(a[1]);syncAll();};
 A.bookPeriod=function(p){S.bookPeriod=p;};
-A.bookOpen=function(p){S.bookGuest=p;S.scrollTop=true;};
-A.bookBack=function(){S.bookGuest=null;S.scrollTop=true;};
+A.bookOpen=function(p){S.delArm=null;S.bookGuest=p;S.scrollTop=true;};
+A.bookBack=function(){S.delArm=null;S.bookGuest=null;S.scrollTop=true;};
 A.bkSel=function(p){S.bookSel[p]=!S.bookSel[p];};
 A.bkUndo=function(p){var g=G(p);if(g){g.arrived=false;toast('Potvrzení příjezdu vráceno zpět.');}};
 A.bkConfirm=function(p){G(p).arrived=true;toast('Příjezd potvrzen.');};
