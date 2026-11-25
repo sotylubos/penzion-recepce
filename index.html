@@ -1037,12 +1037,13 @@ function rvLabel(){var r=rvRange(),P=S.rvP||'month';if(!r)return 'vyplňte obě 
 function payBreak(p){
  var g=G(p.gid);if(!g)return null;
  var rd=receiptData(g),duzp=rd.to||p.date,o={p:p,g:g,rates:{},exempt:0,total:0,items:[]};
- rd.lines.forEach(function(l){var r=vatRate(l.k,duzp);o.total+=l.sum;if(r===null)o.exempt+=l.sum;else o.rates[r]=(o.rates[r]||0)+l.sum;o.items.push({name:l.k==='x'?'Ostatní: '+l.name:l.name,qty:l.qty,rate:r,sum:l.sum});});
+ rd.lines.forEach(function(l){var r=vatRate(l.k,duzp);o.total+=l.sum;if(r===null)o.exempt+=l.sum;else o.rates[r]=(o.rates[r]||0)+l.sum;o.items.push({name:l.k==='x'?'Ostatní: '+l.name:((l.k==='sn'||l.k==='ob'||l.k==='ve')?'Strava':l.name),qty:l.qty,rate:r,sum:l.sum});});
  o.det={};Object.keys(o.rates).forEach(function(r){var gr=o.rates[r],b=r2(gr/(1+r/100));o.det[r]={gross:gr,base:b,vat:r2(gr-b)};});
  return o;
 }
 function rvData(){
  var r=rvRange(),f=S.rvG||'all',mt=S.rvM||'all',rows=[];
+ S._mr={};
  if(!r)return {r:r,rows:[],tot:{rates:{12:{gross:0,base:0,vat:0},21:{gross:0,base:0,vat:0}},exempt:0,total:0},items:[],byMethod:{},skipped:0};
  S.payments.slice().sort(function(a,b){return a.date<b.date?-1:(a.date>b.date?1:0);}).forEach(function(p){
   if(p.date<r[0]||p.date>r[1])return;if(mt!=='all'&&p.method!==mt)return;
@@ -1050,10 +1051,10 @@ function rvData(){
  var tot={rates:{12:{gross:0,base:0,vat:0},21:{gross:0,base:0,vat:0}},exempt:0,total:0},im={},byMethod={};
  rows.forEach(function(b){tot.total+=b.total;tot.exempt+=b.exempt;[12,21].forEach(function(k){var d=b.det[k];if(d){tot.rates[k].gross+=d.gross;tot.rates[k].base+=d.base;tot.rates[k].vat+=d.vat;}});
   b.items.forEach(function(it){var key=it.name+'|'+it.rate;if(!im[key])im[key]={name:it.name,rate:it.rate,qty:0,sum:0};im[key].qty+=it.qty;im[key].sum+=it.sum;});
-  var m=b.p.method;byMethod[m]=(byMethod[m]||0)+b.total;});
+  var m=b.p.method;byMethod[m]=(byMethod[m]||0)+b.total;var mr=(S._mr=S._mr||{});mr[m]=mr[m]||{};Object.keys(b.rates).forEach(function(r){mr[m][r]=(mr[m][r]||0)+b.rates[r];});mr[m].x=(mr[m].x||0)+b.exempt;});
  [12,21].forEach(function(k){var x=tot.rates[k];x.base=r2(x.gross/(1+k/100));x.vat=r2(x.gross-x.base);});
  var items=Object.keys(im).map(function(k){return im[k];}).sort(function(a,b){return b.sum-a.sum;});
- return {r:r,rows:rows,tot:tot,items:items,byMethod:byMethod};
+ return {r:r,rows:rows,tot:tot,items:items,byMethod:byMethod,mr:S._mr};
 }
 function rvRateTxt(r){return r===null?'mimo DPH':r+' %';}
 function vTrzby(){
@@ -1088,8 +1089,11 @@ function rvExport(){
  rows.push(['ROZPIS PODLE POLOŽEK','Sazba','','','Celkem (s DPH)']);
  D.items.forEach(function(it){rows.push([it.name,rvRateTxt(it.rate),'','',m2(it.sum)]);});
  rows.push(E.slice());
- rows.push(['ROZPIS PODLE ZPŮSOBU PLATBY','','','','Celkem']);
- Object.keys(D.byMethod).forEach(function(k){var m=METHODS[k];rows.push([m?m[0]:k,'','','',m2(D.byMethod[k])]);});
+ rows.push(['ROZPIS PODLE ZPŮSOBU PLATBY','Sazba','Základ','DPH','Celkem']);
+ Object.keys(D.byMethod).forEach(function(k){var m=METHODS[k],nm=m?m[0]:k,mr=D.mr[k]||{},bs=0,vt=0;
+  [12,21].forEach(function(q){var g=mr[q]||0;if(g>0){var b=r2(g/(1+q/100)),v=r2(g-b);bs+=b;vt+=v;rows.push([nm,q+' %',m2(b),m2(v),m2(g)]);}});
+  if((mr.x||0)>0){bs+=mr.x;rows.push([nm,'mimo DPH',m2(mr.x),'—',m2(mr.x)]);}
+  rows.push([nm+' celkem','',m2(bs),m2(vt),m2(D.byMethod[k])]);});
  var f=S.rvG||'all',mt=S.rvM||'all';
  var sub=rvLabel()+(f==='all'?'':' · skupina '+grpName(f))+(mt==='all'?'':' · '+(METHODS[mt]?METHODS[mt][0]:mt))+' · částky v Kč, ceny s DPH · vytištěno '+dmy(TODAY);
  return {title:'Tržby a DPH – Penzion',sub:sub,head:['ROZPIS DPH','Sazba','Základ','DPH','Celkem'],w:[.42,.12,.14,.14,.18],cw:[44,12,16,14,18],rows:rows,sigs:null,numCols:[2,3,4]};
