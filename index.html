@@ -510,6 +510,19 @@ input[data-dpk]{cursor:pointer}
  .scroll.fit .calinfo .infw{position:relative}
  .scroll.fit .calinfo .ibub{position:absolute;right:0;top:calc(100% + 8px);z-index:15;width:min(640px,80vw);background:#fff;box-shadow:0 10px 24px rgba(31,35,64,.28),inset 0 0 0 2px var(--ic,#E3D8FF)}
 }
+.caldet{position:sticky;top:4px;z-index:12;padding:8px 12px;gap:8px;box-shadow:0 6px 14px rgba(31,35,64,.22)}
+.caldet.ed{position:static;box-shadow:none}
+.cdrow{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap}
+.cdn{font-size:21px;font-weight:900}.cdt{font-size:14px;padding:4px 12px}
+.cdi{font-size:17px;font-weight:700;flex:1 1 260px;min-width:0}.cdi b{font-weight:900}.cdnote{font-size:15px;font-weight:700;opacity:.85}
+.caldet .btn{min-height:44px;font-size:16px;padding:0 16px}
+@media (max-width:700px),(max-height:520px) and (max-width:1000px){.caldet{position:static;box-shadow:none}}
+.askov{position:fixed;inset:0;z-index:80;background:rgba(31,35,64,.78);display:flex;align-items:center;justify-content:center;padding:16px}
+.askc{background:#FFF8D6;border:6px solid #FFC21A;border-radius:28px;width:min(520px,100%);padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 10px 0 rgba(31,35,64,.3)}
+.askc>b{font-size:24px;font-weight:900;line-height:1.3}
+.askc .btn{width:100%;white-space:normal;line-height:1.2;padding-top:10px;padding-bottom:10px}
+.hrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 3px 0 #F0DFC0}
+.hw{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:2px}.hw b{font-size:18px;font-weight:900;overflow-wrap:anywhere}.hw small{font-size:14px;font-weight:700;color:#5B5F85}
 /* přizpůsobení výšce displeje: kalendář vyplní okno, bez zbytečného posouvání dolů */
 .scroll.fit{display:flex;flex-direction:column}
 .scroll.fit>.calcard{flex:1 0 auto}
@@ -812,9 +825,9 @@ function vKal(){
   var np=stayPersons(sel),note='';
   if(sel.grp==='indiv')note=G(sel.guestId).note||'';
   else{var ms=membersOf(sel).filter(function(x){return x.here;});var only=ms.filter(function(x){return x.only;}).reduce(function(a,x){return a+x.persons;},0);var fo=ms.filter(function(x){return x.foreign;}).length;note=(np-only)+' ubytováno, '+only+' jen na stravu'+(fo?' · '+fo+' ze zahraničí':'')+' · platba na konci pobytu.';}
-  detail='<div class="panel caldet" id="caldet" style="background:'+bg+'"><div class="row wrap"><b style="font-size:24px;font-weight:900">'+esc(stayName(sel))+'</b><span class="tag" style="background:#fff;font-size:16px;padding:5px 14px">'+(sel.grp==='indiv'?'individuál':'skupina')+'</span><span class="sp"></span><button class="rb" style="background:#fff" aria-label="Zavřít" data-a="selStay" data-p="">×</button></div>'+
-   '<div style="font-size:19px;font-weight:800">'+rangeTxt(sel.from,sel.to)+(sel.to<TODAY?' (proběhlo)':'')+' · '+persTxt(np)+roomTxt(sel)+'</div><div style="font-size:17px;font-weight:700;line-height:1.45">'+esc(note)+'</div>'+
-   '<div class="row wrap"><button class="btn dark big" data-a="openStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Otevřít hosta':'Otevřít skupinu')+'</button><button class="btn yellow big" data-a="payStay" data-p="'+sel.id+'">Účtovat</button></div>'+stayEdit(sel)+'</div>';
+  var edO=isOpen('sted',false);
+  detail='<div class="panel caldet'+(edO?' ed':'')+'" id="caldet" style="background:'+bg+'"><div class="cdrow"><b class="cdn">'+esc(stayName(sel))+'</b><span class="tag cdt" style="background:#fff">'+(sel.grp==='indiv'?'individuál':'skupina')+'</span><span class="cdi"><b>'+rangeTxt(sel.from,sel.to)+(sel.to<TODAY?' (proběhlo)':'')+'</b> · '+persTxt(np)+roomTxt(sel)+(note?' · <span class="cdnote">'+esc(note)+'</span>':'')+'</span><span class="sp"></span>'+
+   '<button class="btn dark" data-a="openStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Otevřít hosta':'Otevřít skupinu')+'</button><button class="btn yellow" data-a="payStay" data-p="'+sel.id+'">Účtovat</button><button class="btn white" style="color:#6C3CE9" '+tg('sted',false)+'>'+(edO?'Hotovo':'Upravit')+'</button><button class="rb" style="background:#fff" aria-label="Zavřít" data-a="selStay" data-p="">×</button></div>'+(edO?stayEdit(sel):'')+'</div>';
  }
  var form='';
  if(S.calNewOpen){
@@ -1288,18 +1301,18 @@ function vEet(){
 }
 
 /* ---------- celkové vykreslení ---------- */
-var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['trzby','Tržby','#5BD38A'],['eet','EET','#FF8A8A'],['uby','Ubyport','#FF9F43']];
-var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',trzby:'Tržby a DPH',eet:'EET',uby:'Ubyport – hlášení cizinců'};
+var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['trzby','Tržby','#5BD38A'],['eet','EET','#FF8A8A'],['uby','Ubyport','#FF9F43'],['hist','Historie','#A5B4FC']];
+var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',trzby:'Tržby a DPH',eet:'EET',uby:'Ubyport – hlášení cizinců',hist:'Historie změn a obnova smazaného'};
 function render(){
  if(!LOADED){renderLoading();return;}
  var app=document.getElementById('app'),old=app.querySelector('.scroll'),st=old?old.scrollTop:0,otw=app.querySelector('.tlw'),osx=otw?otw.scrollLeft:0,okey=otw?otw.dataset.k:'';
  var ae=document.activeElement,fid=ae&&ae.id,ss=null,ov=document.getElementById('sigov'),ovs=ov?ov.scrollTop:0;try{if(fid)ss=ae.selectionStart;}catch(e){}
- var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,trzby:vTrzby,eet:vEet,uby:vUby}[S.screen]();
+ var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,trzby:vTrzby,eet:vEet,uby:vUby,hist:vHist}[S.screen]();
  var nav=NAV.map(function(n,i){return '<button class="nav'+(S.screen===n[0]?' act':'')+'" data-a="nav" data-p="'+n[0]+'"><i style="background:'+n[2]+'">'+(i+1)+'</i><span>'+n[1]+'</span></button>';}).join('');
  app.innerHTML='<div class="app"><nav class="side'+(S.navOpen?' open':'')+'"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+
   '<button class="burger" data-a="menu" aria-label="Hlavní menu" aria-expanded="'+(S.navOpen?'true':'false')+'"><span class="bl"><i></i><i></i><i></i></span><b>Menu</b></button>'+
   '<div class="navs">'+nav+'</div></nav>'+(S.navOpen?'<div class="navbd" data-a="menu"></div>':'')+
-  '<div class="main"><div class="top"><div><h1>'+TITLES[S.screen]+'</h1><small>'+DN[parse(TODAY).getDay()].toLowerCase()+' '+dmy(TODAY)+'</small></div>'+syncChip()+'</div><div class="scroll'+(S.screen==='kal'?' fit':'')+'">'+body+'</div></div></div>'+(S.sigFor?vSig():'');
+  '<div class="main"><div class="top"><div><h1>'+TITLES[S.screen]+'</h1><small>'+DN[parse(TODAY).getDay()].toLowerCase()+' '+dmy(TODAY)+'</small></div>'+syncChip()+'</div><div class="scroll'+(S.screen==='kal'?' fit':'')+'">'+body+'</div></div></div>'+(S.sigFor?vSig():'')+askHtml();
  var sc=app.querySelector('.scroll');if(sc)sc.scrollTop=S.scrollTop?0:st;S.scrollTop=false;
  var ntw=app.querySelector('.tlw');if(ntw){if(okey&&okey===ntw.dataset.k)ntw.scrollLeft=osx;else{var inn=ntw.querySelector('.tlin'),lw=104;ntw.scrollLeft=Math.max(0,Number(ntw.dataset.sx||0)*((inn?inn.scrollWidth:ntw.scrollWidth)-lw)-30);}}
  if(S.scrollToId){var se=document.getElementById(S.scrollToId);if(se)se.scrollIntoView({block:'start'});S.scrollToId=null;}
@@ -1522,6 +1535,78 @@ function dropGuest(id){
  if(S.payGuest===id)S.payGuest='';if(S.payOpen===id)S.payOpen=null;if(S.grpGuest===id)S.grpGuest=null;if(S.indivFocus===id)S.indivFocus=null;
 }
 function arm(k,t){if(S.delArm!==k){S.delArm=k;toast(t);return true;}S.delArm=null;return false;}
+/* velké potvrzovací okno před smazáním nebo zrušením */
+var ASK=null;
+function ask(t,y,f){ASK={t:t,y:y,f:f};}
+function askHtml(){if(!ASK)return '';return '<div class="askov" role="alertdialog" aria-modal="true"><div class="askc"><b>'+esc(ASK.t)+'</b><button class="btn green big" data-a="askNo">Ne, nechat jak je</button><button class="btn red big" data-a="askYes">'+esc(ASK.y)+'</button></div></div>';}
+A.askNo=function(){ASK=null;toast('Nic se nezměnilo.');};
+A.askYes=function(){var f=ASK&&ASK.f;ASK=null;if(f)f();};
+/* ---------- historie změn a obnova smazaného ---------- */
+var H={days:7,mode:'del',rows:null,loading:false,err:''};
+function hExists(r){if(r.coll==='guests')return !!G(r.doc_id);if(r.coll==='stays')return S.stays.some(function(x){return x.id===r.doc_id;});if(r.coll==='payments')return S.payments.some(function(x){return x.id===r.doc_id;});return true;}
+function hNames(){var n={};S.guests.forEach(function(g){n[g.id]=g.name;});(H.rows||[]).forEach(function(r){if(r.coll==='guests'){var d=r.old_data||r.new_data;if(d&&d.name&&!n[r.doc_id])n[r.doc_id]=d.name;}});return n;}
+function hLabel(r,n){
+ var d=r.old_data||r.new_data||{};
+ if(r.coll==='guests')return 'Host '+dn(d.name||r.doc_id);
+ if(r.coll==='stays'){var who=d.grp==='indiv'?(n[d.guestId]?dn(n[d.guestId]):'host'):grpName(d.grp);return 'Pobyt – '+who+(d.from&&d.to?' ('+rangeTxt(d.from,d.to)+')':'');}
+ if(r.coll==='payments')return 'Platba'+(d.sum!=null?' '+d.sum+' Kč':'')+(n[d.gid]?' – '+dn(n[d.gid]):'');
+ return 'Nastavení';
+}
+function hWhen(at){var d=new Date(at);return d.toLocaleString('cs-CZ',{weekday:'short',day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'});}
+function hWho(e){return e?String(e).split('@')[0]:'neznámý';}
+function hGroups(){
+ var out=[];
+ (H.rows||[]).filter(function(r){return r.op==='delete'&&(r.coll==='guests'||r.coll==='stays'||r.coll==='payments');}).forEach(function(r){
+  var g=out[out.length-1],t=Date.parse(r.at);
+  if(g&&g.by===r.by_email&&Math.abs(g.t-t)<=15000)g.rows.push(r);else out.push({t:t,at:r.at,by:r.by_email,rows:[r],key:String(r.hid)});
+ });
+ return out;
+}
+function hGroupLabel(g,n){var gr=g.rows.filter(function(r){return r.coll==='guests';})[0]||g.rows[0];var k=g.rows.length-1;return hLabel(gr,n)+(k>0?' (+ '+k+' '+pl(k,'související záznam','související záznamy','souvisejících záznamů')+')':'');}
+async function loadHist(){
+ if(H.loading)return;H.loading=true;H.err='';
+ try{
+  if(!SB)throw new Error('offline');
+  var since=new Date(Date.now()-H.days*864e5).toISOString();
+  var r=await SB.from('pz_history').select('hid,at,by_email,op,coll,doc_id,old_data,new_data').gte('at',since).order('hid',{ascending:false}).limit(1500);
+  sbChk(r);H.rows=r.data||[];
+ }catch(e){H.err='Historii se nepodařilo načíst. Zkuste to prosím za chvíli.';H.rows=[];}
+ H.loading=false;render();
+}
+async function restoreGroup(g){
+ var docs=g.rows.filter(function(r){return !hExists(r)&&r.old_data;}).map(function(r){return {coll:r.coll,id:r.doc_id,data:r.old_data};});
+ if(!docs.length){toast('Už je obnoveno.');return;}
+ try{var r=await SB.from('pz_docs').upsert(docs);sbChk(r);await sbResync(false);toast('Obnoveno: '+docs.length+' '+pl(docs.length,'záznam','záznamy','záznamů')+'.');}
+ catch(e){toast('Obnovení se nepovedlo. Nic se nezměnilo, zkuste to znovu.');}
+ H.rows=null;render();
+}
+A.histDays=function(p){H.days=Number(p)||7;H.rows=null;};
+A.histMode=function(p){H.mode=p;};
+A.histRestore=function(k){var g=hGroups().filter(function(x){return x.key===k;})[0];if(!g)return;
+ ask('Obnovit „'+hGroupLabel(g,hNames())+'“, smazáno '+hWhen(g.at)+'?','Ano, obnovit',function(){restoreGroup(g);});};
+function vHist(){
+ if(H.rows===null&&!H.loading)setTimeout(loadHist,0);
+ var n=hNames(),h='<div class="card"><div class="row wrap"><b style="font-size:17px;font-weight:900">Za:</b>'+chip('7 dní','histDays','7',H.days===7,'#6C3CE9')+chip('30 dní','histDays','30',H.days===30,'#6C3CE9')+'<span style="width:14px"></span>'+chip('Smazané','histMode','del',H.mode==='del','#D62839')+chip('Všechny změny','histMode','all',H.mode==='all','#6C3CE9')+'</div>';
+ if(H.rows===null||H.loading)return h+'<div class="small b">Načítám historii…</div></div>';
+ if(H.err)return h+'<div class="note g" style="font-size:17px">'+esc(H.err)+'</div></div>';
+ if(H.mode==='del'){
+  var gs=hGroups();
+  if(!gs.length)h+='<div class="small b" style="font-size:17px">Za posledních '+H.days+' dní se nic nesmazalo.</div>';
+  gs.forEach(function(g){
+   var can=g.rows.some(function(r){return !hExists(r)&&r.old_data;});
+   h+='<div class="hrow"><div class="hw"><b>'+esc(hGroupLabel(g,n))+'</b><small>smazáno '+esc(hWhen(g.at))+' · '+esc(hWho(g.by))+'</small></div>'+(can?'<button class="btn green" data-a="histRestore" data-p="'+g.key+'">↩ Obnovit</button>':'<span class="tag ok">Obnoveno ✓</span>')+'</div>';
+  });
+ }else{
+  var OPS={insert:['přidáno','#12805C'],update:['změněno','#6C3CE9'],'delete':['smazáno','#D62839']};
+  var rs=H.rows.filter(function(r){return r.coll!=='cfg';}).slice(0,300);
+  if(!rs.length)h+='<div class="small b" style="font-size:17px">Za posledních '+H.days+' dní nejsou žádné změny.</div>';
+  rs.forEach(function(r){var o=OPS[r.op]||[r.op,'#5B5F85'];
+   h+='<div class="hrow"><div class="hw"><b>'+esc(hLabel(r,n))+'</b><small>'+esc(hWhen(r.at))+' · '+esc(hWho(r.by_email))+'</small></div><span class="tag" style="background:'+o[1]+';color:#fff">'+o[0]+'</span></div>';});
+  h+='<div class="small">Nastavení a ceníky se v tomto přehledu neukazují. Záznamy se uchovávají 2 roky.</div>';
+ }
+ return h+'</div>';
+}
+
 function forgetBtn(act,id,label){
  if(S.delArm===act+id)return '<div class="row wrap"><button class="btn red big" data-a="'+act+'" data-p="'+id+'">Ano, smazat navždy</button><button class="btn white big" style="color:#6C3CE9" data-a="disarm" data-p="">Ne, vrátit zpět</button></div>';
  return '<button class="btn red" style="align-self:flex-start" data-a="'+act+'" data-p="'+id+'">'+label+'</button>';
@@ -1705,7 +1790,7 @@ A.trzbyX=function(p){doTrzbyExport(p);};
 A.calGo=function(p){
  if(S.calView==='week'||S.calView==='day'){var st=S.calView==='week'?7:1;S.calD=p==='0'?TODAY:addDays(S.calD||TODAY,Number(p)*st);return;}
  S.calOff=p==='0'?0:S.calOff+Number(p);};
-A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;if(S.calSel&&mob())S.scrollToId='caldet';};
+A.selStay=function(p){S.open.sted=false;S.calSel=(S.calSel===p||!p)?null:p;if(S.calSel&&mob())S.scrollToId='caldet';};
 A.calNew=function(){S.calNewOpen=!S.calNewOpen;S.calMsg='';S.calKind=null;S.calGrp=null;};
 A.calKind=function(p){S.calKind=p;S.calGrp=null;S.calMsg='';};
 A.calGrp=function(p){S.calGrp=p;};
@@ -1787,25 +1872,25 @@ A.saveGuest=function(){
  toast(isIndiv?'Host uložen a zapsán do kalendáře.':'Host přidán do skupiny.');
 };
 A.here=function(p){var g=G(p);g.here=!g.here;};
-A.book=function(p){var g=G(p);if(!g.inBook&&inBookNow(g)){toast('Host je v knize hostů automaticky od příjezdu.');return;}g.inBook=!g.inBook;toast(g.inBook?'Zapsáno do knihy hostů.':'Odebráno z knihy hostů.');};
+A.book=function(p){var g=G(p);if(!g.inBook&&inBookNow(g)){toast('Host je v knize hostů automaticky od příjezdu.');return;}if(g.inBook){ask('Odebrat hosta „'+dn(g.name)+'“ z knihy hostů?','Ano, odebrat',function(){g.inBook=false;toast('Odebráno z knihy hostů.');});return;}g.inBook=true;toast('Zapsáno do knihy hostů.');};
 A.goPay=function(p){var g=G(p);S.screen='platba';S.scrollTop=true;S.payGroup=g.grp;S.payGuest=g.id;S.payOpen=g.id;};
 A.bill=function(p){var a=p.split('|'),g=G(a[0]);g.bill[a[1]]=Math.max(0,(g.bill[a[1]]||0)+Number(a[2]));syncPay(g);};
 A.setHere=function(p){var a=p.split('|');G(a[0]).here=a[1]==='1';};
-A.resetPrice=function(p){var a=p.split('|'),g=G(a[0]);if(g.price)delete g.price[a[1]];syncPay(g);};
-A.xdel=function(p){var a=p.split('|'),g=G(a[0]);g.extra=(g.extra||[]).filter(function(x){return x.id!==a[1];});syncPay(g);};
+A.resetPrice=function(p){var a=p.split('|'),g=G(a[0]);ask('Vrátit cenu hosta „'+dn(g.name)+'“ na hodnotu z ceníku? Ručně upravená cena se přepíše.','Ano, vrátit cenu',function(){if(g.price)delete g.price[a[1]];syncPay(g);});};
+A.xdel=function(p){var a=p.split('|'),g=G(a[0]);var x0=(g.extra||[]).filter(function(x){return x.id===a[1];})[0];ask('Smazat položku „'+(x0&&x0.name?x0.name:'bez názvu')+'“ z účtu hosta „'+dn(g.name)+'“?','Ano, smazat položku',function(){g.extra=(g.extra||[]).filter(function(x){return x.id!==a[1];});syncPay(g);});};
 A.xq=function(p){var a=p.split('|'),g=G(a[0]),x=(g.extra||[]).filter(function(e){return e.id===a[1];})[0];if(x)x.qty=Math.max(1,(x.qty||1)+Number(a[2]));syncPay(g);};
 /* platba */
 A.persons=function(p){var a=p.split('|'),g=G(a[0]),old=g.persons;g.persons=Math.max(1,old+Number(a[1]));var df=g.persons-old;if(df&&!g.only)g.bill.pp=Math.max(0,(g.bill.pp||0)+df*nightsOf(g));syncPay(g);};
 A.billItem=function(p){var a=p.split('|');S.billItem=S.billItem||{};S.billItem[a[0]]=S.billItem[a[0]]===a[1]?null:a[1];S.open['pb:'+a[0]]=true;if(S.billItem[a[0]])S.scrollToId='bitem_'+a[0];};
 A.xadd=function(p){var g=G(p);S.open['pb:'+g.id]=true;g.extra=g.extra||[];var id='x'+uid();g.extra.push({id:id,name:'',price:0,qty:1});S.focusId='xn_'+g.id+'_'+id;syncPay(g);};
 A.plNew=function(){var id='pl'+uid();S.priceLists.push({id:id,name:'Nový ceník',from:'',to:'',groups:[],p:Object.assign({},DEFP,S.priceLists[0]?S.priceLists[0].p:{})});S.open['pl:'+id]=true;S.focusId='pn_'+id;};
-A.plDel=function(p){if(S.priceLists.length<2){toast('Aspoň jeden ceník musí zůstat.');return;}S.priceLists=S.priceLists.filter(function(l){return l.id!==p;});syncAll();};
+A.plDel=function(p){if(S.priceLists.length<2){toast('Aspoň jeden ceník musí zůstat.');return;}var l0=PLg(p);ask('Opravdu smazat ceník „'+(l0?l0.name:'')+'“? Ceník se nedá vrátit, jen opsat znovu.','Ano, smazat ceník',function(){S.priceLists=S.priceLists.filter(function(l){return l.id!==p;});syncAll();toast('Ceník smazán.');});};
 A.plGroup=function(p){var a=p.split('|'),l=PLg(a[0]),i=l.groups.indexOf(a[1]);if(i>=0)l.groups.splice(i,1);else l.groups.push(a[1]);syncAll();};
 A.bookPeriod=function(p){S.bookPeriod=p;};
 A.bookOpen=function(p){S.delArm=null;S.bookGuest=p;S.scrollTop=true;};
 A.bookBack=function(){S.delArm=null;S.bookGuest=null;S.scrollTop=true;};
 A.bkSel=function(p){S.bookSel[p]=!S.bookSel[p];};
-A.bkUndo=function(p){var g=G(p);if(g){g.arrived=false;toast('Potvrzení příjezdu vráceno zpět.');}};
+A.bkUndo=function(p){var g=G(p);if(g)ask('Vrátit potvrzení příjezdu hosta „'+dn(g.name)+'“?','Ano, vrátit potvrzení',function(){g.arrived=false;toast('Potvrzení příjezdu vráceno zpět.');});};
 A.bkConfirm=function(p){G(p).arrived=true;toast('Příjezd potvrzen.');};
 A.disarmQ=function(){S.delArm=null;};
 A.bkConfirmAll=function(){if(S.delArm!=='bkAll'){S.delArm='bkAll';return;}S.delArm=null;var n=0;bookView().vis.forEach(function(r){if(r.pending&&r.gid){G(r.gid).arrived=true;n++;}});toast('Příjezd potvrzen u '+n+' '+pl(n,'hosta','hostů','hostů')+'.');};
@@ -1879,7 +1964,7 @@ A.doPay=function(p){
  toast('Platba zapsána. Klikli jste omylem? Je tu tlačítko „Vrátit zpět“.');
  celebrate(kc(total(g)));
 };
-A.undoPay=function(p){var g=G(p);S.payments=S.payments.filter(function(x){return x.gid!==g.id;});g.paid=null;toast('Platba vrácena zpět, host je zase nezaplacený.');};
+A.undoPay=function(p){var g=G(p);ask('Vrátit platbu hosta „'+dn(g.name)+'“ zpět? Platba se smaže a host bude zase nezaplacený.','Ano, vrátit platbu',function(){S.payments=S.payments.filter(function(x){return x.gid!==g.id;});g.paid=null;toast('Platba vrácena zpět, host je zase nezaplacený.');});};
 A.doMail=function(p){
  var g=G(p);if(!g)return;
  if(!g.paid){toast('Nejdřív zapište platbu, potvrzení se posílá až po zaplacení.');return;}
@@ -2071,7 +2156,7 @@ A.ubyMark=function(){var s=ubyS().sent;(S.ubyLast||[]).forEach(function(k){s[k]=
 A.ubyPer=function(p){ubyF().p=p;};
 A.ubyTog=function(k){var o=ubyF().off;if(o[k])delete o[k];else o[k]=1;};
 A.ubySelAll=function(v){var F=ubyF();ubyItems().list.forEach(function(x){if(v==='1')delete F.off[x.key];else F.off[x.key]=1;});};
-A.ubyUndo=function(k){delete ubyS().sent[k];};
+A.ubyUndo=function(k){ask('Vrátit zpět označení „nahlášeno cizinecké policii“?','Ano, vrátit zpět',function(){delete ubyS().sent[k];});};
 
 /* ---------- přihlašovací tiskopis k podpisu cizince (PDF, A4 na výšku) ---------- */
 function ubyItemFor(r,s){
