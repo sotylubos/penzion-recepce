@@ -938,7 +938,9 @@ function vBook(){
  var gsel=gch.filter(function(f){return f[0]===S.bookFilter;})[0],psel=pch.filter(function(f){return f[0]===S.bookPeriod;})[0],fsum=(gsel?gsel[1]:'Všichni')+' · '+(psel?psel[1]:'Celé období');
  var pm=S.pickFor,pg=pm&&pm!=='indiv';
  var exp=pm?'':fold('bkx','Export do tabulky k tisku','v seznamu: '+vis.length+' '+pl(vis.length,'host','hosté','hostů'),
-  '<span class="small" style="font-size:15px">Do souboru půjdou všichni hosté zobrazení v seznamu a jen jejich pobyty ve zvoleném období. Skupinu a období nastavíte filtry výše.</span>'+
+  '<span class="small" style="font-size:15px">Do souboru půjdou všichni hosté zobrazení v seznamu a jen jejich pobyty ve zvoleném období. Skupinu a období vyberete tady (jsou to stejné filtry jako nahoře).</span>'+
+  '<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(f){return chip(esc(f[1]),'bookFilter',f[0],S.bookFilter===f[0],f[2]);}).join('')+'</div>'+
+  '<div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(f){return chip(f[1],'bookPeriod',f[0],S.bookPeriod===f[0],'#00857F');}).join('')+'</div>'+custom.replace(/kd_(from|to)/g,'kx_$1')+
   (DL?'<div class="row wrap"><button class="btn green big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(vis.length?'':'disabled style="opacity:.45" ')+'data-a="exportX" data-p="pdf">Stáhnout PDF</button></div>':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>'),false,'#6C3CE9');
  var rowOf=function(b,page){
   var o=!!page,pd=!!S.police[b.id],sh=staysIn(b,rg),sel=!!S.bookSel[b.id];
