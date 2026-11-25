@@ -504,6 +504,50 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 .dpd:active,.dpa:active{transform:translateY(2px)}
 .dpf{display:flex;gap:10px;flex-wrap:wrap}.dpf .btn{flex:1}
 input[data-dpk]{cursor:pointer}
+.calinfo{display:none}
+@media (min-width:701px){
+ .scroll.fit .calinfo{display:block;position:relative;flex:none}.scroll.fit .legrow{display:none}
+ .scroll.fit .calinfo .infw{position:relative}
+ .scroll.fit .calinfo .ibub{position:absolute;right:0;top:calc(100% + 8px);z-index:15;width:min(640px,80vw);background:#fff;box-shadow:0 10px 24px rgba(31,35,64,.28),inset 0 0 0 2px var(--ic,#E3D8FF)}
+}
+/* přizpůsobení výšce displeje: kalendář vyplní okno, bez zbytečného posouvání dolů */
+.scroll.fit{display:flex;flex-direction:column}
+.scroll.fit>.calcard{flex:1 0 auto}
+.calcard>.cal{flex:1 1 auto;grid-template-rows:auto;grid-auto-rows:1fr}
+@media (min-width:701px) and (max-height:1150px){
+ .top{padding:8px 24px 4px}.top>div:first-child{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}.top h1{font-size:25px}.top small{font-size:14px}
+ .scroll{padding:2px 24px 14px}
+ .scroll.fit .calcard{padding:12px;gap:8px}
+ .scroll.fit .calsw .pill,.scroll.fit .calsw .btn,.scroll.fit .calnav .btn{min-height:40px;font-size:15px;padding:0 16px}
+ .scroll.fit .calnav .rb{width:40px;height:40px;font-size:24px}.scroll.fit .calnav .mname{font-size:22px}
+ .scroll.fit .cal{gap:4px}.scroll.fit .cal .h{font-size:12px}
+ .scroll.fit .day{min-height:0;padding:4px 5px;gap:2px}
+ .scroll.fit .dn{font-size:13px}
+ .scroll.fit .bar{min-height:20px;font-size:11.5px;padding:2px 5px}
+}
+@media (min-width:701px) and (max-height:930px){
+ .navs .nav{min-height:46px!important}
+ .scroll.fit .calcard{padding:10px;gap:6px}
+ .scroll.fit .day{padding:3px 4px;gap:1px}
+ .scroll.fit .bar{min-height:18px;font-size:11px;padding:1px 5px}
+}
+@media (min-width:701px) and (max-height:780px){
+ .side{padding:4px 10px!important}.navs .nav{min-height:42px!important;font-size:15px!important}
+ .top{padding:4px 20px 0}.top h1{font-size:21px}.top small{display:none}
+ .scroll{padding:2px 20px 8px}
+ .scroll.fit .calcard{padding:8px 10px;gap:5px;border-radius:18px}
+ .scroll.fit .calsw .pill,.scroll.fit .calsw .btn,.scroll.fit .calnav .btn{min-height:36px;font-size:14px;padding:0 14px}
+ .scroll.fit .calnav .rb{width:36px;height:36px;font-size:22px}.scroll.fit .calnav .mname{font-size:19px}
+ .scroll.fit .cal{gap:3px}
+ .scroll.fit .day{padding:2px 4px;gap:1px;border-width:2px;border-radius:10px}
+ .scroll.fit .dn{font-size:12px;line-height:1.1}
+ .scroll.fit .bar{min-height:16px;font-size:10.5px;padding:0 4px}
+}
+@media (min-width:701px) and (max-height:680px){
+ .scroll.fit .bar{min-height:14px;font-size:10px}
+ .scroll.fit .dn{font-size:11px}
+ .scroll.fit .ibtn{width:28px;height:28px;min-height:28px;font-size:16px}
+}
 </style>
 </head>
 <body>
@@ -792,8 +836,8 @@ function vKal(){
   S.groupDefs.map(function(d){return '<span class="small b" style="color:#1F2340"><i class="dot" style="background:'+d.color+'"></i>'+esc(d.name)+'</span>';}).join('')+
   '<span class="small b" style="color:#1F2340"><i class="dot" style="background:linear-gradient(90deg,#C2410C,#0E9F6E,#7048E8)"></i>Individuálové (každý jinou barvou)</span><span class="small b" style="color:#1F2340"><i class="dot" style="background:#B8B5C8"></i>proběhlo</span>';
  var legendBox=infoI('legend','<div class="row wrap" style="gap:10px 14px">'+legend+'</div>','#6C3CE9');
- return '<div class="card calcard">'+calSwitch('<span class="sp"></span><button class="btn green" data-a="calNew">+ Nová<span class="dsk"> rezervace</span></button>')+'<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí" data-a="calGo" data-p="-1">‹</button><b class="mname">'+(wd?wdLabel():MN[base.getMonth()]+' '+base.getFullYear())+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button></div>'+
-  legendBox+form+detail+dayListPanel()+(wd?vWeekDay():S.calView==='rooms'?vRoomsTl(base):'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div>')+'</div>';
+ return '<div class="card calcard">'+calSwitch('<span class="sp"></span><button class="btn green" data-a="calNew">+ Nová<span class="dsk"> rezervace</span></button>')+'<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí" data-a="calGo" data-p="-1">‹</button><b class="mname">'+(wd?wdLabel():MN[base.getMonth()]+' '+base.getFullYear())+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button><span class="calinfo">'+legendBox+'</span></div>'+
+  '<div class="legrow">'+legendBox+'</div>'+form+detail+dayListPanel()+(wd?vWeekDay():S.calView==='rooms'?vRoomsTl(base):'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div>')+'</div>';
 }
 
 function guestRow(g){
@@ -1255,7 +1299,7 @@ function render(){
  app.innerHTML='<div class="app"><nav class="side'+(S.navOpen?' open':'')+'"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+
   '<button class="burger" data-a="menu" aria-label="Hlavní menu" aria-expanded="'+(S.navOpen?'true':'false')+'"><span class="bl"><i></i><i></i><i></i></span><b>Menu</b></button>'+
   '<div class="navs">'+nav+'</div></nav>'+(S.navOpen?'<div class="navbd" data-a="menu"></div>':'')+
-  '<div class="main"><div class="top"><div><h1>'+TITLES[S.screen]+'</h1><small>'+DN[parse(TODAY).getDay()].toLowerCase()+' '+dmy(TODAY)+'</small></div>'+syncChip()+'</div><div class="scroll">'+body+'</div></div></div>'+(S.sigFor?vSig():'');
+  '<div class="main"><div class="top"><div><h1>'+TITLES[S.screen]+'</h1><small>'+DN[parse(TODAY).getDay()].toLowerCase()+' '+dmy(TODAY)+'</small></div>'+syncChip()+'</div><div class="scroll'+(S.screen==='kal'?' fit':'')+'">'+body+'</div></div></div>'+(S.sigFor?vSig():'');
  var sc=app.querySelector('.scroll');if(sc)sc.scrollTop=S.scrollTop?0:st;S.scrollTop=false;
  var ntw=app.querySelector('.tlw');if(ntw){if(okey&&okey===ntw.dataset.k)ntw.scrollLeft=osx;else{var inn=ntw.querySelector('.tlin'),lw=104;ntw.scrollLeft=Math.max(0,Number(ntw.dataset.sx||0)*((inn?inn.scrollWidth:ntw.scrollWidth)-lw)-30);}}
  if(S.scrollToId){var se=document.getElementById(S.scrollToId);if(se)se.scrollIntoView({block:'start'});S.scrollToId=null;}
