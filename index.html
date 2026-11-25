@@ -468,6 +468,11 @@ textarea.inp{padding:10px 12px;min-height:80px;resize:vertical}
 .dlist{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow:auto}
 .dlr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:48px;padding:6px 12px;border-radius:14px;border:3px solid transparent;background:#fff;text-align:left;font-family:inherit;color:#1F2340}
 .dlr b{font-size:17px;font-weight:900}.dlr small{font-size:14px;font-weight:700;color:#5B5F7E}.dlr.sel{border-color:#1F2340}
+.wkw{overflow-x:auto;padding-bottom:6px}.wk{display:grid;grid-template-columns:repeat(7,minmax(112px,1fr));gap:8px;min-width:820px}
+.wkc{display:flex;flex-direction:column;gap:6px;background:#F4F0FF;border-radius:14px;padding:8px;min-width:0}.wkc.td{background:#FFF1D6;outline:3px solid #FFC21A}
+.wkc .wh{display:flex;flex-direction:column;line-height:1.2}.wkc .wh b{font-size:16px;font-weight:900}.wkc .wh small{font-size:13px;font-weight:800;color:#5B5F7E}
+.wkr{display:flex;flex-direction:column;gap:2px;text-align:left;font-family:inherit;color:#1F2340;background:#fff;border:3px solid transparent;border-left:8px solid var(--c);border-radius:10px;padding:6px 7px;min-height:48px}
+.wkr b{font-size:15px;font-weight:900;overflow-wrap:anywhere}.wkr small{font-size:12.5px;font-weight:700;color:#5B5F7E}.wkr.sel{border-color:#1F2340;border-left-color:var(--c)}
 /* časová osa pokojů */
 .tlw{overflow-x:auto;border-radius:14px;background:#fff;border:2px solid #E3D8FF}
 .tlin{display:flex;flex-direction:column}
@@ -736,9 +741,11 @@ function vWeekDay(){
  }
  for(var i=0;i<7;i++){
   var t2=addDays(r[0],i),l=S.stays.filter(function(s){return s.from<=t2&&t2<=s.to;}).sort(byName);
-  out+='<div class="panel" style="background:'+(t2===TODAY?'#FFF1D6':'#F4F0FF')+(t2===TODAY?';outline:3px solid #FFC21A':'')+'"><div class="row wrap"><b style="font-size:19px;font-weight:900">'+DN[parse(t2).getDay()]+' '+dm(t2)+'</b>'+(t2===TODAY?'<span class="tag y">dnes</span>':'')+'<span class="sp"></span><span class="small b">'+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací')+'</span></div>'+(l.length?'<div class="dlist" style="max-height:none">'+l.map(function(s){return stayRowBtn(s,t2);}).join('')+'</div>':'<span class="small">volno</span>')+'</div>';
+  out+='<div class="wkc'+(t2===TODAY?' td':'')+'"><div class="wh"><b>'+DN[parse(t2).getDay()].slice(0,2)+' '+dm(t2)+(t2===TODAY?' · dnes':'')+'</b><small>'+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací')+'</small></div>'+
+   l.map(function(s){return '<button class="wkr'+(S.calSel===s.id?' sel':'')+'" style="--c:'+stayColor(s)+'" data-a="selStay" data-p="'+s.id+'"><b>'+esc(stayName(s))+'</b><small>'+(s.from===t2?'příjezd':(s.to===t2?'odjezd':'ubytován'))+' · '+persTxt(stayPersons(s))+roomTxt(s).replace(' · pokoj ',' · p. ')+'</small></button>';}).join('')+(l.length?'':'<span class="small">volno</span>')+'</div>';
  }
- return '<div class="col">'+out+'</div>';
+ out='<div class="wkw"><div class="wk">'+out+'</div></div>';
+ return out;
 }
 function vKal(){
  if(S.calView==='list')return vRes();
@@ -1044,6 +1051,7 @@ function rvData(){
  rows.forEach(function(b){tot.total+=b.total;tot.exempt+=b.exempt;[12,21].forEach(function(k){var d=b.det[k];if(d){tot.rates[k].gross+=d.gross;tot.rates[k].base+=d.base;tot.rates[k].vat+=d.vat;}});
   b.items.forEach(function(it){var key=it.name+'|'+it.rate;if(!im[key])im[key]={name:it.name,rate:it.rate,qty:0,sum:0};im[key].qty+=it.qty;im[key].sum+=it.sum;});
   var m=b.p.method;byMethod[m]=(byMethod[m]||0)+b.total;});
+ [12,21].forEach(function(k){var x=tot.rates[k];x.base=r2(x.gross/(1+k/100));x.vat=r2(x.gross-x.base);});
  var items=Object.keys(im).map(function(k){return im[k];}).sort(function(a,b){return b.sum-a.sum;});
  return {r:r,rows:rows,tot:tot,items:items,byMethod:byMethod};
 }
@@ -1072,19 +1080,19 @@ function vTrzby(){
   (n?'<div class="card">'+vatTab+'</div>'+fold('rvi','Rozpis podle položek',D.items.length+' '+pl(D.items.length,'položka','položky','položek'),itTab,false,'#00857F')+fold('rvm','Podle způsobu platby','',mtTab,false,'#1D6FE0')+fold('rvl','Jednotlivé platby',n+'',list,false,'#6C3CE9')+'<div class="card">'+ex+'<span class="small">Sazby DPH: ubytování, jídlo a pes 12 %, káva 21 % (od 1. 1. 2027 12 %), ostatní položky 21 %; místní poplatek je mimo DPH. Ceny jsou s DPH, základ a daň se dopočítají. Tržby se berou podle data přijetí platby.</span></div>':'<div class="note p" style="text-align:center">V tomto období a výběru není žádná platba.</div>')+'</div>';
 }
 function rvExport(){
- var D=rvData(),T=D.tot,rows=[];
- D.rows.forEach(function(b){var d12=b.det[12]||{base:0,vat:0},d21=b.det[21]||{base:0,vat:0},mm=METHODS[b.p.method];rows.push([dmy(b.p.date),b.p.name+' ('+grpName(b.g.grp)+')',mm?mm[0]:'',m2(d12.base),m2(d12.vat),m2(d21.base),m2(d21.vat),m2(b.exempt),m2(b.total)]);});
- rows.push(['','CELKEM','',m2(T.rates[12].base),m2(T.rates[12].vat),m2(T.rates[21].base),m2(T.rates[21].vat),m2(T.exempt),m2(T.total)]);
- rows.push(['','','','','','','','','']);
- rows.push(['','ROZPIS DPH','','Základ','DPH','','','','Celkem']);
- [12,21].forEach(function(k){var x=T.rates[k];if(x.gross>0)rows.push(['','Sazba '+k+' %','',m2(x.base),m2(x.vat),'','','',m2(x.gross)]);});
- rows.push(['','Mimo předmět DPH (místní poplatek)','',m2(T.exempt),'','','','',m2(T.exempt)]);
- rows.push(['','','','','','','','','']);
- rows.push(['','ROZPIS PODLE POLOŽEK','Sazba','Počet','','','','','Celkem']);
- D.items.forEach(function(it){rows.push(['',it.name,rvRateTxt(it.rate),String(it.qty),'','','','',m2(it.sum)]);});
+ var D=rvData(),T=D.tot,rows=[],E=['','','','',''];
+ [12,21].forEach(function(k){var x=T.rates[k];if(x.gross>0)rows.push(['Zdanitelné plnění',k+' %',m2(x.base),m2(x.vat),m2(x.gross)]);});
+ rows.push(['Místní poplatek (mimo předmět DPH)','mimo DPH',m2(T.exempt),'—',m2(T.exempt)]);
+ rows.push(['CELKEM','',m2(T.rates[12].base+T.rates[21].base+T.exempt),m2(T.rates[12].vat+T.rates[21].vat),m2(T.total)]);
+ rows.push(E.slice());
+ rows.push(['ROZPIS PODLE POLOŽEK','Sazba','','','Celkem (s DPH)']);
+ D.items.forEach(function(it){rows.push([it.name,rvRateTxt(it.rate),'','',m2(it.sum)]);});
+ rows.push(E.slice());
+ rows.push(['ROZPIS PODLE ZPŮSOBU PLATBY','','','','Celkem']);
+ Object.keys(D.byMethod).forEach(function(k){var m=METHODS[k];rows.push([m?m[0]:k,'','','',m2(D.byMethod[k])]);});
  var f=S.rvG||'all',mt=S.rvM||'all';
- var sub=rvLabel()+(f==='all'?'':' · skupina '+grpName(f))+(mt==='all'?'':' · '+(METHODS[mt]?METHODS[mt][0]:mt))+' · částky v Kč, ceny s DPH · Mimo DPH = místní poplatek · vytištěno '+dmy(TODAY);
- return {title:'Tržby a DPH – Penzion',sub:sub,head:['Datum','Host / skupina','Způsob','Základ 12 %','DPH 12 %','Základ 21 %','DPH 21 %','Mimo DPH','Celkem'],w:[.09,.25,.10,.10,.09,.10,.09,.09,.09],cw:[12,36,14,14,12,14,12,12,14],rows:rows,sigs:null,numCols:[3,4,5,6,7,8]};
+ var sub=rvLabel()+(f==='all'?'':' · skupina '+grpName(f))+(mt==='all'?'':' · '+(METHODS[mt]?METHODS[mt][0]:mt))+' · částky v Kč, ceny s DPH · vytištěno '+dmy(TODAY);
+ return {title:'Tržby a DPH – Penzion',sub:sub,head:['ROZPIS DPH','Sazba','Základ','DPH','Celkem'],w:[.42,.12,.14,.14,.18],cw:[44,12,16,14,18],rows:rows,sigs:null,numCols:[2,3,4]};
 }
 async function doTrzbyExport(kind){
  if(!DL){toast('Stažení souboru tu není dostupné.');return;}
