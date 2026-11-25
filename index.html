@@ -895,7 +895,7 @@ function nk(n){return n.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g,'');
 function bookRows(){
  var map={},order=[];
  function row(name){var k=nk(name);if(!map[k]){map[k]={id:'k_'+k,name:name,grp:'',foreign:false,nat:'CZ',addr:'',doc:'',email:'',phone:'',stays:[]};order.push(k);}return map[k];}
- function addStay(r,s,g){if(!s||!s.from)return;var ex=r.stays.filter(function(x){return x.from===s.from&&x.to===s.to;})[0];if(ex){if(g&&ex.addr==null){ex.addr=g.addr||'';ex.doc=g.doc||'';ex.born=g.born||'';ex.nat=g.nat;ex.foreign=g.foreign;}return;}var ne={from:s.from,to:s.to};if(g){ne.addr=g.addr||'';ne.doc=g.doc||'';ne.born=g.born||'';ne.nat=g.nat;ne.foreign=g.foreign;}r.stays.push(ne);}
+ function addStay(r,s,g){if(!s||!s.from)return;var ex=r.stays.filter(function(x){return x.from===s.from&&x.to===s.to;})[0];if(ex){if(g&&g.sig&&g.sig.img&&!ex.sig)ex.sig=g.sig.img;if(g&&ex.addr==null){ex.addr=g.addr||'';ex.doc=g.doc||'';ex.born=g.born||'';ex.nat=g.nat;ex.foreign=g.foreign;}return;}var ne={from:s.from,to:s.to};if(g){if(g.sig&&g.sig.img)ne.sig=g.sig.img;ne.addr=g.addr||'';ne.doc=g.doc||'';ne.born=g.born||'';ne.nat=g.nat;ne.foreign=g.foreign;}r.stays.push(ne);}
  HIST0.forEach(function(h){var r=row(h[1]);r.grp={'Gestalt':'gestalt','VIP 5':'vip5','Individuál':'indiv'}[h[2]]||'indiv';r.email=h[3];r.phone=h[4];r.foreign=h[5];if(h[5])r.nat='zahraničí';h[6].forEach(function(x){addStay(r,isoFromHist(x));});});
  S.guests.slice().sort(function(a,b){var x=guestDates(a).from,y=guestDates(b).from;return x<y?-1:(x>y?1:0);}).forEach(function(g){if(!inBookNow(g))return;var r=row(g.name),pend=!g.inBook&&!g.arrived;if(pend||!r.pending)r.gid=g.id;if(pend)r.pending=true;r.grp=g.grp;r.foreign=g.foreign;r.nat=g.nat;r.first=gFirst(g);r.last=gLast(g);if(g.addr)r.addr=g.addr;if(g.doc)r.doc=g.doc;if(g.born)r.born=g.born;if(g.email)r.email=g.email;if(g.phone)r.phone=g.phone;addStay(r,stayOf(g)?guestDates(g):null,g);});
  S.manual.forEach(function(m){var r=row(m.name);if(!r.grp)r.grp='manual';r.first=gFirst(m);r.last=gLast(m);r.foreign=m.foreign;r.nat=m.nat;r.addr=m.addr;r.doc=m.doc;if(m.born)r.born=m.born;if(m.email)r.email=m.email;if(m.phone)r.phone=m.phone;addStay(r,{from:m.from,to:m.to});});
@@ -993,14 +993,16 @@ function vPrice(){
 
 /* ---------- export knihy hostů ---------- */
 function exportData(){
- var rg=periodRange(),lines=[],n=0;
+ var rg=periodRange(),lines=[],sigs=[],n=0;
  bookView().vis.forEach(function(r){
   staysIn(r,rg).slice().sort(function(a,b){return a.from<b.from?-1:1;}).forEach(function(s){
-   var hb=s.addr!=null,bo=hb?s.born:r.born,na=hb?s.nat:r.nat,fo=hb?s.foreign:r.foreign;lines.push([r.name,bo?dmy(bo):'',bGrpName(r.grp),dmy(s.from),dmy(s.to),String(Math.max(1,diffDays(s.from,s.to))),natLabel(na),(hb?s.addr:r.addr)||'',(hb?s.doc:r.doc)||'']);
+   var hb=s.addr!=null,bo=hb?s.born:r.born,na=hb?s.nat:r.nat,fo=hb?s.foreign:r.foreign;lines.push([r.name,bo?dmy(bo):'',bGrpName(r.grp),dmy(s.from),dmy(s.to),String(Math.max(1,diffDays(s.from,s.to))),natLabel(na),(hb?s.addr:r.addr)||'',(hb?s.doc:r.doc)||'']);sigs.push(s.sig||'');
   });
  });
+ var hasSig=sigs.some(function(x){return x;}),head=['Jméno a příjmení','Narození','Skupina','Příjezd','Odjezd','Nocí','Země','Adresa','Číslo dokladu'],w=[.16,.09,.09,.09,.09,.04,.11,.20,.13];
+ if(hasSig){head.push('Podpis');w=[.14,.08,.08,.08,.08,.04,.10,.17,.11,.12];lines.forEach(function(l){l.push('');});}
  var sub=rg?'Období: '+dmy(rg[0])+' – '+dmy(rg[1]):'Všechny pobyty';
- return {title:'Kniha hostů – Penzion',sub:sub+' · vytištěno '+dmy(TODAY),head:['Jméno a příjmení','Datum narození','Skupina','Příjezd','Odjezd','Nocí','Země','Adresa','Číslo dokladu'],w:[.16,.09,.09,.09,.09,.04,.11,.20,.13],rows:lines};
+ return {title:'Kniha hostů – Penzion',sub:sub+' · vytištěno '+dmy(TODAY),head:head,w:w,rows:lines,sigs:hasSig?sigs:null};
 }
 function xe(s){return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 var CRC=(function(){var t=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
@@ -1009,7 +1011,7 @@ function zipStore(files){
  var enc=new TextEncoder(),chunks=[],cd=[],off=0;
  function u16(v){return [v&255,(v>>>8)&255];}function u32(v){return [v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];}
  files.forEach(function(f){
-  var nm=enc.encode(f.name),d=enc.encode(f.data),crc=crc32(d);
+  var nm=enc.encode(f.name),d=f.bytes||enc.encode(f.data),crc=crc32(d);
   var lh=[].concat(u32(0x04034b50),u16(20),u16(0x0800),u16(0),u16(0),u16(0x21),u32(crc),u32(d.length),u32(d.length),u16(nm.length),u16(0));
   chunks.push(new Uint8Array(lh),nm,d);
   cd.push({nm:nm,crc:crc,len:d.length,off:off});
@@ -1027,18 +1029,21 @@ function colL(i){return String.fromCharCode(65+i);}
 function buildXlsx(d){
  var cell=function(c,r,v,s){return '<c r="'+colL(c)+r+'" t="inlineStr" s="'+s+'"><is><t xml:space="preserve">'+xe(v)+'</t></is></c>';};
  var rows='<row r="1" ht="28" customHeight="1">'+cell(0,1,d.title,2)+'</row><row r="2">'+cell(0,2,d.sub,5)+'</row><row r="4" ht="30" customHeight="1">'+d.head.map(function(h,i){return cell(i,4,h,1);}).join('')+'</row>';
- d.rows.forEach(function(r,j){var rn=5+j,st=j%2?4:3;rows+='<row r="'+rn+'">'+r.map(function(v,i){return cell(i,rn,v,st);}).join('')+'</row>';});
- var widths=[26,14,13,13,7,22,32,18,10];
- var sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="20"/><cols>'+widths.map(function(w,i){return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>';}).join('')+'</cols><sheetData>'+rows+'</sheetData><pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>';
+ d.rows.forEach(function(r,j){var rn=5+j,st=j%2?4:3;rows+='<row r="'+rn+'"'+(d.sigs&&d.sigs[j]?' ht="58" customHeight="1"':'')+'>'+r.map(function(v,i){return cell(i,rn,v,st);}).join('')+'</row>';});
+ var widths=d.sigs?[26,13,13,12,12,7,14,32,18,26]:[26,13,13,12,12,7,14,32,18];
+ var sigs=d.sigs||[],dr='',media=[];
+ sigs.forEach(function(u,j){if(!u)return;var b=atob(u.split(',')[1]),by=new Uint8Array(b.length);for(var q=0;q<b.length;q++)by[q]=b.charCodeAt(q);var iw=((by[16]*256+by[17])*256+by[18])*256+by[19],ih=((by[20]*256+by[21])*256+by[22])*256+by[23];if(!iw||!ih){iw=300;ih=120;}var k=Math.min(170/iw,64/ih),cxm=Math.round(iw*k*9525),cym=Math.round(ih*k*9525),n=media.length+1;media.push(by);
+  dr+='<xdr:oneCellAnchor><xdr:from><xdr:col>9</xdr:col><xdr:colOff>38100</xdr:colOff><xdr:row>'+(4+j)+'</xdr:row><xdr:rowOff>38100</xdr:rowOff></xdr:from><xdr:ext cx="'+cxm+'" cy="'+cym+'"/><xdr:pic><xdr:nvPicPr><xdr:cNvPr id="'+(n+1)+'" name="Podpis '+n+'"/><xdr:cNvPicPr/></xdr:nvPicPr><xdr:blipFill><a:blip r:embed="rId'+n+'"/><a:stretch><a:fillRect/></a:stretch></xdr:blipFill><xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cxm+'" cy="'+cym+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:oneCellAnchor>';});
+ var sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="20"/><cols>'+widths.map(function(w,i){return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>';}).join('')+'</cols><sheetData>'+rows+'</sheetData><pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>'+(media.length?'<drawing r:id="rId1"/>':'')+'</worksheet>';
  var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="4"><font><sz val="12"/><name val="Calibri"/></font><font><b/><sz val="12"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="18"/><color rgb="FF2B1B6B"/><name val="Calibri"/></font><font><sz val="12"/><color rgb="FF5B5F85"/><name val="Calibri"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF6C3CE9"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF4F0FF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFC9B8FF"/></left><right style="thin"><color rgb="FFC9B8FF"/></right><top style="thin"><color rgb="FFC9B8FF"/></top><bottom style="thin"><color rgb="FFC9B8FF"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
  return zipStore([
-  {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
+  {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+(media.length?'<Default Extension="png" ContentType="image/png"/><Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>':'')+'</Types>'},
   {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
   {name:'xl/workbook.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Kniha hostů" sheetId="1" r:id="rId1"/></sheets></workbook>'},
   {name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
   {name:'xl/styles.xml',data:styles},
   {name:'xl/worksheets/sheet1.xml',data:sheet}
- ]);
+ ].concat(media.length?[{name:'xl/worksheets/_rels/sheet1.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/></Relationships>'},{name:'xl/drawings/drawing1.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'+dr+'</xdr:wsDr>'},{name:'xl/drawings/_rels/drawing1.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+media.map(function(m,i){return '<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/image'+(i+1)+'.png"/>';}).join('')+'</Relationships>'}].concat(media.map(function(m,i){return {name:'xl/media/image'+(i+1)+'.png',bytes:m};})):[]));
 }
 async function buildPdf(d){
  try{await document.fonts.load('700 22px Nunito');await document.fonts.load('600 22px Nunito');}catch(e){}
@@ -1050,12 +1055,14 @@ async function buildPdf(d){
   words.forEach(function(wd){var tr=cur?cur+' '+wd:wd;if(cx.measureText(tr).width<=w||!cur)cur=tr;else{ln.push(cur);cur=wd;}});
   if(cur||!ln.length)ln.push(cur);return ln;
  }
+ var sg=d.sigs||[],imgs=[];
+ for(var si=0;si<sg.length;si++){imgs[si]=null;if(sg[si]){imgs[si]=await new Promise(function(ok){var im=new Image();im.onload=function(){ok(im);};im.onerror=function(){ok(null);};im.src=sg[si];});}}
  var topFirst=M+130,topNext=M+20,bottom=H-M-30,hh=52;
  var pages=[[]],y=topFirst+hh;
- d.rows.forEach(function(r){
-  var cells=r.map(function(v,i){return wrap(v,cw[i]-20);}),lines=Math.max.apply(null,cells.map(function(c){return c.length;})),rh=lines*30+18;
+ d.rows.forEach(function(r,ri){
+  var cells=r.map(function(v,i){return wrap(v,cw[i]-20);}),lines=Math.max.apply(null,cells.map(function(c){return c.length;})),rh=lines*30+18;if(imgs[ri])rh=Math.max(rh,100);
   if(y+rh>bottom){pages.push([]);y=topNext+hh;}
-  pages[pages.length-1].push({cells:cells,rh:rh});y+=rh;
+  pages[pages.length-1].push({cells:cells,rh:rh,img:imgs[ri]});y+=rh;
  });
  var jpgs=[];
  pages.forEach(function(pg,pi){
@@ -1070,6 +1077,7 @@ async function buildPdf(d){
    cx.strokeStyle='#D9CFFF';cx.lineWidth=1;cx.strokeRect(M+.5,yy+.5,TW-1,r.rh-1);
    cx.fillStyle='#1F2340';cx.font='600 22px '+FF;cx.textBaseline='top';
    var xx=M;r.cells.forEach(function(c,i){c.forEach(function(t,k){cx.fillText(t,xx+10,yy+10+k*30);});xx+=cw[i];});
+   if(r.img){var bw=cw[cw.length-1]-20,bh=r.rh-16,kk=Math.min(bw/r.img.width,bh/r.img.height);cx.drawImage(r.img,xx-cw[cw.length-1]+10,yy+8,r.img.width*kk,r.img.height*kk);}
    yy+=r.rh;
   });
   cx.fillStyle='#5B5F85';cx.font='600 20px '+FF;cx.textBaseline='alphabetic';cx.fillText('Strana '+(pi+1)+' z '+pages.length,W-M-130,H-M+10);
