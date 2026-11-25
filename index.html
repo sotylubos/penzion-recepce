@@ -782,7 +782,7 @@ function vKal(){
   }
   if(ready){
    form+='<b style="font-size:18px;font-weight:900">'+(S.calKind==='group'?'Nová rezervace pro skupinu '+esc(grpName(S.calGrp)):'Nová rezervace pro jednotlivce')+'</b><div class="fg3 fg">'+
-    (S.calKind==='indiv'?fi('cFirst','Jméno','např. Alena','text','gr')+fi('cLast','Příjmení','např. Procházková','text','gr'):'')+fi('cFrom','Příjezd','','date','gr')+fi('cTo','Odjezd','','date','gr')+(S.calKind==='indiv'?fi('cPers','Počet osob','2','number','gr'):'')+'</div>'+(S.calKind==='indiv'?roomPanelNew():'')+
+    (S.calKind==='indiv'?fi('cFirst','Jméno','např. Alena','text','gr')+fi('cLast','Příjmení','např. Procházková','text','gr'):'')+fi('cFrom','Příjezd','','date','gr')+fi('cTo','Odjezd','','date','gr')+(S.calKind==='indiv'?fi('cPers','Počet osob','2','number','gr'):'')+'</div>'+((S.calKind==='indiv'||S.calKind==='group')?roomPanelNew():'')+
     '<div class="row wrap"><button class="btn green big" data-a="calSave">Uložit rezervaci</button><span style="font-weight:800;font-size:16px;color:'+(S.calOk?'#0B5A40':'#B4232F')+'">'+esc(S.calMsg)+'</span></div>';
   }
   form+='</div>';
@@ -1332,10 +1332,10 @@ function roomLabel(id){var r=roomById(id);return r?r.n:id;}
 function bedsTxt(n){return n+' '+pl(n,'lůžko','lůžka','lůžek');}
 function roomTxt(s){var r=(s&&s.rooms)||[];return r.length?' · pokoj '+r.map(roomLabel).join(', '):'';}
 function overlap(a,b){return a.from<b.to&&b.from<a.to;}
-/* obsazenost pokojů individuály v termínu (mimo rezervaci excl) -> {pokoj: jméno} */
+/* obsazenost pokojů (individuály i skupiny) v termínu (mimo rezervaci excl) -> {pokoj: jméno} */
 function roomBusy(from,to,excl){
  var m={};if(!from||!to||to<=from)return m;
- S.stays.forEach(function(s){if(s.grp!=='indiv'||s.id===excl||!s.rooms||!s.rooms.length)return;if(!overlap({from:from,to:to},s))return;var g=G(s.guestId),w=g?(g.last||g.name):'jiný host';s.rooms.forEach(function(r){if(!m[r])m[r]=w;});});
+ S.stays.forEach(function(s){if(s.id===excl||!s.rooms||!s.rooms.length)return;if(!overlap({from:from,to:to},s))return;var g=s.grp==='indiv'?G(s.guestId):null,w=s.grp==='indiv'?(g?(g.last||g.name):'jiný host'):grpName(s.grp);s.rooms.forEach(function(r){if(!m[r])m[r]=w;});});
  return m;
 }
 function roomClash(rooms,from,to,excl){var b=roomBusy(from,to,excl),o=[];(rooms||[]).forEach(function(r){if(b[r])o.push({room:r,who:b[r]});});return o;}
@@ -1358,15 +1358,15 @@ function roomPick(sel,from,to,excl,act,pre,persons){
  return h+sum;
 }
 function roomPanel(sel){
- var dflt=!(sel.rooms&&sel.rooms.length),o=isOpen('rmp:'+sel.id,dflt);
- return '<div class="panel" style="background:#fff"><button class="rmtg" '+tg('rmp:'+sel.id,dflt)+' aria-expanded="'+(o?'true':'false')+'"><b style="font-size:19px;font-weight:900">Pokoj'+(roomTxt(sel)?':'+roomTxt(sel).replace(' · pokoj',''):' (zatím nepřiřazený)')+'</b><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?roomPick(sel.rooms||[],sel.from,sel.to,sel.id,'stayRoom',sel.id+'|',stayPersons(sel)):'')+'</div>';
+ var gr=sel.grp!=='indiv',dflt=!gr&&!(sel.rooms&&sel.rooms.length),o=isOpen('rmp:'+sel.id,dflt);
+ return '<div class="panel" style="background:#fff"><button class="rmtg" '+tg('rmp:'+sel.id,dflt)+' aria-expanded="'+(o?'true':'false')+'"><b style="font-size:19px;font-weight:900">'+(gr?'Pokoje':'Pokoj')+(roomTxt(sel)?':'+roomTxt(sel).replace(' · pokoj',''):(gr?' (nepovinné, zatím nevyplněné)':' (zatím nepřiřazený)'))+'</b><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?roomPick(sel.rooms||[],sel.from,sel.to,sel.id,'stayRoom',sel.id+'|',stayPersons(sel)):'')+'</div>';
 }
 function roomPanelNew(){
  var f=S.form,sel=f.cRooms||[];
- return '<div class="panel" style="background:#fff"><b style="font-size:18px;font-weight:900">Pokoj (nepovinné)</b>'+roomPick(sel,f.cFrom,f.cTo,null,'newRoom','',Math.max(1,parseInt(f.cPers,10)||1))+'</div>';
+ var ind=S.calKind==='indiv';return '<div class="panel" style="background:#fff"><b style="font-size:18px;font-weight:900">'+(ind?'Pokoj':'Pokoje')+' (nepovinné)</b>'+roomPick(sel,f.cFrom,f.cTo,null,'newRoom','',ind?Math.max(1,parseInt(f.cPers,10)||1):0)+'</div>';
 }
 A.stayRoom=function(p){
- var a=p.split('|'),s=stayById(a[0]);if(!s||s.grp!=='indiv')return;
+ var a=p.split('|'),s=stayById(a[0]);if(!s)return;
  s.rooms=s.rooms||[];var i=s.rooms.indexOf(a[1]);
  if(i>=0){s.rooms.splice(i,1);return;}
  var b=roomBusy(s.from,s.to,s.id);if(b[a[1]]){toast('Pokoj '+roomLabel(a[1])+' je v tomto termínu obsazen ('+b[a[1]]+').');return;}
@@ -1413,15 +1413,15 @@ function vRoomsTl(base){
  ['A','B'].forEach(function(sec){
   h+='<div class="tlsec"><span>'+(sec==='A'?'Část A':'Část B (s kuchyňským koutem)')+'</span></div>';
   ROOMS.filter(function(r){return r.sec===sec;}).forEach(function(r){
-   var l=S.stays.filter(function(s){return s.grp==='indiv'&&inM(s)&&(s.rooms||[]).indexOf(r.id)>=0;});
+   var l=S.stays.filter(function(s){return inM(s)&&(s.rooms||[]).indexOf(r.id)>=0;});
    var L=lanes(l);
    h+='<div class="tlrow"><div class="tll"><b>'+esc(r.n)+'</b><small>'+bedsTxt(r.beds)+'</small></div><div class="tlg" '+gs+'>'+tm+bars(l,r.id)+'</div></div>';
   });
  });
  var nor=S.stays.filter(function(s){return s.grp==='indiv'&&inM(s)&&!(s.rooms||[]).length;});
  h+='<div class="tlsec"><span>Individuálové bez pokoje'+(nor.length?' ('+nor.length+')':'')+'</span></div>'+(nor.length?row('bez pokoje','ťuknutím přidělíte',bars(nor)):'<div class="small" style="padding:6px 10px">Všichni individuálové mají přidělený pokoj.</div>');
- var grp=S.stays.filter(function(s){return s.grp!=='indiv'&&inM(s);});
- if(grp.length)h+='<div class="tlsec"><span>Skupiny (pokoje se u nich zatím nepřidělují)</span></div>'+row('skupiny','',bars(grp));
+ var grp=S.stays.filter(function(s){return s.grp!=='indiv'&&inM(s)&&!(s.rooms||[]).length;});
+ if(grp.length)h+='<div class="tlsec"><span>Skupiny bez pokojů (pokoje u skupin jsou nepovinné)</span></div>'+row('skupiny','',bars(grp));
  var fs=S.stays.filter(function(q){return inM(q)&&q.grp==='indiv';}).concat(S.stays.filter(inM)).map(function(s){return s.from<first?first:s.from;}).sort()[0],fs=S.stays.filter(function(q){return inM(q)&&q.grp==='indiv';}).length?S.stays.filter(function(q){return inM(q)&&q.grp==='indiv';}).map(function(q){return q.from<first?first:q.from;}).sort()[0]:fs,sx=todayI>=0?todayI/N:(fs?diffDays(first,fs)/N:0);
  return '<div class="tlw" data-k="'+y+'-'+m+'" data-sx="'+sx+'"><div class="tlin" style="min-width:'+(104+N*30)+'px">'+h+'</div></div><span class="small">Pruh začíná v pravé půlce dne příjezdu a končí v levé půlce dne odjezdu. Ťuknutím na pruh se otevře rezervace nahoře.</span>';
 }
@@ -1465,7 +1465,7 @@ document.addEventListener('keydown',function(e){
 },true);
 
 /* ---------- úprava a zrušení rezervace v kalendáři ---------- */
-function stayEdit(sel){return stayEdit0(sel)+(sel.grp==='indiv'?roomPanel(sel):'');}
+function stayEdit(sel){return stayEdit0(sel)+roomPanel(sel);}
 function stayEdit0(sel){
  return '<div class="row wrap" style="align-items:flex-end;gap:12px"><div class="fld"><label for="sd_f">Příjezd</label><input type="date" class="inp" id="sd_f" data-dpk="1" readonly data-sdt="'+sel.id+'|from" value="'+sel.from+'"></div><div class="fld"><label for="sd_t">Odjezd</label><input type="date" class="inp" id="sd_t" data-dpk="1" readonly data-sdt="'+sel.id+'|to" value="'+sel.to+'"></div><span class="sp"></span>'+(S.delArm===sel.id?'<button class="btn red" data-a="delStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Ano, zrušit':'Ano, zrušit i se seznamem hostů tohoto termínu')+'</button><button class="btn white" style="color:#6C3CE9" data-a="disarmQ" data-p="">Zrušit</button>':'<button class="btn red" data-a="delStay" data-p="'+sel.id+'">'+(sel.grp==='indiv'?'Zrušit rezervaci a smazat hosta':'Zrušit rezervaci')+'</button>')+'</div>';
 }
@@ -1684,7 +1684,9 @@ A.calSave=function(){
   var srcL=staysOf(S.calGrp),src=null,srcM=[];
   for(var si=srcL.length-1;si>=0;si--){var mm=membersOf(srcL[si]);if(mm.length){src=srcL[si];srcM=mm;break;}}
   if(!srcL.length)srcM=S.guests.filter(function(x){return x.grp===S.calGrp&&!x.sid;});
-  S.stays.push({id:id,grp:S.calGrp,from:f.cFrom,to:f.cTo,menuSet:S.calGrp==='gestalt'?'gestalt-now':(S.calGrp==='vip5'?'vip5-now':'blank'),dish:{},published:false});
+  var gnr=(f.cRooms||[]).slice(),gcl=roomClash(gnr,f.cFrom,f.cTo,null);
+  if(gcl.length){S.calOk=false;S.calMsg='Pokoj '+roomLabel(gcl[0].room)+' je v tomto termínu obsazen ('+gcl[0].who+'). Vyberte jiný.';return;}
+  S.stays.push({id:id,grp:S.calGrp,rooms:gnr,from:f.cFrom,to:f.cTo,menuSet:S.calGrp==='gestalt'?'gestalt-now':(S.calGrp==='vip5'?'vip5-now':'blank'),dish:{},published:false});
   S.stayPick[S.calGrp]=id;
   var nst=stayById(id);
   if(src)srcM.forEach(function(x){S.guests.push(cloneFor(x,nst));});
