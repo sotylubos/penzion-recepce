@@ -581,7 +581,9 @@ function pinGuests(k){S.guests.forEach(function(x){if(x.grp!=='indiv'&&!x.sid&&(
 function prevStayWithMembers(s){var l=staysOf(s.grp).filter(function(t){return t.id!==s.id&&membersOf(t).length;}).sort(function(a,b){return a.from<b.from?1:-1;});return l.filter(function(t){return t.from<s.from;})[0]||l[0]||null;}
 function cloneFor(x,s){var g={id:'gs'+uid(),grp:s.grp,sid:s.id,name:x.name,first:gFirst(x),last:gLast(x),persons:x.persons||1,email:x.email||'',phone:x.phone||'',only:!!x.only,foreign:!!x.foreign,nat:x.nat||'',addr:x.addr||'',doc:x.doc||'',here:true,inBook:false,note:'',paid:null};if(x.born)g.born=x.born;g.bill=defBill(g,null,Math.max(1,diffDays(s.from,s.to)));return g;}
 function stayName(s){return s.grp==='indiv'?G(s.guestId).name:grpName(s.grp);}
-function stayColor(s){return s.to<TODAY?'#B8B5C8':grpColor(s.grp);}
+var INDC=['#C2410C','#0E9F6E','#D6336C','#7048E8','#0B7285','#E67700','#2F9E44','#AE3EC9','#1971C2','#A61E4D','#5C940D','#E8590C'];
+function indColor(s){var h=0,k=String(s.guestId||s.id);for(var i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))>>>0;return INDC[h%INDC.length];}
+function stayColor(s){return s.to<TODAY?'#B8B5C8':(s.grp==='indiv'?indColor(s):grpColor(s.grp));}
 function stayPersons(s){
  if(s.grp==='indiv')return G(s.guestId).persons;
  return membersOf(s).filter(function(x){return x.here;}).reduce(function(a,x){return a+x.persons;},0);
@@ -706,7 +708,7 @@ function guestCard(g,page){
  return '<div class="gcard'+(o?' open':'')+'"><div class="grow"><button class="gtoggle" '+tg('g:'+g.id,false)+'><span class="av" style="background:'+(past?'#B8B5C8':col)+'">'+esc(initials(g.name))+'</span><span class="gtxt"><b>'+esc(dn(g.name))+'</b></span>'+(!g.here&&!o?'<span class="tag g">nepřijede</span>':'')+'<span class="pm">'+(o?'–':'+')+'</span></button></div>'+det+'</div>';
 }
 /* ---------- obrazovky ---------- */
-function calSwitch(extra){return '<div class="row wrap calsw">'+chip('Kalendář','calView','cal',S.calView!=='list'&&S.calView!=='rooms','#6C3CE9')+chip('Pokoje','calView','rooms',S.calView==='rooms','#6C3CE9')+chip('Seznam<span class="dsk"> rezervací</span>','calView','list',S.calView==='list','#6C3CE9')+(extra||'')+'</div>';}
+function calSwitch(extra){return '<div class="row wrap calsw">'+chip('Měsíc','calView','cal',S.calView!=='list'&&S.calView!=='rooms'&&S.calView!=='week'&&S.calView!=='day','#6C3CE9')+chip('Týden','calView','week',S.calView==='week','#6C3CE9')+chip('Den','calView','day',S.calView==='day','#6C3CE9')+chip('Pokoje','calView','rooms',S.calView==='rooms','#6C3CE9')+chip('Seznam<span class="dsk"> rezervací</span>','calView','list',S.calView==='list','#6C3CE9')+(extra||'')+'</div>';}
 function vRes(){
  var f=S.resF||'up',q=(S.query||'').toLowerCase();
  var l=S.stays.filter(function(s){return f==='all'||(f==='up'?s.to>=TODAY:s.to<TODAY);}).sort(function(a,b){return f==='past'?(a.from<b.from?1:-1):(a.from<b.from?-1:1);});
@@ -719,6 +721,24 @@ function vRes(){
  }).join('')||'<div class="note p">Žádné rezervace.</div>';
  var fl=[['up','Nadcházející a probíhající'],['past','Proběhlé'],['all','Všechny']],fn=fl.filter(function(c){return c[0]===f;})[0][1];
  return '<div class="card">'+calSwitch()+'<div class="row resbar"><input class="inp t" style="flex:1;min-width:0;width:auto;min-height:52px;font-size:18px;font-weight:800;border-width:3px;border-radius:16px;padding:0 16px" data-q="1" value="'+esc(S.query)+'" placeholder="'+(mob()?'Hledat…':'Hledat skupinu nebo hosta')+'" aria-label="Hledat rezervaci"><button class="btn green big" data-a="calNewGo">+ Nová<span class="dsk"> rezervace</span></button></div>'+fold('resf','Zobrazit',esc(fn)+' · '+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací'),'<div class="row wrap">'+fl.map(function(c){return chip(c[1],'resF',c[0],f===c[0],'#00857F');}).join('')+'</div>',false,'#00857F')+rows+'</div>';
+}
+function wdRange(){var a=S.calD||TODAY;if(S.calView==='day')return [a,a];var d=parse(a),i=(d.getDay()+6)%7;var m=addDays(a,-i);return [m,addDays(m,6)];}
+function wdLabel(){var r=wdRange();if(S.calView==='day')return DN[parse(r[0]).getDay()]+' '+dmy(r[0]);return dm(r[0])+' – '+dmy(r[1]);}
+function stayRowBtn(s,t){var np=stayPersons(s);return '<button class="dlr'+(S.calSel===s.id?' sel':'')+'" data-a="selStay" data-p="'+s.id+'"><i class="dot" style="background:'+stayColor(s)+'"></i><b>'+esc(stayName(s))+'</b><small>'+rangeTxt(s.from,s.to)+' · '+persTxt(np)+roomTxt(s)+(s.from===t?' · příjezd':(s.to===t?' · odjezd':''))+'</small></button>';}
+function vWeekDay(){
+ var r=wdRange(),out='';
+ function byName(a,b){return stayName(a)<stayName(b)?-1:1;}
+ if(S.calView==='day'){
+  var t=r[0],all=S.stays.filter(function(s){return s.from<=t&&t<=s.to;}),ar=all.filter(function(s){return s.from===t;}).sort(byName),dp=all.filter(function(s){return s.to===t&&s.from!==t;}).sort(byName),st=all.filter(function(s){return s.from<t&&s.to>t;}).sort(byName);
+  var sec=function(ti,l,c){return '<div class="panel" style="background:'+c+'"><b style="font-size:19px;font-weight:900">'+ti+' ('+l.length+')</b>'+(l.length?'<div class="dlist" style="max-height:none">'+l.map(function(s){return stayRowBtn(s,t);}).join('')+'</div>':'<span class="small">nikdo</span>')+'</div>';};
+  var np=all.reduce(function(a,s){return a+(s.to===t&&s.from!==t?0:stayPersons(s));},0);
+  return '<div class="col"><div class="note p" style="font-size:18px;font-weight:800">V noci z '+dm(t)+' spí '+persTxt(np)+'.</div>'+sec('Příjezdy',ar,'#E3F8EC')+sec('Odjezdy',dp,'#FFE9D6')+sec('Ubytovaní (zůstávají)',st,'#F4F0FF')+'</div>';
+ }
+ for(var i=0;i<7;i++){
+  var t2=addDays(r[0],i),l=S.stays.filter(function(s){return s.from<=t2&&t2<=s.to;}).sort(byName);
+  out+='<div class="panel" style="background:'+(t2===TODAY?'#FFF1D6':'#F4F0FF')+(t2===TODAY?';outline:3px solid #FFC21A':'')+'"><div class="row wrap"><b style="font-size:19px;font-weight:900">'+DN[parse(t2).getDay()]+' '+dm(t2)+'</b>'+(t2===TODAY?'<span class="tag y">dnes</span>':'')+'<span class="sp"></span><span class="small b">'+l.length+' '+pl(l.length,'rezervace','rezervace','rezervací')+'</span></div>'+(l.length?'<div class="dlist" style="max-height:none">'+l.map(function(s){return stayRowBtn(s,t2);}).join('')+'</div>':'<span class="small">volno</span>')+'</div>';
+ }
+ return '<div class="col">'+out+'</div>';
 }
 function vKal(){
  if(S.calView==='list')return vRes();
@@ -760,12 +780,13 @@ function vKal(){
   }
   form+='</div>';
  }
+ var wd=S.calView==='week'||S.calView==='day';
  var legend='<span class="small b" style="color:#1F2340">▶ příjezd (pravá půlka dne) · ◀ odjezd (levá půlka)</span>'+
   S.groupDefs.map(function(d){return '<span class="small b" style="color:#1F2340"><i class="dot" style="background:'+d.color+'"></i>'+esc(d.name)+'</span>';}).join('')+
-  '<span class="small b" style="color:#1F2340"><i class="dot" style="background:#C2410C"></i>Individuálové</span><span class="small b" style="color:#1F2340"><i class="dot" style="background:#B8B5C8"></i>proběhlo</span>';
+  '<span class="small b" style="color:#1F2340"><i class="dot" style="background:linear-gradient(90deg,#C2410C,#0E9F6E,#7048E8)"></i>Individuálové (každý jinou barvou)</span><span class="small b" style="color:#1F2340"><i class="dot" style="background:#B8B5C8"></i>proběhlo</span>';
  var legendBox=infoI('legend','<div class="row wrap" style="gap:10px 14px">'+legend+'</div>','#6C3CE9');
- return '<div class="card calcard">'+calSwitch('<span class="sp"></span><button class="btn green" data-a="calNew">+ Nová<span class="dsk"> rezervace</span></button>')+'<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí měsíc" data-a="calGo" data-p="-1">‹</button><b class="mname">'+MN[base.getMonth()]+' '+base.getFullYear()+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další měsíc" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button></div>'+
-  legendBox+form+detail+dayListPanel()+(S.calView==='rooms'?vRoomsTl(base):'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div>')+'</div>';
+ return '<div class="card calcard">'+calSwitch('<span class="sp"></span><button class="btn green" data-a="calNew">+ Nová<span class="dsk"> rezervace</span></button>')+'<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí" data-a="calGo" data-p="-1">‹</button><b class="mname">'+(wd?wdLabel():MN[base.getMonth()]+' '+base.getFullYear())+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další" data-a="calGo" data-p="1">›</button><button class="btn yellow" data-a="calGo" data-p="0">Dnes</button></div>'+
+  legendBox+form+detail+dayListPanel()+(wd?vWeekDay():S.calView==='rooms'?vRoomsTl(base):'<div class="cal">'+['Po','Út','St','Čt','Pá','So','Ne'].map(function(h){return '<span class="h">'+h+'</span>';}).join('')+cells+'</div>')+'</div>';
 }
 
 function guestRow(g){
@@ -991,6 +1012,87 @@ function vPrice(){
  return '<div class="col"><div class="row wrap"><div style="flex:1;min-width:200px">'+infoI('plinfo','Tady si nastavíte ceny. Každý ceník má své období a platí pro vybrané skupiny. U individuálů se cena ubytování liší podle toho, jestli je v pokoji jeden host, nebo dva a více; skupiny mají jednu cenu za osobu a noc. Skupina bez vlastního ceníku použije první ceník v seznamu.','#00857F')+'</div><button class="btn green big" data-a="plNew">+ Nový ceník</button></div>'+cards+'</div>';
 }
 
+/* ---------- tržby a DPH ---------- */
+function vatRate(k,duzp){if(k==='pp')return null;if(k==='ka')return duzp>='2027-01-01'?12:21;if(['ub','di','st','sn','ob','ve','pes'].indexOf(k)>=0)return 12;return 21;}
+function m2(n){return n.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+function r2(n){return Math.round(n*100)/100;}
+function rvRange(){
+ var a=S.rvA||TODAY,P=S.rvP||'month',d=parse(a),y=d.getFullYear(),m=d.getMonth();
+ if(P==='day')return [a,a];
+ if(P==='week'){var i=(d.getDay()+6)%7,mo=addDays(a,-i);return [mo,addDays(mo,6)];}
+ if(P==='month')return [toIso(new Date(y,m,1)),toIso(new Date(y,m+1,0))];
+ if(P==='year')return [y+'-01-01',y+'-12-31'];
+ return (S.rvF&&S.rvT&&S.rvT>=S.rvF)?[S.rvF,S.rvT]:null;
+}
+function rvLabel(){var r=rvRange(),P=S.rvP||'month';if(!r)return 'vyplňte obě data';
+ if(P==='day')return DN[parse(r[0]).getDay()]+' '+dmy(r[0]);if(P==='week')return dm(r[0])+' – '+dmy(r[1]);
+ if(P==='month')return MN[parse(r[0]).getMonth()]+' '+parse(r[0]).getFullYear();if(P==='year')return 'rok '+r[0].slice(0,4);return dmy(r[0])+' – '+dmy(r[1]);}
+function payBreak(p){
+ var g=G(p.gid);if(!g)return null;
+ var rd=receiptData(g),duzp=rd.to||p.date,o={p:p,g:g,rates:{},exempt:0,total:0,items:[]};
+ rd.lines.forEach(function(l){var r=vatRate(l.k,duzp);o.total+=l.sum;if(r===null)o.exempt+=l.sum;else o.rates[r]=(o.rates[r]||0)+l.sum;o.items.push({name:l.k==='x'?'Ostatní: '+l.name:l.name,qty:l.qty,rate:r,sum:l.sum});});
+ o.det={};Object.keys(o.rates).forEach(function(r){var gr=o.rates[r],b=r2(gr/(1+r/100));o.det[r]={gross:gr,base:b,vat:r2(gr-b)};});
+ return o;
+}
+function rvData(){
+ var r=rvRange(),f=S.rvG||'all',mt=S.rvM||'all',rows=[];
+ if(!r)return {r:r,rows:[],tot:{rates:{12:{gross:0,base:0,vat:0},21:{gross:0,base:0,vat:0}},exempt:0,total:0},items:[],byMethod:{},skipped:0};
+ S.payments.slice().sort(function(a,b){return a.date<b.date?-1:(a.date>b.date?1:0);}).forEach(function(p){
+  if(p.date<r[0]||p.date>r[1])return;if(mt!=='all'&&p.method!==mt)return;
+  var b=payBreak(p);if(!b)return;if(f!=='all'&&b.g.grp!==f)return;rows.push(b);});
+ var tot={rates:{12:{gross:0,base:0,vat:0},21:{gross:0,base:0,vat:0}},exempt:0,total:0},im={},byMethod={};
+ rows.forEach(function(b){tot.total+=b.total;tot.exempt+=b.exempt;[12,21].forEach(function(k){var d=b.det[k];if(d){tot.rates[k].gross+=d.gross;tot.rates[k].base+=d.base;tot.rates[k].vat+=d.vat;}});
+  b.items.forEach(function(it){var key=it.name+'|'+it.rate;if(!im[key])im[key]={name:it.name,rate:it.rate,qty:0,sum:0};im[key].qty+=it.qty;im[key].sum+=it.sum;});
+  var m=b.p.method;byMethod[m]=(byMethod[m]||0)+b.total;});
+ var items=Object.keys(im).map(function(k){return im[k];}).sort(function(a,b){return b.sum-a.sum;});
+ return {r:r,rows:rows,tot:tot,items:items,byMethod:byMethod};
+}
+function rvRateTxt(r){return r===null?'mimo DPH':r+' %';}
+function vTrzby(){
+ var D=rvData(),P=S.rvP||'month',f=S.rvG||'all',mt=S.rvM||'all';
+ var pch=[['day','Den'],['week','Týden'],['month','Měsíc'],['year','Rok'],['custom','Vlastní']];
+ var gch=[['all','Všechny skupiny','#6C3CE9']].concat(allGroups().map(function(g){return [g[0],g[1],g[2]];}));
+ var mch=[['all','Všechny platby','#2B1B6B'],['hotove','Hotově','#12805C'],['qr','QR kód','#1D6FE0'],['prevod','Převodem','#6C3CE9'],['predem','Předem','#C2410C']];
+ var nav=P==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="rv_f">Od</label><input class="inp" id="rv_f" type="date" data-kd="rvF" value="'+esc(S.rvF||'')+'"></div><div class="fld" style="width:190px"><label for="rv_t">Do</label><input class="inp" id="rv_t" type="date" data-kd="rvT" value="'+esc(S.rvT||'')+'"></div>'+(D.r?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':
+  '<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí" data-a="rvGo" data-p="-1">‹</button><b class="mname">'+esc(rvLabel())+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další" data-a="rvGo" data-p="1">›</button><button class="btn yellow" data-a="rvGo" data-p="0">Dnes</button></div>';
+ var T=D.tot,n=D.rows.length,base=T.rates[12].base+T.rates[21].base,vat=T.rates[12].vat+T.rates[21].vat;
+ var th='style="padding:8px 10px;text-align:right;font-size:15px"',td='style="white-space:nowrap;padding:8px 10px;text-align:right;font-weight:800;border-top:1px solid #E3D8FF"',tl='style="padding:8px 10px;text-align:left;font-weight:800;border-top:1px solid #E3D8FF"';
+ var vatTab='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:16px"><tr style="background:#F1EBFF"><th style="padding:8px 10px;text-align:left;font-size:15px">Rozpis DPH</th><th '+th+'>Základ</th><th '+th+'>DPH</th><th '+th+'>Celkem</th></tr>'+
+  [12,21].filter(function(k){return T.rates[k].gross>0;}).map(function(k){var x=T.rates[k];return '<tr><td '+tl+'>Sazba '+k+' %</td><td '+td+'>'+m2(x.base)+'</td><td '+td+'>'+m2(x.vat)+'</td><td '+td+'>'+m2(x.gross)+'</td></tr>';}).join('')+
+  '<tr><td '+tl+'>Mimo předmět DPH <small>(místní poplatek)</small></td><td '+td+'>'+m2(T.exempt)+'</td><td '+td+'>—</td><td '+td+'>'+m2(T.exempt)+'</td></tr>'+
+  '<tr style="background:#E3F8EC"><td '+tl+'>CELKEM</td><td '+td+'>'+m2(base+T.exempt)+'</td><td '+td+'>'+m2(vat)+'</td><td '+td+'>'+m2(T.total)+' Kč</td></tr></table></div>';
+ var itTab='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:16px"><tr style="background:#F1EBFF"><th style="padding:8px 10px;text-align:left;font-size:15px">Položka</th><th '+th+'>Sazba</th><th '+th+'>Počet</th><th '+th+'>Celkem</th></tr>'+
+  D.items.map(function(it){return '<tr><td '+tl+'>'+esc(it.name)+'</td><td '+td+'>'+rvRateTxt(it.rate)+'</td><td '+td+'>'+it.qty+'</td><td '+td+'>'+m2(it.sum)+'</td></tr>';}).join('')+'</table></div>';
+ var mtTab=Object.keys(D.byMethod).map(function(k){var m=METHODS[k]||[k,'#6C3CE9','#F1EBFF'];return '<div class="row wrap" style="background:'+m[2]+';border-radius:14px;padding:8px 14px"><b style="flex:1;font-size:17px">'+esc(m[0])+'</b><b style="font-size:17px">'+kc(D.byMethod[k])+'</b></div>';}).join('');
+ var list=D.rows.map(function(b){var m=METHODS[b.p.method]||['—','#6C3CE9','#F1EBFF'];return '<div class="row wrap" style="background:'+m[2]+';border-radius:14px;padding:8px 14px"><span style="flex:1;min-width:170px;display:flex;flex-direction:column"><b style="font-size:17px">'+esc(b.p.name)+'</b><span class="small">'+dmy(b.p.date)+' · '+esc(grpName(b.g.grp))+' · '+esc(m[0])+(b.exempt?' · z toho místní poplatek '+kc(b.exempt):'')+'</span></span><b style="font-size:18px">'+kc(b.total)+'</b></div>';}).join('');
+ var ex='<div class="row wrap"><button class="btn green big" '+(n?'':'disabled style="opacity:.45" ')+'data-a="trzbyX" data-p="xlsx">Stáhnout Excel (.xlsx)</button><button class="btn red big" '+(n?'':'disabled style="opacity:.45" ')+'data-a="trzbyX" data-p="pdf">Stáhnout / vytisknout PDF</button></div>'+(DL?'':'<div class="note y">Stažení souboru se zobrazí v otevřené aplikaci; v tomto náhledu není dostupné.</div>');
+ return '<div class="col"><div class="card"><div class="row wrap"><span class="small b">Období:</span>'+pch.map(function(c){return chip(c[1],'rvP',c[0],P===c[0],'#00857F');}).join('')+'</div>'+nav+
+  fold('rvf','Filtry','skupina a způsob platby',  '<div class="row wrap"><span class="small b">Skupina:</span>'+gch.map(function(c){return chip(esc(c[1]),'rvG',c[0],f===c[0],c[2]);}).join('')+'</div><div class="row wrap"><span class="small b">Platba:</span>'+mch.map(function(c){return chip(c[1],'rvM',c[0],mt===c[0],c[2]);}).join('')+'</div>',false,'#6C3CE9')+'</div>'+
+  '<div class="card" style="background:#12B45E;color:#fff"><span style="font-size:16px;font-weight:800">Tržby celkem · '+esc(rvLabel())+'</span><b style="font-size:38px;font-weight:900">'+kc(T.total)+'</b><span style="font-size:16px;font-weight:800">'+n+' '+pl(n,'platba','platby','plateb')+' · základ '+kc(base)+' · DPH '+kc(vat)+' · místní poplatek '+kc(T.exempt)+'</span></div>'+
+  (n?'<div class="card">'+vatTab+'</div>'+fold('rvi','Rozpis podle položek',D.items.length+' '+pl(D.items.length,'položka','položky','položek'),itTab,false,'#00857F')+fold('rvm','Podle způsobu platby','',mtTab,false,'#1D6FE0')+fold('rvl','Jednotlivé platby',n+'',list,false,'#6C3CE9')+'<div class="card">'+ex+'<span class="small">Sazby DPH: ubytování, jídlo a pes 12 %, káva 21 % (od 1. 1. 2027 12 %), ostatní položky 21 %; místní poplatek je mimo DPH. Ceny jsou s DPH, základ a daň se dopočítají. Tržby se berou podle data přijetí platby.</span></div>':'<div class="note p" style="text-align:center">V tomto období a výběru není žádná platba.</div>')+'</div>';
+}
+function rvExport(){
+ var D=rvData(),T=D.tot,rows=[];
+ D.rows.forEach(function(b){var d12=b.det[12]||{base:0,vat:0},d21=b.det[21]||{base:0,vat:0},mm=METHODS[b.p.method];rows.push([dmy(b.p.date),b.p.name+' ('+grpName(b.g.grp)+')',mm?mm[0]:'',m2(d12.base),m2(d12.vat),m2(d21.base),m2(d21.vat),m2(b.exempt),m2(b.total)]);});
+ rows.push(['','CELKEM','',m2(T.rates[12].base),m2(T.rates[12].vat),m2(T.rates[21].base),m2(T.rates[21].vat),m2(T.exempt),m2(T.total)]);
+ rows.push(['','','','','','','','','']);
+ rows.push(['','ROZPIS DPH','','Základ','DPH','','','','Celkem']);
+ [12,21].forEach(function(k){var x=T.rates[k];if(x.gross>0)rows.push(['','Sazba '+k+' %','',m2(x.base),m2(x.vat),'','','',m2(x.gross)]);});
+ rows.push(['','Mimo předmět DPH (místní poplatek)','',m2(T.exempt),'','','','',m2(T.exempt)]);
+ rows.push(['','','','','','','','','']);
+ rows.push(['','ROZPIS PODLE POLOŽEK','Sazba','Počet','','','','','Celkem']);
+ D.items.forEach(function(it){rows.push(['',it.name,rvRateTxt(it.rate),String(it.qty),'','','','',m2(it.sum)]);});
+ var f=S.rvG||'all',mt=S.rvM||'all';
+ var sub=rvLabel()+(f==='all'?'':' · skupina '+grpName(f))+(mt==='all'?'':' · '+(METHODS[mt]?METHODS[mt][0]:mt))+' · částky v Kč, ceny s DPH · Mimo DPH = místní poplatek · vytištěno '+dmy(TODAY);
+ return {title:'Tržby a DPH – Penzion',sub:sub,head:['Datum','Host / skupina','Způsob','Základ 12 %','DPH 12 %','Základ 21 %','DPH 21 %','Mimo DPH','Celkem'],w:[.09,.25,.10,.10,.09,.10,.09,.09,.09],cw:[12,36,14,14,12,14,12,12,14],rows:rows,sigs:null,numCols:[3,4,5,6,7,8]};
+}
+async function doTrzbyExport(kind){
+ if(!DL){toast('Stažení souboru tu není dostupné.');return;}
+ var d=rvExport();if(!rvData().rows.length){toast('V seznamu nejsou žádné platby.');return;}
+ try{toast('Připravuji soubor…');var r=rvRange(),base='Trzby-'+r[0]+(r[1]!==r[0]?'-'+r[1]:''),data=kind==='xlsx'?buildXlsx(d):await buildPdf(d);
+  await DL.save({filename:base+(kind==='xlsx'?'.xlsx':'.pdf'),data:data});toast('Soubor je uložený.');}catch(e){toast(e&&e.code==='declined'?'Ukládání jste zrušili.':'Soubor se nepodařilo uložit.');}
+}
+
 /* ---------- export knihy hostů ---------- */
 function exportData(){
  var rg=periodRange(),lines=[],sigs=[],n=0;
@@ -1027,15 +1129,15 @@ function zipStore(files){
 }
 function colL(i){return String.fromCharCode(65+i);}
 function buildXlsx(d){
- var cell=function(c,r,v,s){return '<c r="'+colL(c)+r+'" t="inlineStr" s="'+s+'"><is><t xml:space="preserve">'+xe(v)+'</t></is></c>';};
+ var cell=function(c,r,v,s,numOk){if(numOk&&d.numCols&&d.numCols.indexOf(c)>=0&&/^-?[\d\s]+,\d\d$/.test(v)){return '<c r="'+colL(c)+r+'" s="'+(s===4?7:6)+'"><v>'+v.replace(/\s/g,'').replace(',','.')+'</v></c>';}return '<c r="'+colL(c)+r+'" t="inlineStr" s="'+s+'"><is><t xml:space="preserve">'+xe(v)+'</t></is></c>';};
  var rows='<row r="1" ht="28" customHeight="1">'+cell(0,1,d.title,2)+'</row><row r="2">'+cell(0,2,d.sub,5)+'</row><row r="4" ht="30" customHeight="1">'+d.head.map(function(h,i){return cell(i,4,h,1);}).join('')+'</row>';
- d.rows.forEach(function(r,j){var rn=5+j,st=j%2?4:3;rows+='<row r="'+rn+'"'+(d.sigs&&d.sigs[j]?' ht="58" customHeight="1"':'')+'>'+r.map(function(v,i){return cell(i,rn,v,st);}).join('')+'</row>';});
- var widths=d.sigs?[26,13,13,12,12,7,14,32,18,26]:[26,13,13,12,12,7,14,32,18];
+ d.rows.forEach(function(r,j){var rn=5+j,st=j%2?4:3;rows+='<row r="'+rn+'"'+(d.sigs&&d.sigs[j]?' ht="58" customHeight="1"':'')+'>'+r.map(function(v,i){return cell(i,rn,v,st,true);}).join('')+'</row>';});
+ var widths=d.cw||(d.sigs?[26,13,13,12,12,7,14,32,18,26]:[26,13,13,12,12,7,14,32,18]);
  var sigs=d.sigs||[],dr='',media=[];
  sigs.forEach(function(u,j){if(!u)return;var b=atob(u.split(',')[1]),by=new Uint8Array(b.length);for(var q=0;q<b.length;q++)by[q]=b.charCodeAt(q);var iw=((by[16]*256+by[17])*256+by[18])*256+by[19],ih=((by[20]*256+by[21])*256+by[22])*256+by[23];if(!iw||!ih){iw=300;ih=120;}var k=Math.min(170/iw,64/ih),cxm=Math.round(iw*k*9525),cym=Math.round(ih*k*9525),n=media.length+1;media.push(by);
   dr+='<xdr:oneCellAnchor><xdr:from><xdr:col>9</xdr:col><xdr:colOff>38100</xdr:colOff><xdr:row>'+(4+j)+'</xdr:row><xdr:rowOff>38100</xdr:rowOff></xdr:from><xdr:ext cx="'+cxm+'" cy="'+cym+'"/><xdr:pic><xdr:nvPicPr><xdr:cNvPr id="'+(n+1)+'" name="Podpis '+n+'"/><xdr:cNvPicPr/></xdr:nvPicPr><xdr:blipFill><a:blip r:embed="rId'+n+'"/><a:stretch><a:fillRect/></a:stretch></xdr:blipFill><xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cxm+'" cy="'+cym+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:oneCellAnchor>';});
  var sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="20"/><cols>'+widths.map(function(w,i){return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>';}).join('')+'</cols><sheetData>'+rows+'</sheetData><pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>'+(media.length?'<drawing r:id="rId1"/>':'')+'</worksheet>';
- var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="4"><font><sz val="12"/><name val="Calibri"/></font><font><b/><sz val="12"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="18"/><color rgb="FF2B1B6B"/><name val="Calibri"/></font><font><sz val="12"/><color rgb="FF5B5F85"/><name val="Calibri"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF6C3CE9"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF4F0FF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFC9B8FF"/></left><right style="thin"><color rgb="FFC9B8FF"/></right><top style="thin"><color rgb="FFC9B8FF"/></top><bottom style="thin"><color rgb="FFC9B8FF"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+ var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="4"><font><sz val="12"/><name val="Calibri"/></font><font><b/><sz val="12"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="18"/><color rgb="FF2B1B6B"/><name val="Calibri"/></font><font><sz val="12"/><color rgb="FF5B5F85"/><name val="Calibri"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF6C3CE9"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF4F0FF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFC9B8FF"/></left><right style="thin"><color rgb="FFC9B8FF"/></right><top style="thin"><color rgb="FFC9B8FF"/></top><bottom style="thin"><color rgb="FFC9B8FF"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="8"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="4" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf><xf numFmtId="4" fontId="0" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
  return zipStore([
   {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+(media.length?'<Default Extension="png" ContentType="image/png"/><Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>':'')+'</Types>'},
   {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
@@ -1130,13 +1232,13 @@ function vEet(){
 }
 
 /* ---------- celkové vykreslení ---------- */
-var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['eet','EET','#FF8A8A'],['uby','Ubyport','#FF9F43']];
-var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',eet:'EET',uby:'Ubyport – hlášení cizinců'};
+var NAV=[['kal','Kalendář','#FFC21A'],['skupiny','Skupiny','#FF7AA8'],['platba','Odjezd a platba','#7DB4FF'],['kniha','Kniha hostů','#C9B8FF'],['cen','Ceník','#7DE0D0'],['trzby','Tržby','#5BD38A'],['eet','EET','#FF8A8A'],['uby','Ubyport','#FF9F43']];
+var TITLES={kal:'Rezervační kalendář',skupiny:'Skupiny hostů',indiv:'Individuální hosté',platba:'Odjezd a platba',kniha:'Kniha hostů',cen:'Ceník',trzby:'Tržby a DPH',eet:'EET',uby:'Ubyport – hlášení cizinců'};
 function render(){
  if(!LOADED){renderLoading();return;}
  var app=document.getElementById('app'),old=app.querySelector('.scroll'),st=old?old.scrollTop:0,otw=app.querySelector('.tlw'),osx=otw?otw.scrollLeft:0,okey=otw?otw.dataset.k:'';
  var ae=document.activeElement,fid=ae&&ae.id,ss=null,ov=document.getElementById('sigov'),ovs=ov?ov.scrollTop:0;try{if(fid)ss=ae.selectionStart;}catch(e){}
- var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,eet:vEet,uby:vUby}[S.screen]();
+ var body={kal:vKal,skupiny:function(){return vGroups(false);},indiv:function(){return vGroups(true);},platba:vPay,kniha:vBook,cen:vPrice,trzby:vTrzby,eet:vEet,uby:vUby}[S.screen]();
  var nav=NAV.map(function(n,i){return '<button class="nav'+(S.screen===n[0]?' act':'')+'" data-a="nav" data-p="'+n[0]+'"><i style="background:'+n[2]+'">'+(i+1)+'</i><span>'+n[1]+'</span></button>';}).join('');
  app.innerHTML='<div class="app"><nav class="side'+(S.navOpen?' open':'')+'"><div class="logo"><i>9</i><div><b>Na Devítce</b><span>penzion · recepce</span></div></div>'+
   '<button class="burger" data-a="menu" aria-label="Hlavní menu" aria-expanded="'+(S.navOpen?'true':'false')+'"><span class="bl"><i></i><i></i><i></i></span><b>Menu</b></button>'+
@@ -1529,7 +1631,7 @@ A.nav=function(p){S.navOpen=false;S.bookGuest=null;S.payOpen=null;S.grpOpen=fals
 A.tog=function(p,el){var d=el.dataset.d==='1';S.open[p]=!isOpen(p,d);};
 A.quickGuest=function(){S.screen='indiv';S.scrollTop=true;S.newGuestOpen=true;S.form={};};
 /* kalendář */
-A.calView=function(p){S.calView=p;S.query='';S.scrollTop=true;};
+A.calView=function(p){S.calView=p;S.query='';S.scrollTop=true;if((p==='week'||p==='day')&&!S.calD)S.calD=TODAY;};
 A.resF=function(p){S.resF=p;};
 A.calNewGo=function(){S.calView='cal';S.calNewOpen=true;S.calMsg='';S.calKind=null;S.calGrp=null;S.scrollTop=true;};
 A.grpF=function(p){S.grpF=p;};
@@ -1539,7 +1641,14 @@ A.payOpen=function(p){S.delArm=null;S.payOpen=p;S.scrollTop=true;};
 A.noCome=function(p){var g=G(p);if(!g)return;if(S.delArm!=='noCome'+p){S.delArm='noCome'+p;return;}S.delArm=null;g.here=false;S.payOpen=null;S.scrollTop=true;toast('Host „'+dn(g.name)+'“ označen jako nepřijel.');};
 A.payBack=function(){S.delArm=null;var g=G(S.payOpen);S.payOpen=null;S.scrollTop=true;if(g)S.scrollToId='acc_'+(g.grp==='indiv'?'indiv':g.grp);};
 A.closeGuest=function(p){var g=G(p);S.open['pu:'+p]=false;S.scrollToId='acc_'+g.grp;};
-A.calGo=function(p){S.calOff=p==='0'?0:S.calOff+Number(p);};
+A.rvP=function(p){S.rvP=p;if(!S.rvA)S.rvA=TODAY;};
+A.rvG=function(p){S.rvG=p;};A.rvM=function(p){S.rvM=p;};
+A.rvGo=function(p){var a=S.rvA||TODAY,P=S.rvP||'month';if(p==='0'){S.rvA=TODAY;return;}var k=Number(p);
+ if(P==='day')S.rvA=addDays(a,k);else if(P==='week')S.rvA=addDays(a,7*k);else if(P==='month'){var d=parse(a);S.rvA=toIso(new Date(d.getFullYear(),d.getMonth()+k,1));}else if(P==='year'){var d2=parse(a);S.rvA=toIso(new Date(d2.getFullYear()+k,0,1));}};
+A.trzbyX=function(p){doTrzbyExport(p);};
+A.calGo=function(p){
+ if(S.calView==='week'||S.calView==='day'){var st=S.calView==='week'?7:1;S.calD=p==='0'?TODAY:addDays(S.calD||TODAY,Number(p)*st);return;}
+ S.calOff=p==='0'?0:S.calOff+Number(p);};
 A.selStay=function(p){S.calSel=(S.calSel===p||!p)?null:p;if(S.calSel&&mob())S.scrollToId='caldet';};
 A.calNew=function(){S.calNewOpen=!S.calNewOpen;S.calMsg='';S.calKind=null;S.calGrp=null;};
 A.calKind=function(p){S.calKind=p;S.calGrp=null;S.calMsg='';};
