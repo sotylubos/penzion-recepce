@@ -2133,7 +2133,7 @@ function vSig(){
  h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><b style="font-size:19px">Potvrzuji, že uvedené údaje jsou pravdivé.</b><span style="font-size:15px;font-weight:700;color:#5B5F85">I confirm that the information above is correct. · Ich bestätige die Richtigkeit der Angaben.</span>';
  if(sig&&!S.sigRedo){
   h+='<div style="background:#fff;border:3px solid #12805C;border-radius:16px;padding:10px;text-align:center"><img src="'+sig.img+'" alt="Podpis" style="max-width:100%;height:160px;object-fit:contain"></div>'+
-   '<div class="row wrap"><span class="tag ok" style="font-size:16px">✍ Podepsáno '+dmy(sig.at.slice(0,10))+' v '+sig.at.slice(11,16)+'</span><span class="sp"></span><button class="btn white" style="color:#D62839" data-a="sigRedo">Podepsat znovu</button><button class="btn green big" data-a="sigClose">Hotovo</button></div>';
+   '<div class="row wrap"><span class="tag ok" style="font-size:16px">✍ Podepsáno '+dmy(sig.at.slice(0,10))+' v '+sig.at.slice(11,16)+'</span><span class="sp"></span><button class="btn white" style="color:#D62839" data-a="sigRedo">Podepsat znovu</button>'+(S.delArm==='sigDel'?'<button class="btn red big" data-a="sigDel">Ano, smazat podpis</button><button class="btn white" style="color:#6C3CE9" data-a="disarm" data-p="">Ne, nechat</button>':'<button class="btn red" data-a="sigDel">Smazat podpis</button>')+'<button class="btn green big" data-a="sigClose">Hotovo</button></div>';
  }else{
   h+='<span style="font-size:17px;font-weight:800">Podpis / Signature / Unterschrift</span>'+
    '<canvas id="sigpad" style="width:100%;height:240px;background:#fff;border:3px dashed #6C3CE9;border-radius:16px;touch-action:none;display:block"></canvas>'+
@@ -2156,6 +2156,9 @@ document.addEventListener('pointermove',function(e){if(!SIGDOWN)return;var cv=do
 A.sigOpen=function(key){S.sigFor=key;S.sigStrokes=[];S.sigRedo=false;S.natOpen=null;};
 A.sigClose=function(){S.sigFor=null;S.sigStrokes=[];S.sigRedo=false;};
 A.sigClear=function(){S.sigStrokes=[];};
+A.sigDel=function(){var f=sigFind(S.sigFor),x=f&&recObj(recFor(f.r,f.s));if(!x||!x.sig)return;
+ if(arm('sigDel','Opravdu? Podpis se smaže a nejde vrátit.'))return;
+ delete x.sig;S.sigRedo=false;S.sigStrokes=[];toast('Podpis je smazaný.');};
 A.sigRedo=function(){S.sigRedo=true;S.sigStrokes=[];};
 A.sigSave=function(){
  var f=sigFind(S.sigFor),x=f&&recObj(recFor(f.r,f.s));
