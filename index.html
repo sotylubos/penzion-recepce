@@ -962,7 +962,7 @@ function vBook(){
  var npend=bookRows().filter(function(r){return r.pending;}).length,vpend=vis.filter(function(r){return r.pending;}).length;
  if(npend)gch.push(['pending','Čeká na potvrzení ('+npend+')','#D62839']);
  var pch=[['all','Celé období'],['week','Tento týden'],['month','Tento měsíc'],['prev','Minulý měsíc'],['custom','Vlastní období']];
- var custom=S.bookPeriod==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="kd_from">Od</label><input class="inp" id="kd_from" type="date" data-kd="kFrom" value="'+esc(S.kFrom)+'"></div><div class="fld" style="width:190px"><label for="kd_to">Do</label><input class="inp" id="kd_to" type="date" data-kd="kTo" value="'+esc(S.kTo)+'"></div>'+(rg?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':'';
+ var custom=S.bookPeriod==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="kd_from">Od</label><input class="inp" id="kd_from" type="date" data-dpk="1" readonly data-kd="kFrom" value="'+esc(S.kFrom)+'"></div><div class="fld" style="width:190px"><label for="kd_to">Do</label><input class="inp" id="kd_to" type="date" data-dpk="1" readonly data-kd="kTo" value="'+esc(S.kTo)+'"></div>'+(rg?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':'';
  var gsel=gch.filter(function(f){return f[0]===S.bookFilter;})[0],psel=pch.filter(function(f){return f[0]===S.bookPeriod;})[0],fsum=(gsel?gsel[1]:'Všichni')+' · '+(psel?psel[1]:'Celé období');
  var pm=S.pickFor,pg=pm&&pm!=='indiv';
  var exp=pm?'':fold('bkx','Export do tabulky k tisku','v seznamu: '+vis.length+' '+pl(vis.length,'host','hosté','hostů'),
@@ -1062,7 +1062,7 @@ function vTrzby(){
  var pch=[['day','Den'],['week','Týden'],['month','Měsíc'],['year','Rok'],['custom','Vlastní']];
  var gch=[['all','Všechny skupiny','#6C3CE9']].concat(allGroups().map(function(g){return [g[0],g[1],g[2]];}));
  var mch=[['all','Všechny platby','#2B1B6B'],['hotove','Hotově','#12805C'],['qr','QR kód','#1D6FE0'],['prevod','Převodem','#6C3CE9'],['predem','Předem','#C2410C']];
- var nav=P==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="rv_f">Od</label><input class="inp" id="rv_f" type="date" data-kd="rvF" value="'+esc(S.rvF||'')+'"></div><div class="fld" style="width:190px"><label for="rv_t">Do</label><input class="inp" id="rv_t" type="date" data-kd="rvT" value="'+esc(S.rvT||'')+'"></div>'+(D.r?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':
+ var nav=P==='custom'?'<div class="row wrap"><div class="fld" style="width:190px"><label for="rv_f">Od</label><input class="inp" id="rv_f" type="date" data-dpk="1" readonly data-kd="rvF" value="'+esc(S.rvF||'')+'"></div><div class="fld" style="width:190px"><label for="rv_t">Do</label><input class="inp" id="rv_t" type="date" data-dpk="1" readonly data-kd="rvT" value="'+esc(S.rvT||'')+'"></div>'+(D.r?'':'<span class="small b">Vyplňte obě data.</span>')+'</div>':
   '<div class="row calnav"><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Předchozí" data-a="rvGo" data-p="-1">‹</button><b class="mname">'+esc(rvLabel())+'</b><button class="rb" style="background:#EFE9FF;color:#6C3CE9" aria-label="Další" data-a="rvGo" data-p="1">›</button><button class="btn yellow" data-a="rvGo" data-p="0">Dnes</button></div>';
  var T=D.tot,n=D.rows.length,base=T.rates[12].base+T.rates[21].base,vat=T.rates[12].vat+T.rates[21].vat;
  var th='style="padding:8px 10px;text-align:right;font-size:15px"',td='style="white-space:nowrap;padding:8px 10px;text-align:right;font-weight:800;border-top:1px solid #E3D8FF"',tl='style="padding:8px 10px;text-align:left;font-weight:800;border-top:1px solid #E3D8FF"';
@@ -1427,7 +1427,7 @@ function vRoomsTl(base){
 }
 /* ---------- vlastní výběr data (malý kalendář zůstane otevřený) ---------- */
 var DPS=null;
-function dpRef(id){if(id==='f_cTo')return 'f_cFrom';if(id==='sd_t')return 'sd_f';if(/^gdt_/.test(id))return 'gdf_'+id.slice(4);if(/^f_.*To$/.test(id))return id.replace(/To$/,'From');if(/^f_ht_/.test(id))return id.replace('f_ht_','f_hf_');return '';}
+function dpRef(id){if(id==='kd_to')return 'kd_from';if(id==='kx_to')return 'kx_from';if(id==='rv_t')return 'rv_f';if(id==='ubf_to')return 'ubf_from';if(id==='f_cTo')return 'f_cFrom';if(id==='sd_t')return 'sd_f';if(/^gdt_/.test(id))return 'gdf_'+id.slice(4);if(/^f_.*To$/.test(id))return id.replace(/To$/,'From');if(/^f_ht_/.test(id))return id.replace('f_ht_','f_hf_');return '';}
 function dpLabel(el){var l=el.id?document.querySelector('label[for="'+el.id+'"]'):null;return l?l.textContent:'Datum';}
 function dpClose(){var o=document.getElementById('dpop');if(o)o.remove();DPS=null;}
 function dpDraw(){
@@ -1997,7 +1997,7 @@ function vUby(){
  var F=ubyF(),rg=ubyRange(),fo=isOpen('ubyflt',false),PS=[['today','Dnes'],['yest','Včera'],['week','Posledních 7 dní'],['month','Tento měsíc'],['prev','Minulý měsíc'],['45','Posledních 45 dní'],['all','Vše'],['own','Vlastní období']];
  h+='<div class="panel" style="background:#fff;box-shadow:0 3px 0 #F0DFC0"><button type="button" class="btn white" style="justify-content:space-between;color:#1F2340;background:#F4F0FF" '+tg('ubyflt',false)+'><span style="text-align:left"><b style="display:block;font-size:18px">Filtr: příjezd</b><span class="small">'+(PS.filter(function(q){return q[0]===F.p;})[0]||PS[5])[1]+' · '+dmy(rg[0]==='2000-01-01'?(it.list.length?it.list[0].from:TODAY):rg[0])+' – '+dmy(rg[1])+'</span></span><span>'+(fo?'▴':'▾')+'</span></button>';
  if(fo){h+='<div class="row wrap">'+PS.map(function(q){return chip(q[1],'ubyPer',q[0],F.p===q[0],'#6C3CE9');}).join('')+'</div>';
-  if(F.p==='own')h+='<div class="fg"><div class="fld"><label for="ubf_from">Příjezd od</label><input type="date" class="inp w" id="ubf_from" data-ubyf="from" value="'+esc(F.from)+'"></div><div class="fld"><label for="ubf_to">Příjezd do</label><input type="date" class="inp w" id="ubf_to" data-ubyf="to" value="'+esc(F.to)+'"></div></div>';}
+  if(F.p==='own')h+='<div class="fg"><div class="fld"><label for="ubf_from">Příjezd od</label><input type="date" data-dpk="1" readonly class="inp w" id="ubf_from" data-ubyf="from" value="'+esc(F.from)+'"></div><div class="fld"><label for="ubf_to">Příjezd do</label><input type="date" data-dpk="1" readonly class="inp w" id="ubf_to" data-ubyf="to" value="'+esc(F.to)+'"></div></div>';}
  h+='</div>';
  if(it.wait)h+='<div class="panel" style="background:#E8F0FF"><span style="font-size:17px">'+it.wait+' '+pl(it.wait,'host ještě nemá','hosté ještě nemají','hostů ještě nemá')+' potvrzený příjezd v Knize hostů. Hlásí se až po potvrzení.</span></div>';
  if(it.noNat.length)h+='<div class="panel" style="background:#FFE4E4"><b>Chybí země u hostů:</b><span style="font-size:17px;line-height:1.5">'+it.noNat.map(esc).join(', ')+'</span><span class="small">Bez země nepoznám, jestli jde o cizince. Doplňte ji v kartě hosta nebo v Knize hostů.</span></div>';
