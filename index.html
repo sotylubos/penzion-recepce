@@ -751,7 +751,7 @@ function billBlock(g){
   return '<div class="line xl"><input class="inp xn" id="xn_'+g.id+'_'+x.id+'" enterkeyhint="done" data-gx="'+g.id+'|'+x.id+'|name" value="'+esc(x.name)+'" placeholder="Název položky" aria-label="Název položky"><span class="pw pc"><input class="inp pi" inputmode="numeric" enterkeyhint="done" aria-label="Cena položky" placeholder="Cena" data-gx="'+g.id+'|'+x.id+'|price" value="'+(x.price?x.price:'')+'"><span class="small">Kč</span></span><span class="pw"><button class="rb minus" aria-label="Méně" data-a="xq" data-p="'+g.id+'|'+x.id+'|-1">−</button><span class="qn">'+x.qty+'</span><button class="rb plus" aria-label="Více" data-a="xq" data-p="'+g.id+'|'+x.id+'|1">+</button></span><span class="ls" data-xsum="'+g.id+'|'+x.id+'">'+kc(x.qty*x.price)+'</span><button class="rb rx" aria-label="Smazat položku" data-a="xdel" data-p="'+g.id+'|'+x.id+'">×</button></div>';
  }).join('');
  var add='';
- return '<div class="bill"><div class="row wrap"><b class="bt">Pobyt a konzumace</b><span class="sp"></span>'+personsRow(g)+'</div><div class="row wrap"><div class="fld" style="width:190px"><label for="gdf_'+g.id+'">Příjezd</label><input class="inp" id="gdf_'+g.id+'" type="date" data-dpk="1" readonly data-gd="'+g.id+'|from" value="'+esc(guestDates(g).from)+'"></div><div class="fld" style="width:190px"><label for="gdt_'+g.id+'">Odjezd</label><input class="inp" id="gdt_'+g.id+'" type="date" data-dpk="1" readonly data-gd="'+g.id+'|to" value="'+esc(guestDates(g).to)+'"></div><span class="small" style="flex:1;min-width:200px">Změna data přepočítá počet nocí a poplatek.'+(g.grp==='indiv'?'':' Platí jen pro tohoto hosta.')+'</span></div><div class="small">Ceník: <b>'+esc(listFor(g).name)+'</b>. Počty i ceny jdou u tohoto hosta přepsat. Ubytování a strava se násobí počtem osob, poplatek a další položky ne.</div>'+lines+'<div class="small">Místní poplatek se neplatí za děti do 18 let a osoby nad 70 let: snižte počet.</div>'+ex+add+'<div class="tot"><span>Celkem</span><b data-total="'+g.id+'">'+kc(total(g))+'</b></div></div>';
+ return '<div class="bill"><div class="row wrap"><b class="bt">Pobyt a konzumace</b><span class="sp"></span>'+personsRow(g)+'</div><div class="row wrap"><div class="fld" style="width:190px"><label for="gdf_'+g.id+'">Příjezd</label><input class="inp" id="gdf_'+g.id+'" type="date" data-dpk="1" readonly data-gd="'+g.id+'|from" value="'+esc(guestDates(g).from)+'"></div><div class="fld" style="width:190px"><label for="gdt_'+g.id+'">Odjezd</label><input class="inp" id="gdt_'+g.id+'" type="date" data-dpk="1" readonly data-gd="'+g.id+'|to" value="'+esc(guestDates(g).to)+'"></div><span class="small" style="flex:1;min-width:200px">Změna data přepočítá počet nocí a poplatek.'+(g.grp==='indiv'?'':' Platí jen pro tohoto hosta.')+'</span></div>'+(g.grp==='indiv'&&stayOfGuest(g)?roomPanel(stayOfGuest(g)):'')+'<div class="small">Ceník: <b>'+esc(listFor(g).name)+'</b>. Počty i ceny jdou u tohoto hosta přepsat. Ubytování a strava se násobí počtem osob, poplatek a další položky ne.</div>'+lines+'<div class="small">Místní poplatek se neplatí za děti do 18 let a osoby nad 70 let: snižte počet.</div>'+ex+add+'<div class="tot"><span>Celkem</span><b data-total="'+g.id+'">'+kc(total(g))+'</b></div></div>';
 }
 function guestCard(g,page){
  var o=page||isOpen('g:'+g.id,false),col=grpColor(g.grp);
@@ -1411,12 +1411,12 @@ function roomPick(sel,from,to,excl,act,pre,persons){
   if(sec==='A')h+='<span class="small">Pokoje A6 a A7 tvoří apartmán se společnou koupelnou a WC.</span>';
   h+='</div>';
  });
- var sum=sel.length?'<span class="small b" style="color:'+(persons&&beds<persons?'#B4232F':'#0B5A40')+'">Vybráno: '+sel.map(roomLabel).join(', ')+' · '+bedsTxt(beds)+(persons?' pro '+persTxt(persons)+(beds<persons?' – lůžek je méně než osob':''):'')+'</span>':'<span class="small">Pokoj zatím není vybraný. Ťukněte na pokoj, ťuknutím znovu ho odeberete.</span>';
+ var sum=sel.length?'<span class="small b" style="color:'+(persons&&beds<persons?'#B4232F':'#0B5A40')+'">Vybráno: '+sel.map(roomLabel).join(', ')+' · '+bedsTxt(beds)+(persons?' pro '+persTxt(persons)+(beds<persons?' – lůžek je méně než osob':''):'')+'</span>':'<span class="small">Pokoj zatím není vybraný. Ťukněte na pokoj (můžete i na více pokojů), ťuknutím znovu ho odeberete.</span>';
  return h+sum;
 }
 function roomPanel(sel){
- var gr=sel.grp!=='indiv',dflt=!gr&&!(sel.rooms&&sel.rooms.length),o=isOpen('rmp:'+sel.id,dflt);
- return '<div class="panel" style="background:#fff"><button class="rmtg" '+tg('rmp:'+sel.id,dflt)+' aria-expanded="'+(o?'true':'false')+'"><b style="font-size:19px;font-weight:900">'+(gr?'Pokoje':'Pokoj')+(roomTxt(sel)?':'+roomTxt(sel).replace(' · pokoj',''):(gr?' (nepovinné, zatím nevyplněné)':' (zatím nepřiřazený)'))+'</b><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?roomPick(sel.rooms||[],sel.from,sel.to,sel.id,'stayRoom',sel.id+'|',stayPersons(sel)):'')+'</div>';
+ var gr=sel.grp!=='indiv',dflt=true,o=isOpen('rmp:'+sel.id,dflt);
+ return '<div class="panel" style="background:#fff"><button class="rmtg" '+tg('rmp:'+sel.id,dflt)+' aria-expanded="'+(o?'true':'false')+'"><b style="font-size:19px;font-weight:900">'+'Pokoje'+(roomTxt(sel)?':'+roomTxt(sel).replace(' · pokoj','').replace(' · pokoje',''):(gr?' (nepovinné, zatím nevyplněné)':' (zatím nepřiřazený)'))+'</b><span class="pm">'+(o?'–':'+')+'</span></button>'+(o?roomPick(sel.rooms||[],sel.from,sel.to,sel.id,'stayRoom',sel.id+'|',stayPersons(sel)):'')+'</div>';
 }
 function roomPanelNew(){
  var f=S.form,sel=f.cRooms||[];
@@ -1506,7 +1506,7 @@ function dpOpen(el){
  var o=document.createElement('div');o.id='dpop';o.className='dpo';o.innerHTML='<div class="dpc" role="dialog" aria-modal="true"></div>';
  document.body.appendChild(o);dpDraw();
 }
-['mousedown','touchstart','pointerdown'].forEach(function(n){document.addEventListener(n,function(e){var t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-dpk'))e.preventDefault();},{capture:true,passive:false});});
+['mousedown'].forEach(function(n){document.addEventListener(n,function(e){var t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-dpk'))e.preventDefault();},{capture:true,passive:false});});
 document.addEventListener('click',function(e){
  var t=e.target,el=t&&t.closest?t.closest('[data-dpk]'):null;
  if(el){e.preventDefault();e.stopPropagation();dpOpen(el);return;}
